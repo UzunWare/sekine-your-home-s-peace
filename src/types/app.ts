@@ -62,6 +62,8 @@ export interface DisplaySettings {
   clockFormat: ClockFormat;
   showHijriDate: boolean;
   showCentralQuote: boolean;
+  showSeconds: boolean;
+  backgroundSlideshow: boolean;
   screensaverTimeout: ScreensaverTimeout;
   backgroundImageUrl: string | null;
   oledProtection: boolean;
@@ -70,6 +72,7 @@ export interface DisplaySettings {
 }
 
 export interface AdhanSettings {
+  enabled: boolean;
   style: string;
   volume: VolumeLevel;
   fadeIn: boolean;

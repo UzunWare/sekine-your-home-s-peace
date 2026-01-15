@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight, Globe, BookOpen } from "lucide-react";
+import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight, Globe, BookOpen, Home, Building2, Sun } from "lucide-react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
 import { useApp } from "@/contexts/AppContext";
 import { useLanguage, SUPPORTED_LANGUAGES } from "@/lib/i18n";
@@ -33,6 +33,14 @@ const Settings = () => {
       bgColor: "bg-gold/10",
     },
     {
+      icon: settings.prayer.mode === 'home' ? Home : Building2,
+      title: "App Mode",
+      description: settings.prayer.mode === 'home' ? 'Home Mode' : 'Mosque Mode',
+      route: "/settings/mode",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+    },
+    {
       icon: Calculator,
       title: "Calculation Method",
       description: settings.prayer.calculationMethod || "ISNA (North America)",
@@ -41,9 +49,17 @@ const Settings = () => {
       bgColor: "bg-emerald/10",
     },
     {
+      icon: Sun,
+      title: "Asr Calculation",
+      description: settings.prayer.asrJuristic === 'hanafi' ? 'Hanafi' : 'Standard (Shafi, Maliki, Hanbali)',
+      route: "/settings/asr",
+      color: "text-gold",
+      bgColor: "bg-gold/10",
+    },
+    {
       icon: Volume2,
       title: "Adhan Settings",
-      description: `Volume ${settings.adhan.volume}%`,
+      description: settings.adhan.enabled ? `Volume ${settings.adhan.volume}%` : 'Disabled',
       route: "/settings/adhan",
       color: "text-gold",
       bgColor: "bg-gold/10",

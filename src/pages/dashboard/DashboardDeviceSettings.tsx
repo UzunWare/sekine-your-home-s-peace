@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Tv, MapPin, Calculator, Volume2, Bell, Monitor, Moon, 
-  BookOpen, Save, RefreshCw, Trash2, Power, Home, Building2, Image, Shield
+  BookOpen, Save, RefreshCw, Trash2, Power, Home, Building2, Image, Shield, Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -24,6 +24,9 @@ const deviceData = {
     longitude: -0.1278,
   },
   settings: {
+    // Language
+    language: 'en',
+    
     // Prayer settings
     calculationMethod: 'MWL',
     asrJuristic: 'standard',
@@ -37,10 +40,10 @@ const deviceData = {
     clockFormat: '12h',
     showHijriDate: true,
     showCentralQuote: true,
-    screensaverTimeout: '5m',
-    backgroundSlideshow: true,
-    screenBurnProtection: true,
     showSeconds: true,
+    backgroundSlideshow: true,
+    screensaverTimeout: '5m',
+    screenBurnProtection: true,
     
     // Night mode
     nightModeEnabled: false,
@@ -106,6 +109,17 @@ const translationLanguages = [
   { value: 'tr', label: 'Turkish' },
   { value: 'id', label: 'Indonesian' },
   { value: 'bn', label: 'Bengali' },
+];
+
+const appLanguages = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'العربية (Arabic)' },
+  { value: 'tr', label: 'Türkçe (Turkish)' },
+  { value: 'ur', label: 'اردو (Urdu)' },
+  { value: 'fr', label: 'Français (French)' },
+  { value: 'id', label: 'Bahasa Indonesia' },
+  { value: 'ms', label: 'Bahasa Melayu' },
+  { value: 'bn', label: 'বাংলা (Bengali)' },
 ];
 
 const cities = [
@@ -190,9 +204,9 @@ const DashboardDeviceSettings = () => {
           </div>
         </div>
 
-        {/* Device Info */}
-        <section className="glass-card p-6">
-          <h2 className="text-lg font-medium text-foreground mb-4">Device Info</h2>
+        {/* Device Info & Language */}
+        <section className="glass-card p-6 space-y-6">
+          <h2 className="text-lg font-medium text-foreground">Device Info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm text-muted-foreground mb-2 block">Device Name</label>
@@ -224,6 +238,34 @@ const DashboardDeviceSettings = () => {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          
+          {/* Language Setting */}
+          <div className="pt-4 border-t border-border/50">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Globe className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-medium text-foreground">App Language</h3>
+                <p className="text-sm text-muted-foreground">Interface language for the TV app</p>
+              </div>
+            </div>
+            <Select 
+              value={device.settings.language}
+              onValueChange={(v) => updateSetting('settings.language', v)}
+            >
+              <SelectTrigger className="w-full md:w-1/2">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {appLanguages.map((lang) => (
+                  <SelectItem key={lang.value} value={lang.value}>
+                    {lang.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </section>
 

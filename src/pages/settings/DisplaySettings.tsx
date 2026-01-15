@@ -120,6 +120,34 @@ export default function DisplaySettings() {
 
           <button
             data-focusable="true"
+            onClick={() => toggleSetting('showSeconds')}
+            className="w-full glass-card p-4 sm:p-5 lg:p-6 flex items-center justify-between text-left focus:ring-2 focus:ring-primary focus:outline-none transition-all hover:bg-card/80"
+          >
+            <div>
+              <h3 className="text-base sm:text-lg font-medium">Show Seconds</h3>
+              <p className="text-sm text-muted-foreground">Display seconds in the clock</p>
+            </div>
+            <div className={`w-14 h-8 rounded-full transition-colors flex items-center px-1 ${settings.display.showSeconds ? 'bg-primary' : 'bg-muted'}`}>
+              <div className={`w-6 h-6 rounded-full bg-white transition-transform ${settings.display.showSeconds ? 'translate-x-6' : ''}`} />
+            </div>
+          </button>
+
+          <button
+            data-focusable="true"
+            onClick={() => toggleSetting('backgroundSlideshow')}
+            className="w-full glass-card p-4 sm:p-5 lg:p-6 flex items-center justify-between text-left focus:ring-2 focus:ring-primary focus:outline-none transition-all hover:bg-card/80"
+          >
+            <div>
+              <h3 className="text-base sm:text-lg font-medium">Background Slideshow</h3>
+              <p className="text-sm text-muted-foreground">Rotate background images automatically</p>
+            </div>
+            <div className={`w-14 h-8 rounded-full transition-colors flex items-center px-1 ${settings.display.backgroundSlideshow ? 'bg-primary' : 'bg-muted'}`}>
+              <div className={`w-6 h-6 rounded-full bg-white transition-transform ${settings.display.backgroundSlideshow ? 'translate-x-6' : ''}`} />
+            </div>
+          </button>
+
+          <button
+            data-focusable="true"
             onClick={() => toggleSetting('oledProtection')}
             className="w-full glass-card p-4 sm:p-5 lg:p-6 flex items-center justify-between text-left focus:ring-2 focus:ring-primary focus:outline-none transition-all hover:bg-card/80"
           >
