@@ -48,7 +48,7 @@ const Iqamah = () => {
   };
 
   return (
-    <div className={`fixed inset-0 flex flex-col items-center justify-center transition-colors duration-1000 ${
+    <div className={`fixed inset-0 flex flex-col items-center justify-center p-6 sm:p-8 lg:p-12 transition-colors duration-1000 ${
       isUrgent ? 'bg-destructive/20' : isWarning ? 'bg-primary/10' : 'bg-background'
     }`}>
       {/* Background pattern */}
@@ -57,16 +57,16 @@ const Iqamah = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center">
         {/* Prayer name */}
-        <h2 className="text-2xl tracking-[0.2em] uppercase text-muted-foreground mb-2">
+        <h2 className="text-lg sm:text-xl lg:text-2xl tracking-[0.15em] sm:tracking-[0.2em] uppercase text-muted-foreground mb-1 sm:mb-2">
           {prayer.name} Prayer
         </h2>
-        <h1 className="font-arabic text-6xl text-primary mb-12">
+        <h1 className="font-arabic text-4xl sm:text-5xl lg:text-6xl text-primary mb-6 sm:mb-8 lg:mb-12">
           {prayer.arabicName}
         </h1>
 
         {/* Countdown */}
         <div className={`relative ${isUrgent ? 'animate-pulse' : ''}`}>
-          <div className={`text-[14rem] font-extralight leading-none tabular-nums ${
+          <div className={`text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] xl:text-[14rem] font-extralight leading-none tabular-nums ${
             isUrgent ? 'text-destructive' : isWarning ? 'text-primary' : 'text-foreground'
           }`}>
             {formatTime(timeRemaining)}
@@ -74,28 +74,28 @@ const Iqamah = () => {
         </div>
 
         {/* Label */}
-        <p className={`text-3xl mt-8 ${
+        <p className={`text-xl sm:text-2xl lg:text-3xl mt-4 sm:mt-6 lg:mt-8 ${
           isUrgent ? 'text-destructive' : 'text-muted-foreground'
         }`}>
           {isUrgent ? 'Iqamah starting now!' : `Iqamah in ${Math.ceil(timeRemaining / 60)} minute${Math.ceil(timeRemaining / 60) !== 1 ? 's' : ''}`}
         </p>
 
         {/* Decorative element */}
-        <div className="flex items-center gap-4 mt-16">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent to-primary/40" />
-          <span className="text-2xl text-primary">☪</span>
-          <div className="h-px w-24 bg-gradient-to-l from-transparent to-primary/40" />
+        <div className="flex items-center gap-2 sm:gap-4 mt-8 sm:mt-12 lg:mt-16">
+          <div className="h-px w-12 sm:w-16 lg:w-24 bg-gradient-to-r from-transparent to-primary/40" />
+          <span className="text-lg sm:text-xl lg:text-2xl text-primary">☪</span>
+          <div className="h-px w-12 sm:w-16 lg:w-24 bg-gradient-to-l from-transparent to-primary/40" />
         </div>
 
         {/* Instructions */}
-        <p className="text-muted-foreground mt-8">
+        <p className="text-sm sm:text-base text-muted-foreground mt-4 sm:mt-6 lg:mt-8">
           Please prepare for prayer
         </p>
       </div>
 
       {/* Back hint */}
-      <div className="absolute bottom-12">
-        <p className="text-sm text-muted-foreground">Press BACK to return to display</p>
+      <div className="absolute bottom-6 sm:bottom-8 lg:bottom-12">
+        <p className="text-xs sm:text-sm text-muted-foreground">Press BACK to return to display</p>
       </div>
     </div>
   );
