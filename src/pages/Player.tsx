@@ -258,12 +258,12 @@ const Player = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
         style={{ 
           backgroundImage: `url(${backgroundImage})`,
-          opacity: 0.25 
+          opacity: 0.4 
         }}
       />
       
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background/95" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/60 to-background/90" />
       
       {/* Subtle pattern overlay */}
       <div className="absolute inset-0 pattern-overlay opacity-5" />
