@@ -122,12 +122,28 @@ export default function AdhanSettings() {
       {/* Settings List */}
       <main className="flex-1 overflow-auto py-4 sm:py-6">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 space-y-3">
-          {/* Adhan Style - opens full-screen list */}
+          {/* Enable Adhan Toggle */}
           <button
             data-focusable="true"
             autoFocus
-            onClick={() => setShowStyleList(true)}
+            onClick={() => updateSettings('adhan', { enabled: !settings.adhan.enabled })}
             className="w-full glass-card p-5 sm:p-6 flex items-center justify-between text-left focus:ring-2 focus:ring-primary focus:outline-none hover:bg-card/80 transition-all"
+          >
+            <div>
+              <h3 className="text-base sm:text-lg lg:text-xl font-medium">Enable Adhan</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">Automatically play Adhan at prayer times</p>
+            </div>
+            <div className={`w-14 h-8 rounded-full transition-colors flex items-center px-1 ${settings.adhan.enabled ? 'bg-primary' : 'bg-muted'}`}>
+              <div className={`w-6 h-6 rounded-full bg-white transition-transform ${settings.adhan.enabled ? 'translate-x-6' : ''}`} />
+            </div>
+          </button>
+
+          {/* Adhan Style - opens full-screen list */}
+          <button
+            data-focusable="true"
+            onClick={() => setShowStyleList(true)}
+            disabled={!settings.adhan.enabled}
+            className={`w-full glass-card p-5 sm:p-6 flex items-center justify-between text-left focus:ring-2 focus:ring-primary focus:outline-none hover:bg-card/80 transition-all ${!settings.adhan.enabled ? 'opacity-50' : ''}`}
           >
             <div>
               <h3 className="text-base sm:text-lg lg:text-xl font-medium">Adhan Style</h3>

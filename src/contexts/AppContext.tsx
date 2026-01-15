@@ -29,6 +29,8 @@ const defaultSettings: AppSettings = {
     clockFormat: '12h',
     showHijriDate: true,
     showCentralQuote: true,
+    showSeconds: true,
+    backgroundSlideshow: true,
     screensaverTimeout: '5m',
     backgroundImageUrl: null,
     oledProtection: true,
@@ -36,6 +38,7 @@ const defaultSettings: AppSettings = {
     nightModeBrightness: 25,
   },
   adhan: {
+    enabled: true,
     style: 'makkah',
     volume: 80,
     fadeIn: true,

@@ -38,6 +38,8 @@ const CalculationSettings = lazy(() => import("./pages/settings/CalculationSetti
 const DisplaySettings = lazy(() => import("./pages/settings/DisplaySettings"));
 const NightModeSettings = lazy(() => import("./pages/settings/NightModeSettings"));
 const LanguageSettings = lazy(() => import("./pages/settings/LanguageSettings"));
+const ModeSettings = lazy(() => import("./pages/settings/ModeSettings"));
+const AsrSettings = lazy(() => import("./pages/settings/AsrSettings"));
 
 // Dashboard pages
 const DashboardLogin = lazy(() => import("./pages/dashboard/DashboardLogin"));
@@ -87,6 +89,8 @@ const App = () => (
                 <Route path="/settings/display" element={<DisplaySettings />} />
                 <Route path="/settings/night" element={<NightModeSettings />} />
                 <Route path="/settings/language" element={<LanguageSettings />} />
+                <Route path="/settings/mode" element={<ModeSettings />} />
+                <Route path="/settings/asr" element={<AsrSettings />} />
                 
                 {/* Setup wizard */}
                 <Route path="/setup" element={<SetupWelcome />} />
