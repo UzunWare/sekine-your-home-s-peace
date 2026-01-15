@@ -60,7 +60,7 @@ export async function fetchAllVerses(
   return allVerses;
 }
 
-// Get audio timing for a chapter
+// Get audio timing for a chapter (from chapter_recitations endpoint which includes timestamps)
 export async function fetchAudioTimings(
   chapterNumber: number,
   reciterId: string = 'mishary'
@@ -68,14 +68,15 @@ export async function fetchAudioTimings(
   const reciterApiId = RECITER_IDS[reciterId] || RECITER_IDS.mishary;
   
   const response = await fetch(
-    `${API_BASE}/recitations/${reciterApiId}/by_chapter/${chapterNumber}`
+    `${API_BASE}/chapter_recitations/${reciterApiId}/${chapterNumber}`
   );
   if (!response.ok) throw new Error('Failed to fetch audio timings');
   
-  const data: AudioTimingsResponse = await response.json();
+  const data = await response.json();
   
-  if (data.audio_files && data.audio_files.length > 0) {
-    return data.audio_files[0].verse_timings || [];
+  // The timestamps are in audio_file.timestamps for chapter_recitations endpoint
+  if (data.audio_file?.timestamps) {
+    return data.audio_file.timestamps;
   }
   
   return [];
