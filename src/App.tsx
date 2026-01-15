@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
+import { I18nProvider } from "@/lib/i18n";
 
 // Pages
 import Splash from "./pages/Splash";
@@ -36,6 +37,7 @@ const LocationSettings = lazy(() => import("./pages/settings/LocationSettings"))
 const CalculationSettings = lazy(() => import("./pages/settings/CalculationSettings"));
 const DisplaySettings = lazy(() => import("./pages/settings/DisplaySettings"));
 const NightModeSettings = lazy(() => import("./pages/settings/NightModeSettings"));
+const LanguageSettings = lazy(() => import("./pages/settings/LanguageSettings"));
 
 // Dashboard pages
 const DashboardLogin = lazy(() => import("./pages/dashboard/DashboardLogin"));
@@ -57,55 +59,58 @@ const LoadingFallback = () => (
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AppProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              {/* Main screens */}
-              <Route path="/" element={<Splash />} />
-              <Route path="/idle" element={<Idle />} />
-              <Route path="/adhan" element={<Adhan />} />
-              <Route path="/iqamah" element={<Iqamah />} />
-              <Route path="/player" element={<Player />} />
-              <Route path="/quran" element={<Quran />} />
-              <Route path="/screensaver" element={<Screensaver />} />
-              <Route path="/pairing" element={<Pairing />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/settings/quran" element={<QuranSettings />} />
-              <Route path="/settings/adhan" element={<AdhanSettings />} />
-              <Route path="/settings/downloads" element={<DownloadsSettings />} />
-              <Route path="/settings/testing" element={<TestingSettings />} />
-              <Route path="/settings/iqamah" element={<IqamahSettings />} />
-              <Route path="/settings/location" element={<LocationSettings />} />
-              <Route path="/settings/calculation" element={<CalculationSettings />} />
-              <Route path="/settings/display" element={<DisplaySettings />} />
-              <Route path="/settings/night" element={<NightModeSettings />} />
-              
-              {/* Setup wizard */}
-              <Route path="/setup" element={<SetupWelcome />} />
-              <Route path="/setup/mode" element={<SetupMode />} />
-              <Route path="/setup/location" element={<SetupLocation />} />
-              <Route path="/setup/calculation" element={<SetupCalculation />} />
-              <Route path="/setup/pairing" element={<SetupPairing />} />
-              <Route path="/setup/complete" element={<SetupComplete />} />
-              
-              {/* Web Dashboard */}
-              <Route path="/dashboard/login" element={<DashboardLogin />} />
-              <Route path="/dashboard" element={<DashboardHome />} />
-              <Route path="/dashboard/devices" element={<DashboardDevices />} />
-              <Route path="/dashboard/devices/:deviceId" element={<DashboardDeviceSettings />} />
-              <Route path="/dashboard/pair" element={<DashboardPair />} />
-              <Route path="/dashboard/settings" element={<DashboardSettings />} />
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AppProvider>
+    <I18nProvider>
+      <AppProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                {/* Main screens */}
+                <Route path="/" element={<Splash />} />
+                <Route path="/idle" element={<Idle />} />
+                <Route path="/adhan" element={<Adhan />} />
+                <Route path="/iqamah" element={<Iqamah />} />
+                <Route path="/player" element={<Player />} />
+                <Route path="/quran" element={<Quran />} />
+                <Route path="/screensaver" element={<Screensaver />} />
+                <Route path="/pairing" element={<Pairing />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/quran" element={<QuranSettings />} />
+                <Route path="/settings/adhan" element={<AdhanSettings />} />
+                <Route path="/settings/downloads" element={<DownloadsSettings />} />
+                <Route path="/settings/testing" element={<TestingSettings />} />
+                <Route path="/settings/iqamah" element={<IqamahSettings />} />
+                <Route path="/settings/location" element={<LocationSettings />} />
+                <Route path="/settings/calculation" element={<CalculationSettings />} />
+                <Route path="/settings/display" element={<DisplaySettings />} />
+                <Route path="/settings/night" element={<NightModeSettings />} />
+                <Route path="/settings/language" element={<LanguageSettings />} />
+                
+                {/* Setup wizard */}
+                <Route path="/setup" element={<SetupWelcome />} />
+                <Route path="/setup/mode" element={<SetupMode />} />
+                <Route path="/setup/location" element={<SetupLocation />} />
+                <Route path="/setup/calculation" element={<SetupCalculation />} />
+                <Route path="/setup/pairing" element={<SetupPairing />} />
+                <Route path="/setup/complete" element={<SetupComplete />} />
+                
+                {/* Web Dashboard */}
+                <Route path="/dashboard/login" element={<DashboardLogin />} />
+                <Route path="/dashboard" element={<DashboardHome />} />
+                <Route path="/dashboard/devices" element={<DashboardDevices />} />
+                <Route path="/dashboard/devices/:deviceId" element={<DashboardDeviceSettings />} />
+                <Route path="/dashboard/pair" element={<DashboardPair />} />
+                <Route path="/dashboard/settings" element={<DashboardSettings />} />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AppProvider>
+    </I18nProvider>
   </QueryClientProvider>
 );
 
