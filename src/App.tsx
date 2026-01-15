@@ -33,6 +33,14 @@ const DownloadsSettings = lazy(() => import("./pages/settings/DownloadsSettings"
 const TestingSettings = lazy(() => import("./pages/settings/TestingSettings"));
 const IqamahSettings = lazy(() => import("./pages/settings/IqamahSettings"));
 
+// Dashboard pages
+const DashboardLogin = lazy(() => import("./pages/dashboard/DashboardLogin"));
+const DashboardHome = lazy(() => import("./pages/dashboard/DashboardHome"));
+const DashboardDevices = lazy(() => import("./pages/dashboard/DashboardDevices"));
+const DashboardDeviceSettings = lazy(() => import("./pages/dashboard/DashboardDeviceSettings"));
+const DashboardPair = lazy(() => import("./pages/dashboard/DashboardPair"));
+const DashboardSettings = lazy(() => import("./pages/dashboard/DashboardSettings"));
+
 const queryClient = new QueryClient();
 
 const LoadingFallback = () => (
@@ -73,6 +81,14 @@ const App = () => (
               <Route path="/setup/calculation" element={<SetupCalculation />} />
               <Route path="/setup/pairing" element={<SetupPairing />} />
               <Route path="/setup/complete" element={<SetupComplete />} />
+              
+              {/* Web Dashboard */}
+              <Route path="/dashboard/login" element={<DashboardLogin />} />
+              <Route path="/dashboard" element={<DashboardHome />} />
+              <Route path="/dashboard/devices" element={<DashboardDevices />} />
+              <Route path="/dashboard/devices/:deviceId" element={<DashboardDeviceSettings />} />
+              <Route path="/dashboard/pair" element={<DashboardPair />} />
+              <Route path="/dashboard/settings" element={<DashboardSettings />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
