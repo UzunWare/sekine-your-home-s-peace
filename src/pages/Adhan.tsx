@@ -6,37 +6,57 @@ import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { Volume2, VolumeX, SkipForward } from 'lucide-react';
 import { adhanStyles } from '@/data/reciters';
 
+type PlaybackPhase = 'adhan' | 'dua';
+
 const Adhan = () => {
   const navigate = useNavigate();
   const { settings } = useApp();
   const { nextPrayer } = usePrayerTimes();
   const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [phase, setPhase] = useState<PlaybackPhase>('adhan');
   const [isComplete, setIsComplete] = useState(false);
 
   const currentAdhanStyle = adhanStyles.find(s => s.id === settings.adhan.style) || adhanStyles[0];
-  const duration = 180; // 3 minutes mock duration
+  
+  // Duration for each phase (in seconds)
+  const adhanDuration = 180; // 3 minutes for adhan
+  const duaDuration = 45; // 45 seconds for dua
+  const currentDuration = phase === 'adhan' ? adhanDuration : duaDuration;
 
   useTVNavigation({
     onBack: () => navigate('/idle'),
   });
 
-  // Simulate adhan playback
+  // Handle playback progress
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= duration) {
-          setIsComplete(true);
-          return duration;
+        if (prev >= currentDuration) {
+          // Phase complete
+          if (phase === 'adhan') {
+            // Check if dua should play
+            if (settings.adhan.duaAfterAdhan) {
+              setPhase('dua');
+              return 0; // Reset progress for dua
+            } else {
+              setIsComplete(true);
+              return currentDuration;
+            }
+          } else {
+            // Dua complete
+            setIsComplete(true);
+            return currentDuration;
+          }
         }
         return prev + 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [duration]);
+  }, [currentDuration, phase, settings.adhan.duaAfterAdhan]);
 
-  // Handle completion
+  // Handle completion - navigate after everything finishes
   useEffect(() => {
     if (isComplete) {
       const timer = setTimeout(() => {
@@ -81,27 +101,42 @@ const Adhan = () => {
           {prayer.name}
         </h2>
 
-        {/* Time */}
+        {/* Status */}
         <p className="text-4xl sm:text-5xl lg:text-6xl font-light tabular-nums mb-2 sm:mb-4">{prayer.time}</p>
-        <p className="text-lg sm:text-xl text-primary mb-6 sm:mb-12">It's time to pray</p>
+        <p className="text-lg sm:text-xl text-primary mb-6 sm:mb-12">
+          {phase === 'adhan' ? "It's time to pray" : 'Dua After Adhan'}
+        </p>
+
+        {/* Phase indicator */}
+        {settings.adhan.duaAfterAdhan && (
+          <div className="flex items-center gap-3 mb-4">
+            <span className={`text-sm ${phase === 'adhan' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+              Adhan
+            </span>
+            <div className="h-px w-8 bg-muted-foreground/30" />
+            <span className={`text-sm ${phase === 'dua' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+              Dua
+            </span>
+          </div>
+        )}
 
         {/* Progress bar */}
         <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md mb-4 sm:mb-8">
           <div className="flex justify-between text-xs sm:text-sm text-muted-foreground mb-2">
             <span>{formatTime(progress)}</span>
-            <span>{formatTime(duration)}</span>
+            <span>{formatTime(currentDuration)}</span>
           </div>
           <div className="h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">
             <div 
               className="h-full bg-primary transition-all duration-1000"
-              style={{ width: `${(progress / duration) * 100}%` }}
+              style={{ width: `${(progress / currentDuration) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Reciter info */}
         <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-12">
-          {currentAdhanStyle.name} • {currentAdhanStyle.origin}
+          {phase === 'adhan' ? `${currentAdhanStyle.name} • ${currentAdhanStyle.origin}` : 'اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ...'}
         </p>
 
         {/* Controls */}
