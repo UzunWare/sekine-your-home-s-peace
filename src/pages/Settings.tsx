@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight, Globe, BookOpen, Home, Building2, Sun } from "lucide-react";
+import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight, Globe, BookOpen, Home, Building2, Sun, LayoutGrid } from "lucide-react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
 import { useApp } from "@/contexts/AppContext";
 import { useLanguage, SUPPORTED_LANGUAGES } from "@/lib/i18n";
@@ -79,6 +79,18 @@ const Settings = () => {
       route: "/settings/display",
       color: "text-gold",
       bgColor: "bg-gold/10",
+    },
+    {
+      icon: LayoutGrid,
+      title: "Screen Layout",
+      description: settings.display.idleLayout === 'classic' ? 'Classic' 
+        : settings.display.idleLayout === 'split' ? 'Split View'
+        : settings.display.idleLayout === 'minimal' ? 'Minimal'
+        : settings.display.idleLayout === 'prayer-focus' ? 'Prayer Focus'
+        : 'Dashboard',
+      route: "/settings/layout",
+      color: "text-emerald-light",
+      bgColor: "bg-emerald/10",
     },
     {
       icon: Moon,
