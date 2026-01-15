@@ -37,6 +37,7 @@ const defaultSettings: AppSettings = {
     nightMode: false,
     nightModeBrightness: 25,
     idleLayout: 'classic',
+    screensaverLayout: 'classic',
   },
   adhan: {
     enabled: true,
