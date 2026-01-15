@@ -10,7 +10,17 @@ export type CalculationMethod =
   | 'Karachi'
   | 'Tehran'
   | 'Gulf'
-  | 'Kuwait';
+  | 'Kuwait'
+  | 'isna'
+  | 'mwl'
+  | 'egypt'
+  | 'makkah'
+  | 'karachi'
+  | 'tehran'
+  | 'jafari'
+  | 'kuwait'
+  | 'qatar'
+  | 'singapore';
 
 export type AsrJuristic = 'standard' | 'hanafi';
 
@@ -54,6 +64,9 @@ export interface DisplaySettings {
   showCentralQuote: boolean;
   screensaverTimeout: ScreensaverTimeout;
   backgroundImageUrl: string | null;
+  oledProtection: boolean;
+  nightMode: boolean;
+  nightModeBrightness: number;
 }
 
 export interface AdhanSettings {

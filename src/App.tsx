@@ -32,6 +32,10 @@ const AdhanSettings = lazy(() => import("./pages/settings/AdhanSettings"));
 const DownloadsSettings = lazy(() => import("./pages/settings/DownloadsSettings"));
 const TestingSettings = lazy(() => import("./pages/settings/TestingSettings"));
 const IqamahSettings = lazy(() => import("./pages/settings/IqamahSettings"));
+const LocationSettings = lazy(() => import("./pages/settings/LocationSettings"));
+const CalculationSettings = lazy(() => import("./pages/settings/CalculationSettings"));
+const DisplaySettings = lazy(() => import("./pages/settings/DisplaySettings"));
+const NightModeSettings = lazy(() => import("./pages/settings/NightModeSettings"));
 
 // Dashboard pages
 const DashboardLogin = lazy(() => import("./pages/dashboard/DashboardLogin"));
@@ -75,6 +79,10 @@ const App = () => (
               <Route path="/settings/downloads" element={<DownloadsSettings />} />
               <Route path="/settings/testing" element={<TestingSettings />} />
               <Route path="/settings/iqamah" element={<IqamahSettings />} />
+              <Route path="/settings/location" element={<LocationSettings />} />
+              <Route path="/settings/calculation" element={<CalculationSettings />} />
+              <Route path="/settings/display" element={<DisplaySettings />} />
+              <Route path="/settings/night" element={<NightModeSettings />} />
               
               {/* Setup wizard */}
               <Route path="/setup" element={<SetupWelcome />} />
