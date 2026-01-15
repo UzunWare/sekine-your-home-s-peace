@@ -31,6 +31,9 @@ const defaultSettings: AppSettings = {
     showCentralQuote: true,
     screensaverTimeout: '5m',
     backgroundImageUrl: null,
+    oledProtection: true,
+    nightMode: false,
+    nightModeBrightness: 25,
   },
   adhan: {
     style: 'makkah',

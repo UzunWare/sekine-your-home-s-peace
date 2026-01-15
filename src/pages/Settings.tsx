@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight } from "lucide-react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
+import { useApp } from "@/contexts/AppContext";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { settings } = useApp();
 
   useTVNavigation({
     onBack: () => navigate('/idle'),
@@ -13,7 +15,7 @@ const Settings = () => {
     {
       icon: MapPin,
       title: "Location",
-      description: "London, United Kingdom",
+      description: `${settings.location.city || 'Not set'}, ${settings.location.country || 'Select location'}`,
       route: "/settings/location",
       color: "text-gold",
       bgColor: "bg-gold/10",
@@ -21,7 +23,7 @@ const Settings = () => {
     {
       icon: Calculator,
       title: "Calculation Method",
-      description: "ISNA (North America)",
+      description: settings.prayer.calculationMethod || "ISNA (North America)",
       route: "/settings/calculation",
       color: "text-teal",
       bgColor: "bg-teal/10",
@@ -29,7 +31,7 @@ const Settings = () => {
     {
       icon: Volume2,
       title: "Adhan Settings",
-      description: "Mishary Rashid Alafasy • Volume 75%",
+      description: `Volume ${settings.adhan.volume}%`,
       route: "/settings/adhan",
       color: "text-gold",
       bgColor: "bg-gold/10",
@@ -53,7 +55,7 @@ const Settings = () => {
     {
       icon: Moon,
       title: "Night Mode",
-      description: "Dim display during night hours",
+      description: settings.display.nightMode ? "Enabled" : "Disabled",
       route: "/settings/night",
       color: "text-teal",
       bgColor: "bg-teal/10",
@@ -82,7 +84,7 @@ const Settings = () => {
       {/* Content - Simple list for easy D-pad navigation */}
       <main className="flex-1 overflow-auto py-6 sm:py-8 lg:py-10">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 space-y-3 sm:space-y-4">
-          {settingsGroups.map((item, index) => (
+          {settingsGroups.map((item) => (
             <button
               key={item.title}
               data-focusable="true"
@@ -118,7 +120,7 @@ const Settings = () => {
                 Device Pairing
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground truncate">
-                Connect to web dashboard for remote control
+                {settings.device.isPaired ? `Paired as ${settings.device.deviceName}` : 'Connect to web dashboard'}
               </p>
             </div>
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-foreground group-focus:text-primary transition-colors" />
