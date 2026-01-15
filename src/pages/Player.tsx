@@ -386,11 +386,11 @@ const Player = () => {
 
           {/* Main controls - Responsive sizing */}
           <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-6">
-            {/* Repeat - Hidden on very small screens */}
+            {/* Repeat */}
             <button
               data-focusable="true"
               onClick={cycleRepeatMode}
-              className={`hidden xs:flex p-2 sm:p-3 rounded-full transition-all focus:ring-2 focus:ring-primary ${
+              className={`p-2 sm:p-3 rounded-full transition-all focus:ring-2 focus:ring-primary ${
                 repeatMode !== 'off' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
               }`}
               title={repeatMode === 'off' ? t('player.repeatOff') : repeatMode === 'one' ? t('player.repeatOne') : t('player.repeatAll')}
