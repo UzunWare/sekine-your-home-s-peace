@@ -27,6 +27,9 @@ const Idle = () => {
   const [quoteOfTheDay] = useState(() => getQuoteOfTheDay());
   const [lastActivity, setLastActivity] = useState(Date.now());
 
+  // Check if mini player is showing
+  const isMiniPlayerVisible = playerState.isMinimized && playerState.currentTrack;
+
   useTVNavigation({
     onBack: () => navigate('/settings'),
   });
@@ -95,7 +98,7 @@ const Idle = () => {
       )}
 
       {/* Main content */}
-      <div className="relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 lg:p-12">
+      <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
         {/* Header */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4">
           <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
@@ -205,10 +208,12 @@ const Idle = () => {
       {/* Mini Player */}
       <MiniPlayer />
 
-      {/* Footer brand */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-        <p className="text-xs text-muted-foreground/50">Sekine TV • Tranquility for your home</p>
-      </div>
+      {/* Footer brand - hide when mini player is visible */}
+      {!isMiniPlayerVisible && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+          <p className="text-xs text-muted-foreground/50">Sekine TV • Tranquility for your home</p>
+        </div>
+      )}
     </div>
   );
 };
