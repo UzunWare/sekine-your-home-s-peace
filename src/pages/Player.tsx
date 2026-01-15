@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { useTranslation, useLanguage } from '@/lib/i18n';
 import { useQuranPlayer } from '@/hooks/useQuranAPI';
 import { RECITERS_INFO } from '@/lib/quranAPI';
+import { getSurahBackground } from '@/lib/surahBackgrounds';
 import { 
   Play, Pause, SkipBack, SkipForward, Repeat, Repeat1, 
   Minimize2, Square, Volume2, Loader2, AlertCircle, ChevronLeft, ChevronRight
@@ -43,6 +44,9 @@ const Player = () => {
   // Get current verse
   const currentVerse = verses[currentVerseIndex];
   const reciterInfo = RECITERS_INFO[reciterId] || { name: reciterId, arabicName: '' };
+  
+  // Get contextual background image based on surah theme
+  const backgroundImage = useMemo(() => getSurahBackground(surahNumber), [surahNumber]);
 
   useTVNavigation({
     onBack: () => handleMinimize(),
@@ -249,8 +253,19 @@ const Player = () => {
         onEnded={handleEnded}
       />
 
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
+      {/* Contextual background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+        style={{ 
+          backgroundImage: `url(${backgroundImage})`,
+          opacity: 0.25 
+        }}
+      />
+      
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background/95" />
+      
+      {/* Subtle pattern overlay */}
       <div className="absolute inset-0 pattern-overlay opacity-5" />
 
       {/* Content - Full height flex container */}
