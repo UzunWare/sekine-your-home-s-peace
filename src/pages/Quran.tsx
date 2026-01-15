@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Play, Pause, SkipForward, SkipBack, Volume2, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { useTVNavigation } from "@/hooks/useTVNavigation";
 
 const reciters = [
   { id: "mishary", name: "Mishary Rashid Alafasy" },
@@ -23,22 +24,29 @@ const surahs = [
 ];
 
 const Quran = () => {
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSurah, setSelectedSurah] = useState(surahs[0]);
   const [selectedReciter, setSelectedReciter] = useState(reciters[0].id);
+
+  useTVNavigation({
+    onBack: () => navigate('/idle'),
+    onPlayPause: () => setIsPlaying(!isPlaying),
+  });
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/idle')}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground focus:ring-2 focus:ring-primary focus:outline-none rounded-lg px-2 py-1 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back</span>
-          </Link>
+          </button>
           <div className="h-6 w-px bg-border" />
           <h1 className="text-xl font-semibold text-foreground">Quran Recitation</h1>
         </div>
@@ -67,7 +75,7 @@ const Quran = () => {
 
             {/* Progress bar */}
             <div className="w-full max-w-md space-y-2">
-              <Slider defaultValue={[33]} max={100} step={1} className="w-full" />
+              <Slider data-focusable="true" defaultValue={[33]} max={100} step={1} className="w-full focus:ring-2 focus:ring-primary" />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>2:34</span>
                 <span>7:45</span>
@@ -76,12 +84,16 @@ const Quran = () => {
 
             {/* Controls */}
             <div className="flex items-center gap-4">
-              <button className="p-3 rounded-full hover:bg-muted/50 transition-colors">
+              <button
+                data-focusable="true"
+                className="p-3 rounded-full hover:bg-muted/50 focus:ring-2 focus:ring-primary focus:outline-none transition-colors"
+              >
                 <SkipBack className="w-6 h-6 text-foreground" />
               </button>
               <button
+                data-focusable="true"
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="p-4 rounded-full gradient-gold gold-glow hover:scale-105 transition-transform"
+                className="p-4 rounded-full gradient-gold gold-glow hover:scale-105 focus:ring-4 focus:ring-primary/50 focus:outline-none transition-transform"
               >
                 {isPlaying ? (
                   <Pause className="w-8 h-8 text-primary-foreground" />
@@ -89,7 +101,10 @@ const Quran = () => {
                   <Play className="w-8 h-8 text-primary-foreground ml-1" />
                 )}
               </button>
-              <button className="p-3 rounded-full hover:bg-muted/50 transition-colors">
+              <button
+                data-focusable="true"
+                className="p-3 rounded-full hover:bg-muted/50 focus:ring-2 focus:ring-primary focus:outline-none transition-colors"
+              >
                 <SkipForward className="w-6 h-6 text-foreground" />
               </button>
             </div>
@@ -97,7 +112,7 @@ const Quran = () => {
             {/* Volume */}
             <div className="flex items-center gap-3 w-full max-w-xs">
               <Volume2 className="w-5 h-5 text-muted-foreground" />
-              <Slider defaultValue={[70]} max={100} step={1} className="flex-1" />
+              <Slider data-focusable="true" defaultValue={[70]} max={100} step={1} className="flex-1 focus:ring-2 focus:ring-primary" />
             </div>
           </div>
         </section>
@@ -106,7 +121,7 @@ const Quran = () => {
         <section className="glass-card p-6 space-y-4">
           <h3 className="text-lg font-medium text-foreground">Reciter</h3>
           <Select value={selectedReciter} onValueChange={setSelectedReciter}>
-            <SelectTrigger className="w-full bg-muted/50 border-border/50">
+            <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -126,8 +141,9 @@ const Quran = () => {
             {surahs.map((surah) => (
               <button
                 key={surah.number}
+                data-focusable="true"
                 onClick={() => setSelectedSurah(surah)}
-                className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
+                className={`flex items-center gap-4 p-4 rounded-xl transition-all focus:ring-2 focus:ring-primary focus:outline-none ${
                   selectedSurah.number === surah.number
                     ? "bg-gold/10 border border-gold/30"
                     : "bg-muted/30 hover:bg-muted/50"

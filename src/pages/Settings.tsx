@@ -1,22 +1,30 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { useTVNavigation } from "@/hooks/useTVNavigation";
 
 const Settings = () => {
+  const navigate = useNavigate();
+
+  useTVNavigation({
+    onBack: () => navigate('/idle'),
+  });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Link
-            to="/idle"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/idle')}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground focus:ring-2 focus:ring-primary focus:outline-none rounded-lg px-2 py-1 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back</span>
-          </Link>
+          </button>
           <div className="h-6 w-px bg-border" />
           <h1 className="text-xl font-semibold text-foreground">Settings</h1>
         </div>
@@ -37,7 +45,7 @@ const Settings = () => {
           </div>
           <div className="space-y-3">
             <Select defaultValue="london">
-              <SelectTrigger className="w-full bg-muted/50 border-border/50">
+              <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
                 <SelectValue placeholder="Select city" />
               </SelectTrigger>
               <SelectContent>
@@ -63,7 +71,7 @@ const Settings = () => {
             </div>
           </div>
           <Select defaultValue="isna">
-            <SelectTrigger className="w-full bg-muted/50 border-border/50">
+            <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
               <SelectValue placeholder="Select method" />
             </SelectTrigger>
             <SelectContent>
@@ -95,14 +103,14 @@ const Settings = () => {
                 <p className="text-foreground">Enable Adhan</p>
                 <p className="text-sm text-muted-foreground">Play Adhan at prayer times</p>
               </div>
-              <Switch defaultChecked />
+              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
             </div>
 
             {/* Adhan Reciter */}
             <div className="space-y-2">
               <p className="text-foreground">Adhan Reciter</p>
               <Select defaultValue="mishary">
-                <SelectTrigger className="w-full bg-muted/50 border-border/50">
+                <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
                   <SelectValue placeholder="Select reciter" />
                 </SelectTrigger>
                 <SelectContent>
@@ -120,7 +128,7 @@ const Settings = () => {
                 <p className="text-foreground">Volume</p>
                 <span className="text-sm text-muted-foreground">75%</span>
               </div>
-              <Slider defaultValue={[75]} max={100} step={1} className="w-full" />
+              <Slider data-focusable="true" defaultValue={[75]} max={100} step={1} className="w-full focus:ring-2 focus:ring-primary" />
             </div>
           </div>
         </section>
@@ -142,7 +150,7 @@ const Settings = () => {
               <div key={prayer} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <span className="text-foreground">{prayer}</span>
                 <Select defaultValue="15">
-                  <SelectTrigger className="w-20 bg-muted/50 border-border/50">
+                  <SelectTrigger data-focusable="true" className="w-20 bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -176,7 +184,7 @@ const Settings = () => {
                 <p className="text-foreground">Screen Burn Protection</p>
                 <p className="text-sm text-muted-foreground">Subtle element movement for OLED TVs</p>
               </div>
-              <Switch defaultChecked />
+              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
             </div>
 
             <div className="flex items-center justify-between">
@@ -184,7 +192,7 @@ const Settings = () => {
                 <p className="text-foreground">Show Seconds</p>
                 <p className="text-sm text-muted-foreground">Display seconds in the clock</p>
               </div>
-              <Switch defaultChecked />
+              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
             </div>
 
             <div className="flex items-center justify-between">
@@ -192,7 +200,7 @@ const Settings = () => {
                 <p className="text-foreground">Background Slideshow</p>
                 <p className="text-sm text-muted-foreground">Rotate background images</p>
               </div>
-              <Switch defaultChecked />
+              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
             </div>
 
             {/* Screensaver Timeout */}
@@ -202,7 +210,7 @@ const Settings = () => {
                 <p className="text-sm text-muted-foreground">Time before screensaver activates</p>
               </div>
               <Select defaultValue="5m">
-                <SelectTrigger className="w-full bg-muted/50 border-border/50">
+                <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
                   <SelectValue placeholder="Select timeout" />
                 </SelectTrigger>
                 <SelectContent>
@@ -234,8 +242,30 @@ const Settings = () => {
               <p className="text-foreground">Enable Night Mode</p>
               <p className="text-sm text-muted-foreground">Automatically dim after Isha</p>
             </div>
-            <Switch />
+            <Switch data-focusable="true" className="focus:ring-2 focus:ring-primary" />
           </div>
+        </section>
+
+        {/* Pairing Section */}
+        <section className="glass-card p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gold/10">
+              <Monitor className="w-5 h-5 text-gold" />
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-foreground">Device Pairing</h2>
+              <p className="text-sm text-muted-foreground">Connect to web dashboard for remote control</p>
+            </div>
+          </div>
+
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/pairing')}
+            className="w-full px-6 py-4 bg-primary/10 border border-primary/30 rounded-xl hover:bg-primary/20 focus:ring-2 focus:ring-primary focus:outline-none transition-all text-left"
+          >
+            <span className="text-foreground">Pair Device</span>
+            <p className="text-sm text-muted-foreground mt-1">Connect this TV to your account</p>
+          </button>
         </section>
       </main>
     </div>

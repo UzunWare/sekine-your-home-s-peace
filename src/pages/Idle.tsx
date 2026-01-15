@@ -203,9 +203,10 @@ const Idle = () => {
 
       {/* Floating player bar */}
       {playerState.isMinimized && playerState.currentTrack && (
-        <div 
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-card/95 backdrop-blur-xl border-t border-border cursor-pointer"
+        <button
+          data-focusable="true"
           onClick={() => navigate('/player')}
+          className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-card/95 backdrop-blur-xl border-t border-border cursor-pointer focus:ring-2 focus:ring-primary focus:outline-none"
         >
           <div className="flex items-center gap-4 max-w-4xl mx-auto">
             <span className="text-primary">{playerState.currentTrack.title}</span>
@@ -213,7 +214,7 @@ const Idle = () => {
               <div className="h-full bg-primary" style={{ width: `${(playerState.progress / playerState.duration) * 100}%` }} />
             </div>
           </div>
-        </div>
+        </button>
       )}
 
       {/* Footer brand */}
