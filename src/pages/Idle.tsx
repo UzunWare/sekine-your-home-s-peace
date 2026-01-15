@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { usePrayerTimes } from '@/hooks/usePrayerTimes';
@@ -7,16 +7,57 @@ import BackgroundSlideshow from '@/components/BackgroundSlideshow';
 import { MapPin, Settings, BookOpen, Volume2, WifiOff } from 'lucide-react';
 import { quotes } from '@/data/quotes';
 
+const getTimeoutMs = (timeout: string): number | null => {
+  switch (timeout) {
+    case '20s': return 20 * 1000;
+    case '1m': return 60 * 1000;
+    case '5m': return 5 * 60 * 1000;
+    case '10m': return 10 * 60 * 1000;
+    case 'disabled': return null;
+    default: return 5 * 60 * 1000; // Default 5 minutes
+  }
+};
+
 const Idle = () => {
   const navigate = useNavigate();
   const { settings, appState, playerState } = useApp();
   const { prayers, hijriDate, nextPrayer, timeUntilNextPrayer } = usePrayerTimes();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentQuote, setCurrentQuote] = useState(quotes[0]);
+  const [lastActivity, setLastActivity] = useState(Date.now());
 
   useTVNavigation({
     onBack: () => navigate('/settings'),
   });
+
+  // Reset activity on any user interaction
+  const resetActivity = useCallback(() => {
+    setLastActivity(Date.now());
+  }, []);
+
+  // Listen for any user activity
+  useEffect(() => {
+    const events = ['keydown', 'mousemove', 'mousedown', 'touchstart', 'click'];
+    events.forEach(event => window.addEventListener(event, resetActivity));
+    return () => {
+      events.forEach(event => window.removeEventListener(event, resetActivity));
+    };
+  }, [resetActivity]);
+
+  // Screensaver timeout
+  useEffect(() => {
+    const timeoutMs = getTimeoutMs(settings.display.screensaverTimeout);
+    if (!timeoutMs) return; // Screensaver disabled
+
+    const checkTimeout = setInterval(() => {
+      const elapsed = Date.now() - lastActivity;
+      if (elapsed >= timeoutMs) {
+        navigate('/screensaver');
+      }
+    }, 1000);
+
+    return () => clearInterval(checkTimeout);
+  }, [lastActivity, settings.display.screensaverTimeout, navigate]);
 
   // Update time every second
   useEffect(() => {
