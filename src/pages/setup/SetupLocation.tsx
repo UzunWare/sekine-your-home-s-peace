@@ -56,69 +56,69 @@ const SetupLocation = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-background flex flex-col p-12">
+    <div className="fixed inset-0 bg-background flex flex-col p-6 sm:p-8 lg:p-12">
       {/* Progress indicator */}
-      <div className="absolute top-12 right-12 flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Step 3 of 6</span>
+      <div className="absolute top-6 sm:top-8 lg:top-12 right-6 sm:right-8 lg:right-12 flex items-center gap-2">
+        <span className="text-xs sm:text-sm text-muted-foreground">Step 3 of 6</span>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5, 6].map((step) => (
             <div
               key={step}
-              className={`w-2 h-2 rounded-full ${step <= 3 ? 'bg-primary' : 'bg-muted'}`}
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${step <= 3 ? 'bg-primary' : 'bg-muted'}`}
             />
           ))}
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col items-center pt-16 max-w-4xl mx-auto w-full">
-        <MapPin className="w-12 h-12 text-primary mb-4" />
-        <h1 className="text-4xl font-light mb-4">Set Your Location</h1>
-        <p className="text-lg text-muted-foreground mb-8">
+      <div className="flex-1 flex flex-col items-center pt-12 sm:pt-16 max-w-3xl lg:max-w-4xl mx-auto w-full">
+        <MapPin className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-primary mb-2 sm:mb-4" />
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light mb-2 sm:mb-4">Set Your Location</h1>
+        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-4 sm:mb-6 lg:mb-8">
           Select your city for accurate prayer times
         </p>
 
         {/* Search */}
-        <div className="relative w-full max-w-lg mb-8">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <div className="relative w-full max-w-md lg:max-w-lg mb-4 sm:mb-6 lg:mb-8">
+          <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for a city..."
-            className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 bg-card border border-border rounded-lg sm:rounded-xl text-sm sm:text-base lg:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
             data-focusable="true"
           />
         </div>
 
         {/* City grid */}
         <div className="flex-1 w-full overflow-auto">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {filteredCities.map((city) => (
               <button
                 key={city.city}
                 data-focusable="true"
                 onClick={() => handleCitySelect(city)}
-                className={`p-6 rounded-xl border-2 transition-all text-left ${
+                className={`p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl border-2 transition-all text-left ${
                   selectedCity?.city === city.city
                     ? 'border-primary bg-primary/10'
                     : 'border-border bg-card hover:border-primary/50'
                 } focus:ring-2 focus:ring-primary`}
               >
-                <h3 className="text-xl font-medium">{city.city}</h3>
-                <p className="text-sm text-muted-foreground">{city.country}</p>
+                <h3 className="text-base sm:text-lg lg:text-xl font-medium">{city.city}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">{city.country}</p>
               </button>
             ))}
           </div>
         </div>
 
         {/* Continue button */}
-        <div className="pt-8">
+        <div className="pt-4 sm:pt-6 lg:pt-8">
           <button
             data-focusable="true"
             onClick={handleContinue}
             disabled={!selectedCity}
-            className={`px-12 py-4 text-lg rounded-full transition-all ${
+            className={`px-8 sm:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg rounded-full transition-all ${
               selectedCity
                 ? 'bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-4 focus:ring-primary/50'
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
