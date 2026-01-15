@@ -279,3 +279,54 @@
     text-shadow: 0 2px 10px hsl(0 0% 0% / 0.5);
   }
 }
+
+/* TV Focus States - Enhanced for immediate visual feedback */
+@layer components {
+  /* Global focus style for all focusable elements */
+  [data-focusable="true"]:focus {
+    outline: none;
+    box-shadow: 
+      0 0 0 3px hsl(var(--primary) / 0.6),
+      0 0 20px hsl(var(--primary) / 0.4),
+      var(--shadow-card);
+    transform: scale(1.02);
+    transition: all 0.15s ease-out;
+  }
+
+  [data-focusable="true"]:focus-visible {
+    outline: none;
+    box-shadow: 
+      0 0 0 3px hsl(var(--primary) / 0.6),
+      0 0 20px hsl(var(--primary) / 0.4),
+      var(--shadow-card);
+    transform: scale(1.02);
+  }
+
+  /* Subtle focus for glass cards */
+  .glass-card[data-focusable="true"]:focus,
+  .glass-card:has([data-focusable="true"]:focus) {
+    border-color: hsl(var(--primary) / 0.7);
+    background: hsl(var(--primary) / 0.1);
+  }
+
+  /* Focused text highlight */
+  [data-focusable="true"]:focus .group-focus\:text-primary,
+  [data-focusable="true"]:focus-visible .group-focus\:text-primary {
+    color: hsl(var(--primary));
+  }
+
+  /* Remove default focus ring for styled elements */
+  [data-focusable="true"] {
+    @apply transition-all duration-150;
+  }
+
+  /* TV navigation hint pulse */
+  @keyframes focus-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px hsl(var(--primary) / 0.6), 0 0 20px hsl(var(--primary) / 0.4); }
+    50% { box-shadow: 0 0 0 4px hsl(var(--primary) / 0.4), 0 0 30px hsl(var(--primary) / 0.3); }
+  }
+
+  [data-focusable="true"]:focus.animate-focus-pulse {
+    animation: focus-pulse 1.5s ease-in-out infinite;
+  }
+}
