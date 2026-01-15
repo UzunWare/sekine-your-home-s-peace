@@ -47,8 +47,8 @@ const Screensaver = () => {
   const { settings } = useApp();
   const { hijriDate, nextPrayer, timeUntilNextPrayer } = usePrayerTimes();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  const [bgIndex, setBgIndex] = useState(Math.floor(Math.random() * unsplashImages.length));
+  const [quoteIndex, setQuoteIndex] = useState(() => Math.floor(Math.random() * quotes.length));
+  const [bgIndex, setBgIndex] = useState(() => Math.floor(Math.random() * unsplashImages.length));
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -75,13 +75,19 @@ const Screensaver = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Rotate quotes and background together
+  // Rotate quotes and background together - randomly
   const rotateContent = useCallback(() => {
     setIsTransitioning(true);
     
     setTimeout(() => {
-      // Change quote
-      setQuoteIndex(prev => (prev + 1) % quotes.length);
+      // Change quote to a random different quote
+      setQuoteIndex(prev => {
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * quotes.length);
+        } while (newIndex === prev && quotes.length > 1);
+        return newIndex;
+      });
       // Change background to a random different image
       setBgIndex(prev => {
         let newIndex;
