@@ -167,40 +167,47 @@ const Screensaver = () => {
         )}
 
         {/* Center - Quote */}
-        <div className="flex-1 flex items-center justify-center px-16">
+        <div className="flex-1 flex items-center justify-center px-8 md:px-20 lg:px-32">
           <div 
-            className={`max-w-4xl text-center transition-all duration-500 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+            className={`max-w-5xl text-center transition-all duration-700 ease-out ${isTransitioning ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'}`}
           >
+            {/* Arabic Text */}
             {currentQuote.arabic && (
-              <p className="text-4xl md:text-5xl font-arabic text-primary leading-relaxed mb-8 drop-shadow-lg">
+              <p className="text-4xl md:text-5xl lg:text-6xl font-arabic text-primary leading-loose mb-10 drop-shadow-[0_4px_20px_rgba(212,175,55,0.3)]" dir="rtl">
                 {currentQuote.arabic}
               </p>
             )}
-            <p className="text-2xl md:text-3xl text-white/90 font-light italic leading-relaxed drop-shadow-md">
-              "{currentQuote.text}"
-            </p>
-            <div className="flex items-center justify-center gap-3 mt-6">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/50" />
-              <p className="text-lg text-white/50 tracking-wide">
+            
+            {/* English Quote */}
+            <blockquote className="relative">
+              {/* Decorative Opening Quote */}
+              <span className="absolute -top-8 -left-4 md:-left-8 text-7xl md:text-8xl text-primary/20 font-quote leading-none select-none">"</span>
+              
+              <p className="font-quote text-2xl md:text-3xl lg:text-4xl text-white/95 leading-relaxed md:leading-relaxed tracking-wide font-light italic px-6 md:px-12">
+                {currentQuote.text}
+              </p>
+              
+              {/* Decorative Closing Quote */}
+              <span className="absolute -bottom-12 -right-4 md:-right-8 text-7xl md:text-8xl text-primary/20 font-quote leading-none select-none">"</span>
+            </blockquote>
+            
+            {/* Source Attribution */}
+            <div className="flex items-center justify-center gap-4 mt-12">
+              <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+              <p className="font-serif text-lg md:text-xl text-primary/80 tracking-widest uppercase">
                 {currentQuote.source}
               </p>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/50" />
+              <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
             </div>
           </div>
         </div>
 
-        {/* Bottom - Quote Progress Indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-          {quotes.slice(0, Math.min(quotes.length, 10)).map((_, i) => (
-            <div 
-              key={i}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                i === quoteIndex % Math.min(quotes.length, 10)
-                  ? 'bg-primary w-6'
-                  : 'bg-white/30'
-              }`}
-            />
-          ))}
+        {/* Bottom - Subtle Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <div className="flex items-center gap-3 text-white/30 text-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="font-light tracking-wider">Press any key to exit</span>
+          </div>
         </div>
       </div>
 
