@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
-import BackgroundSlideshow from '@/components/BackgroundSlideshow';
 import { MapPin, Settings, BookOpen, Volume2, WifiOff } from 'lucide-react';
-import { quotes } from '@/data/quotes';
+import { getQuoteOfTheDay } from '@/data/dailyQuotes';
+import mosqueBg from '@/assets/mosque-background-1.jpg';
 
 const getTimeoutMs = (timeout: string): number | null => {
   switch (timeout) {
@@ -14,7 +14,7 @@ const getTimeoutMs = (timeout: string): number | null => {
     case '5m': return 5 * 60 * 1000;
     case '10m': return 10 * 60 * 1000;
     case 'disabled': return null;
-    default: return 5 * 60 * 1000; // Default 5 minutes
+    default: return 5 * 60 * 1000;
   }
 };
 
@@ -23,7 +23,7 @@ const Idle = () => {
   const { settings, appState, playerState } = useApp();
   const { prayers, hijriDate, nextPrayer, timeUntilNextPrayer } = usePrayerTimes();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentQuote, setCurrentQuote] = useState(quotes[0]);
+  const [quoteOfTheDay] = useState(() => getQuoteOfTheDay());
   const [lastActivity, setLastActivity] = useState(Date.now());
 
   useTVNavigation({
@@ -47,7 +47,7 @@ const Idle = () => {
   // Screensaver timeout
   useEffect(() => {
     const timeoutMs = getTimeoutMs(settings.display.screensaverTimeout);
-    if (!timeoutMs) return; // Screensaver disabled
+    if (!timeoutMs) return;
 
     const checkTimeout = setInterval(() => {
       const elapsed = Date.now() - lastActivity;
@@ -65,15 +65,6 @@ const Idle = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Rotate quotes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      setCurrentQuote(quotes[randomIndex]);
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
   const formatTime = (date: Date) => {
     if (settings.display.clockFormat === '12h') {
       return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -87,7 +78,12 @@ const Idle = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      <BackgroundSlideshow />
+      {/* Static Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${mosqueBg})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
       
       {/* Offline indicator */}
       {!appState.isOnline && (
@@ -97,8 +93,8 @@ const Idle = () => {
         </div>
       )}
 
-      {/* Main content with drift animation */}
-      <div className="relative z-10 h-full flex flex-col p-12 animate-drift">
+      {/* Main content */}
+      <div className="relative z-10 h-full flex flex-col p-12">
         {/* Header */}
         <header className="flex justify-between items-start">
           <div className="flex items-center gap-3 px-6 py-3 glass-card">
@@ -136,7 +132,7 @@ const Idle = () => {
             <p className="text-2xl text-muted-foreground mt-4">{formatDate(currentTime)}</p>
             {settings.display.showHijriDate && hijriDate && (
               <p className="text-xl text-primary mt-2 font-arabic">
-                {hijriDate.day} {hijriDate.month} {hijriDate.year} AH
+                {hijriDate.day} {hijriDate.month} {hijriDate.year} هـ
               </p>
             )}
           </div>
@@ -153,14 +149,23 @@ const Idle = () => {
             </div>
           )}
 
-          {/* Quote */}
+          {/* Quote of the Day */}
           {settings.display.showCentralQuote && (
-            <div className="max-w-3xl text-center mt-8 animate-fade-in">
-              {currentQuote.arabic && (
-                <p className="text-3xl font-arabic text-primary mb-4 leading-relaxed">{currentQuote.arabic}</p>
+            <div className="max-w-4xl text-center mt-8">
+              <p className="text-xs uppercase tracking-[0.3em] text-primary/60 mb-6">Quote of the Day</p>
+              {quoteOfTheDay.arabic && (
+                <p className="text-3xl md:text-4xl font-arabic text-primary mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(212,175,55,0.2)]" dir="rtl">
+                  {quoteOfTheDay.arabic}
+                </p>
               )}
-              <p className="text-xl text-foreground/90 italic">"{currentQuote.text}"</p>
-              <p className="text-sm text-muted-foreground mt-3">— {currentQuote.source}</p>
+              <blockquote className="relative">
+                <p className="font-quote text-xl md:text-2xl text-foreground/90 italic leading-relaxed px-8">
+                  "{quoteOfTheDay.text}"
+                </p>
+              </blockquote>
+              <p className="text-sm text-muted-foreground mt-4 font-serif tracking-wide">
+                — {quoteOfTheDay.source}
+              </p>
             </div>
           )}
 
