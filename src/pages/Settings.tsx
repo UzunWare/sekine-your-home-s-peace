@@ -1,8 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight } from "lucide-react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
 
 const Settings = () => {
@@ -12,262 +9,131 @@ const Settings = () => {
     onBack: () => navigate('/idle'),
   });
 
+  const settingsGroups = [
+    {
+      icon: MapPin,
+      title: "Location",
+      description: "London, United Kingdom",
+      route: "/settings/location",
+      color: "text-gold",
+      bgColor: "bg-gold/10",
+    },
+    {
+      icon: Calculator,
+      title: "Calculation Method",
+      description: "ISNA (North America)",
+      route: "/settings/calculation",
+      color: "text-teal",
+      bgColor: "bg-teal/10",
+    },
+    {
+      icon: Volume2,
+      title: "Adhan Settings",
+      description: "Mishary Rashid Alafasy • Volume 75%",
+      route: "/settings/adhan",
+      color: "text-gold",
+      bgColor: "bg-gold/10",
+    },
+    {
+      icon: Bell,
+      title: "Iqamah Countdown",
+      description: "Configure delays for each prayer",
+      route: "/settings/iqamah",
+      color: "text-teal",
+      bgColor: "bg-teal/10",
+    },
+    {
+      icon: Monitor,
+      title: "Display Settings",
+      description: "Screen, clock format, screensaver",
+      route: "/settings/display",
+      color: "text-gold",
+      bgColor: "bg-gold/10",
+    },
+    {
+      icon: Moon,
+      title: "Night Mode",
+      description: "Dim display during night hours",
+      route: "/settings/night",
+      color: "text-teal",
+      bgColor: "bg-teal/10",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="fixed inset-0 bg-background flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
+      <header className="border-b border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-4 sm:py-6 flex items-center gap-4">
           <button
             data-focusable="true"
+            autoFocus
             onClick={() => navigate('/idle')}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground focus:ring-2 focus:ring-primary focus:outline-none rounded-lg px-2 py-1 transition-colors"
+            className="flex items-center gap-2 sm:gap-3 text-muted-foreground hover:text-foreground focus:ring-2 focus:ring-primary focus:outline-none rounded-lg px-3 py-2 sm:px-4 sm:py-3 transition-colors text-sm sm:text-base lg:text-lg"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
             <span>Back</span>
           </button>
           <div className="h-6 w-px bg-border" />
-          <h1 className="text-xl font-semibold text-foreground">Settings</h1>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-foreground">Settings</h1>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
-        {/* Location Section */}
-        <section className="glass-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gold/10">
-              <MapPin className="w-5 h-5 text-gold" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Location</h2>
-              <p className="text-sm text-muted-foreground">Set your location for accurate prayer times</p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            <Select defaultValue="london">
-              <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
-                <SelectValue placeholder="Select city" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="london">London, United Kingdom</SelectItem>
-                <SelectItem value="dubai">Dubai, UAE</SelectItem>
-                <SelectItem value="istanbul">Istanbul, Turkey</SelectItem>
-                <SelectItem value="cairo">Cairo, Egypt</SelectItem>
-                <SelectItem value="mecca">Mecca, Saudi Arabia</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </section>
-
-        {/* Calculation Method Section */}
-        <section className="glass-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-teal/10">
-              <Calculator className="w-5 h-5 text-teal" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Calculation Method</h2>
-              <p className="text-sm text-muted-foreground">Choose the prayer time calculation method</p>
-            </div>
-          </div>
-          <Select defaultValue="isna">
-            <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
-              <SelectValue placeholder="Select method" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="isna">ISNA (North America)</SelectItem>
-              <SelectItem value="mwl">Muslim World League</SelectItem>
-              <SelectItem value="egypt">Egyptian General Authority</SelectItem>
-              <SelectItem value="makkah">Umm Al-Qura (Makkah)</SelectItem>
-              <SelectItem value="karachi">University of Karachi</SelectItem>
-            </SelectContent>
-          </Select>
-        </section>
-
-        {/* Adhan Settings Section */}
-        <section className="glass-card p-6 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gold/10">
-              <Volume2 className="w-5 h-5 text-gold" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Adhan Settings</h2>
-              <p className="text-sm text-muted-foreground">Configure the call to prayer</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {/* Enable Adhan */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-foreground">Enable Adhan</p>
-                <p className="text-sm text-muted-foreground">Play Adhan at prayer times</p>
+      {/* Content - Simple list for easy D-pad navigation */}
+      <main className="flex-1 overflow-auto py-6 sm:py-8 lg:py-10">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 space-y-3 sm:space-y-4">
+          {settingsGroups.map((item, index) => (
+            <button
+              key={item.title}
+              data-focusable="true"
+              onClick={() => navigate(item.route)}
+              className="w-full glass-card p-4 sm:p-5 lg:p-6 flex items-center gap-4 sm:gap-5 lg:gap-6 hover:bg-card/80 focus:ring-2 focus:ring-primary focus:bg-primary/10 focus:outline-none transition-all text-left group"
+            >
+              <div className={`p-3 sm:p-4 rounded-xl ${item.bgColor}`}>
+                <item.icon className={`w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 ${item.color}`} />
               </div>
-              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
-            </div>
-
-            {/* Adhan Reciter */}
-            <div className="space-y-2">
-              <p className="text-foreground">Adhan Reciter</p>
-              <Select defaultValue="mishary">
-                <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="Select reciter" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="mishary">Mishary Rashid Alafasy</SelectItem>
-                  <SelectItem value="makkah">Makkah Adhan</SelectItem>
-                  <SelectItem value="madinah">Madinah Adhan</SelectItem>
-                  <SelectItem value="abdul-basit">Abdul Basit</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Volume */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-foreground">Volume</p>
-                <span className="text-sm text-muted-foreground">75%</span>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-base sm:text-lg lg:text-xl font-medium text-foreground group-focus:text-primary transition-colors">
+                  {item.title}
+                </h2>
+                <p className="text-sm sm:text-base text-muted-foreground truncate">
+                  {item.description}
+                </p>
               </div>
-              <Slider data-focusable="true" defaultValue={[75]} max={100} step={1} className="w-full focus:ring-2 focus:ring-primary" />
-            </div>
-          </div>
-        </section>
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-foreground group-focus:text-primary transition-colors" />
+            </button>
+          ))}
 
-        {/* Iqamah Settings */}
-        <section className="glass-card p-6 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-teal/10">
-              <Bell className="w-5 h-5 text-teal" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Iqamah Countdown</h2>
-              <p className="text-sm text-muted-foreground">Set time between Adhan and Iqamah</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((prayer) => (
-              <div key={prayer} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                <span className="text-foreground">{prayer}</span>
-                <Select defaultValue="15">
-                  <SelectTrigger data-focusable="true" className="w-20 bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="5">5 min</SelectItem>
-                    <SelectItem value="10">10 min</SelectItem>
-                    <SelectItem value="15">15 min</SelectItem>
-                    <SelectItem value="20">20 min</SelectItem>
-                    <SelectItem value="30">30 min</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Display Settings */}
-        <section className="glass-card p-6 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gold/10">
-              <Monitor className="w-5 h-5 text-gold" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Display Settings</h2>
-              <p className="text-sm text-muted-foreground">Customize the screen appearance</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-foreground">Screen Burn Protection</p>
-                <p className="text-sm text-muted-foreground">Subtle element movement for OLED TVs</p>
-              </div>
-              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-foreground">Show Seconds</p>
-                <p className="text-sm text-muted-foreground">Display seconds in the clock</p>
-              </div>
-              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-foreground">Background Slideshow</p>
-                <p className="text-sm text-muted-foreground">Rotate background images</p>
-              </div>
-              <Switch data-focusable="true" defaultChecked className="focus:ring-2 focus:ring-primary" />
-            </div>
-
-            {/* Screensaver Timeout */}
-            <div className="space-y-2">
-              <div>
-                <p className="text-foreground">Screensaver Timeout</p>
-                <p className="text-sm text-muted-foreground">Time before screensaver activates</p>
-              </div>
-              <Select defaultValue="5m">
-                <SelectTrigger data-focusable="true" className="w-full bg-muted/50 border-border/50 focus:ring-2 focus:ring-primary">
-                  <SelectValue placeholder="Select timeout" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">Disabled</SelectItem>
-                  <SelectItem value="20s">20 seconds</SelectItem>
-                  <SelectItem value="1m">1 minute</SelectItem>
-                  <SelectItem value="5m">5 minutes</SelectItem>
-                  <SelectItem value="10m">10 minutes</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </section>
-
-        {/* Night Mode */}
-        <section className="glass-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-teal/10">
-              <Moon className="w-5 h-5 text-teal" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Night Mode</h2>
-              <p className="text-sm text-muted-foreground">Dim the display during night hours</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-foreground">Enable Night Mode</p>
-              <p className="text-sm text-muted-foreground">Automatically dim after Isha</p>
-            </div>
-            <Switch data-focusable="true" className="focus:ring-2 focus:ring-primary" />
-          </div>
-        </section>
-
-        {/* Pairing Section */}
-        <section className="glass-card p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gold/10">
-              <Monitor className="w-5 h-5 text-gold" />
-            </div>
-            <div>
-              <h2 className="text-lg font-medium text-foreground">Device Pairing</h2>
-              <p className="text-sm text-muted-foreground">Connect to web dashboard for remote control</p>
-            </div>
-          </div>
-
+          {/* Device Pairing - Special item */}
           <button
             data-focusable="true"
             onClick={() => navigate('/pairing')}
-            className="w-full px-6 py-4 bg-primary/10 border border-primary/30 rounded-xl hover:bg-primary/20 focus:ring-2 focus:ring-primary focus:outline-none transition-all text-left"
+            className="w-full glass-card p-4 sm:p-5 lg:p-6 flex items-center gap-4 sm:gap-5 lg:gap-6 hover:bg-card/80 focus:ring-2 focus:ring-primary focus:bg-primary/10 focus:outline-none transition-all text-left group border-primary/30"
           >
-            <span className="text-foreground">Pair Device</span>
-            <p className="text-sm text-muted-foreground mt-1">Connect this TV to your account</p>
+            <div className="p-3 sm:p-4 rounded-xl bg-primary/10">
+              <Monitor className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base sm:text-lg lg:text-xl font-medium text-foreground group-focus:text-primary transition-colors">
+                Device Pairing
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground truncate">
+                Connect to web dashboard for remote control
+              </p>
+            </div>
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-foreground group-focus:text-primary transition-colors" />
           </button>
-        </section>
+        </div>
       </main>
+
+      {/* Footer hint */}
+      <footer className="border-t border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-4 sm:py-5 flex justify-center">
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Use ↑↓ to navigate • SELECT to open • BACK to return
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
