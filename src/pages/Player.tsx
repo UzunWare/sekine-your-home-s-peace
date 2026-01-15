@@ -339,11 +339,11 @@ const Player = () => {
                     className="font-translation text-foreground/90 leading-relaxed italic tracking-wide"
                     style={{ fontSize: 'clamp(1rem, 2.5vw + 0.25rem, 2rem)' }}
                   >
-                    {currentVerse.translations[0].text
+                    "{currentVerse.translations[0].text
                       .replace(/<[^>]*>/g, '') // Remove HTML tags
                       .replace(/\d+/g, '') // Remove verse numbers
                       .replace(/\s+/g, ' ') // Normalize whitespace
-                      .trim()}
+                      .trim()}"
                   </p>
                   <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground/60 font-sans">
                     — {currentVerse.translations[0].resource_name || 'Saheeh International'}
