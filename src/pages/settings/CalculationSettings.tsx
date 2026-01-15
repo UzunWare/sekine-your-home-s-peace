@@ -51,7 +51,7 @@ export default function CalculationSettings() {
       </header>
 
       {/* Info */}
-      <div className="max-w-4xl mx-auto w-full px-6 sm:px-8 lg:px-12 py-4">
+      <div className="max-w-4xl mx-auto w-full px-6 sm:px-8 lg:px-12 pt-4 pb-2">
         <p className="text-sm sm:text-base text-muted-foreground">
           Different calculation methods use varying angles for Fajr and Isha. Choose the one commonly used in your region.
         </p>
@@ -59,7 +59,7 @@ export default function CalculationSettings() {
 
       {/* Method List */}
       <main className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 pb-6 space-y-2">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 pt-4 pb-6 space-y-3">
           {calculationMethods.map((method, index) => {
             const isSelected = settings.prayer.calculationMethod === method.id;
             return (
