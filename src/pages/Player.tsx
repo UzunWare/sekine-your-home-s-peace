@@ -239,7 +239,7 @@ const Player = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-background">
+    <div className="fixed inset-0 bg-background overflow-hidden">
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -253,76 +253,80 @@ const Player = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
       <div className="absolute inset-0 pattern-overlay opacity-5" />
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col">
-        {/* Header - Surah Info */}
-        <header className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-          <div className="flex flex-col gap-1">
+      {/* Content - Full height flex container */}
+      <div className="relative z-10 w-full h-full flex flex-col">
+        {/* Header - Surah Info - Fixed height */}
+        <header className="shrink-0 flex items-center justify-between px-3 py-2 sm:px-6 sm:py-4 lg:px-8 lg:py-5">
+          <div className="flex flex-col gap-0.5 sm:gap-1">
             {chapterInfo && (
               <>
-                <h1 className="text-lg sm:text-xl font-semibold text-foreground">
+                <h1 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground leading-tight">
                   {chapterInfo.name_simple}
                 </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                   {chapterInfo.translated_name?.name} • {chapterInfo.verses_count} {t('quran.verses')}
                 </p>
               </>
             )}
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <span className="px-3 py-1 text-xs bg-primary/20 text-primary rounded-full">
+          <div className="flex flex-col items-end gap-0.5 sm:gap-1">
+            <span className="px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs bg-primary/20 text-primary rounded-full">
               {t('quran.nowPlaying')}
             </span>
-            <span className="text-xs sm:text-sm text-muted-foreground">
+            <span className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
               {reciterInfo.arabicName || reciterInfo.name}
             </span>
           </div>
         </header>
 
-        {/* Main verse display - Centered with flexible space */}
-        <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 overflow-hidden min-h-0">
+        {/* Main verse display - Flexible, takes remaining space */}
+        <main className="flex-1 flex flex-col items-center justify-center px-3 sm:px-6 lg:px-12 xl:px-16 overflow-hidden min-h-0">
           {currentVerse ? (
-            <div className="w-full max-w-5xl text-center space-y-8 sm:space-y-10 lg:space-y-12">
+            <div className="w-full max-w-6xl text-center flex flex-col items-center justify-center gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
               {/* Verse indicator with navigation */}
-              <div className="flex items-center justify-center gap-6">
+              <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6">
                 <button
                   data-focusable="true"
                   onClick={() => skipToVerse('prev')}
                   disabled={currentVerseIndex === 0}
-                  className="p-2 sm:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
+                  className="p-1.5 sm:p-2 lg:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
                 >
-                  <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                 </button>
-                <span className="text-sm sm:text-base text-primary font-medium">
+                <span className="text-xs sm:text-sm lg:text-base text-primary font-medium">
                   {t('quran.verseOf', { current: currentVerse.verse_number, total: verses.length })}
                 </span>
                 <button
                   data-focusable="true"
                   onClick={() => skipToVerse('next')}
                   disabled={currentVerseIndex === verses.length - 1}
-                  className="p-2 sm:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
+                  className="p-1.5 sm:p-2 lg:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
                 >
-                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                 </button>
               </div>
 
-              {/* Arabic text - Large and prominent */}
-              <div className="relative py-4 sm:py-6">
+              {/* Arabic text - Responsive sizing with clamp */}
+              <div className="w-full py-2 sm:py-4 lg:py-6">
                 <p 
-                  className="font-uthmani text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-primary leading-[2] sm:leading-[2.2] text-shadow-gold transition-all duration-500"
+                  className="font-uthmani text-primary leading-[1.8] sm:leading-[2] lg:leading-[2.2] text-shadow-gold transition-all duration-500"
+                  style={{ fontSize: 'clamp(1.5rem, 5vw + 0.5rem, 5rem)' }}
                   dir="rtl"
                 >
                   {currentVerse.text_uthmani}
                 </p>
               </div>
 
-              {/* Translation */}
+              {/* Translation - Responsive sizing */}
               {currentVerse.translations?.[0] && (
-                <div className="space-y-3 max-w-3xl mx-auto">
-                  <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground/80 leading-relaxed font-light">
+                <div className="w-full max-w-4xl space-y-1 sm:space-y-2 lg:space-y-3">
+                  <p 
+                    className="text-foreground/80 leading-relaxed font-light"
+                    style={{ fontSize: 'clamp(0.875rem, 2vw + 0.25rem, 1.75rem)' }}
+                  >
                     {currentVerse.translations[0].text.replace(/<[^>]*>/g, '')}
                   </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground opacity-70">
+                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground opacity-70">
                     — {currentVerse.translations[0].resource_name || 'Saheeh International'}
                   </p>
                 </div>
@@ -330,18 +334,18 @@ const Player = () => {
             </div>
           ) : (
             <div className="text-center text-muted-foreground">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-              <p>{t('common.loading')}</p>
+              <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-2 sm:mb-4" />
+              <p className="text-sm sm:text-base">{t('common.loading')}</p>
             </div>
           )}
         </main>
 
-        {/* Bottom controls container */}
-        <footer className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 bg-gradient-to-t from-background/80 to-transparent backdrop-blur-sm">
+        {/* Bottom controls container - Fixed height */}
+        <footer className="shrink-0 px-3 py-2 sm:px-6 sm:py-4 lg:px-8 lg:py-5 space-y-2 sm:space-y-3 lg:space-y-4 bg-gradient-to-t from-background via-background/90 to-transparent">
           {/* Progress bar */}
-          <div className="w-full max-w-3xl mx-auto">
+          <div className="w-full max-w-2xl lg:max-w-3xl mx-auto">
             <div 
-              className="h-1.5 sm:h-2 bg-muted/50 rounded-full overflow-hidden cursor-pointer group"
+              className="h-1 sm:h-1.5 lg:h-2 bg-muted/50 rounded-full overflow-hidden cursor-pointer group"
               onClick={(e) => {
                 if (audioRef.current) {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -355,27 +359,27 @@ const Player = () => {
                 style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
+            <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground mt-1 sm:mt-2">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
 
-          {/* Main controls */}
-          <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8">
-            {/* Repeat */}
+          {/* Main controls - Responsive sizing */}
+          <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-6">
+            {/* Repeat - Hidden on very small screens */}
             <button
               data-focusable="true"
               onClick={cycleRepeatMode}
-              className={`p-3 rounded-full transition-all focus:ring-2 focus:ring-primary ${
+              className={`hidden xs:flex p-2 sm:p-3 rounded-full transition-all focus:ring-2 focus:ring-primary ${
                 repeatMode !== 'off' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
               }`}
               title={repeatMode === 'off' ? t('player.repeatOff') : repeatMode === 'one' ? t('player.repeatOne') : t('player.repeatAll')}
             >
               {repeatMode === 'one' ? (
-                <Repeat1 className="w-5 h-5" />
+                <Repeat1 className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <Repeat className="w-5 h-5" />
+                <Repeat className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
 
@@ -384,22 +388,22 @@ const Player = () => {
               data-focusable="true"
               onClick={() => skipToVerse('prev')}
               disabled={currentVerseIndex === 0}
-              className="p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
+              className="p-2 sm:p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
             >
-              <SkipBack className="w-6 h-6 sm:w-7 sm:h-7" />
+              <SkipBack className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
             </button>
 
-            {/* Play/Pause - Larger and prominent */}
+            {/* Play/Pause - Prominent */}
             <button
               data-focusable="true"
               autoFocus
               onClick={togglePlayPause}
-              className="p-5 sm:p-6 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all focus:ring-4 focus:ring-primary/30 gold-glow shadow-lg"
+              className="p-4 sm:p-5 lg:p-6 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all focus:ring-4 focus:ring-primary/30 gold-glow shadow-lg"
             >
               {playerState.isPlaying ? (
-                <Pause className="w-8 h-8 sm:w-10 sm:h-10" />
+                <Pause className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10" />
               ) : (
-                <Play className="w-8 h-8 sm:w-10 sm:h-10 ml-1" />
+                <Play className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 ml-0.5 sm:ml-1" />
               )}
             </button>
 
@@ -408,21 +412,21 @@ const Player = () => {
               data-focusable="true"
               onClick={() => skipToVerse('next')}
               disabled={currentVerseIndex === verses.length - 1}
-              className="p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
+              className="p-2 sm:p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
             >
-              <SkipForward className="w-6 h-6 sm:w-7 sm:h-7" />
+              <SkipForward className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
             </button>
 
-            {/* Volume control inline */}
-            <div className="hidden sm:flex items-center gap-2 text-muted-foreground">
-              <Volume2 className="w-5 h-5" />
+            {/* Volume control - Hidden on mobile */}
+            <div className="hidden md:flex items-center gap-2 text-muted-foreground">
+              <Volume2 className="w-4 h-4 lg:w-5 lg:h-5" />
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={volume}
                 onChange={(e) => setVolume(Number(e.target.value))}
-                className="w-20 lg:w-24 accent-primary h-1 cursor-pointer"
+                className="w-16 lg:w-20 xl:w-24 accent-primary h-1 cursor-pointer"
               />
             </div>
 
@@ -430,20 +434,20 @@ const Player = () => {
             <button
               data-focusable="true"
               onClick={handleMinimize}
-              className="p-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary"
+              className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary"
               title={t('player.minimize')}
             >
-              <Minimize2 className="w-5 h-5" />
+              <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Stop */}
             <button
               data-focusable="true"
               onClick={handleStop}
-              className="p-3 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all focus:ring-2 focus:ring-destructive"
+              className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all focus:ring-2 focus:ring-destructive"
               title={t('player.stop')}
             >
-              <Square className="w-5 h-5" />
+              <Square className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </footer>
