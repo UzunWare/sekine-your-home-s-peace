@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, XCircle, Circle, ChevronDown, ChevronUp, Play } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, CheckCircle2, XCircle, Circle, ChevronDown, ChevronUp, Play, RotateCcw } from 'lucide-react';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { Progress } from '@/components/ui/progress';
 
@@ -119,7 +119,9 @@ export default function TestingSettings() {
     }
   });
 
-  useTVNavigation({});
+  useTVNavigation({
+    onBack: () => navigate('/settings'),
+  });
 
   // Persist to localStorage
   useEffect(() => {
@@ -162,122 +164,145 @@ export default function TestingSettings() {
   const StatusIcon = ({ status }: { status: TestStatus }) => {
     switch (status) {
       case 'passed':
-        return <CheckCircle2 className="w-5 h-5 text-green-500" />;
+        return <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />;
       case 'failed':
-        return <XCircle className="w-5 h-5 text-destructive" />;
+        return <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive" />;
       default:
-        return <Circle className="w-5 h-5 text-muted-foreground" />;
+        return <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="fixed inset-0 bg-background flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link
-          to="/settings"
-          className="p-3 rounded-xl bg-card/50 hover:bg-card transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </Link>
-        <h1 className="text-3xl font-bold">QA Testing</h1>
-      </div>
-
-      <div className="max-w-2xl space-y-6">
-        {/* Overall Progress */}
-        <div className="p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">Overall Progress</h3>
-            <span className="text-2xl font-bold text-primary">
-              {getPassedTests()}/{getTotalTests()}
-            </span>
-          </div>
-          <Progress value={(getPassedTests() / getTotalTests()) * 100} className="h-3" />
-          <div className="flex gap-6 mt-4 text-sm">
-            <span className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-green-500" />
-              {getPassedTests()} Passed
-            </span>
-            <span className="flex items-center gap-2">
-              <XCircle className="w-4 h-4 text-destructive" />
-              {getFailedTests()} Failed
-            </span>
-            <span className="flex items-center gap-2">
-              <Circle className="w-4 h-4 text-muted-foreground" />
-              {getTotalTests() - getPassedTests() - getFailedTests()} Untested
-            </span>
-          </div>
+      <header className="border-b border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-4 sm:py-6 flex items-center gap-4">
+          <button
+            data-focusable="true"
+            autoFocus
+            onClick={() => navigate('/settings')}
+            className="flex items-center gap-2 sm:gap-3 text-muted-foreground hover:text-foreground focus:ring-2 focus:ring-primary focus:outline-none rounded-lg px-3 py-2 sm:px-4 sm:py-3 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span>Back</span>
+          </button>
+          <div className="h-6 w-px bg-border" />
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-foreground">QA Testing</h1>
         </div>
+      </header>
 
-        {/* Quick Action */}
-        <button
-          onClick={() => navigate('/adhan')}
-          className="w-full p-4 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center gap-3 hover:bg-primary/30 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <Play className="w-5 h-5 text-primary" />
-          <span className="font-medium">Test Adhan Now</span>
-        </button>
-
-        {/* Test Categories */}
-        <div className="space-y-4">
-          {categories.map((category) => (
-            <div
-              key={category.id}
-              className="rounded-2xl bg-card/30 backdrop-blur-sm border border-border/50 overflow-hidden"
-            >
-              {/* Category Header */}
-              <button
-                onClick={() => toggleCategory(category.id)}
-                className="w-full p-4 flex items-center justify-between hover:bg-card/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="font-medium">{category.name}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {category.tests.filter(t => t.status === 'passed').length}/{category.tests.length}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Progress
-                    value={getCategoryProgress(category)}
-                    className="w-20 h-2"
-                  />
-                  {category.expanded ? (
-                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                  )}
-                </div>
-              </button>
-
-              {/* Tests List */}
-              {category.expanded && (
-                <div className="border-t border-border/30">
-                  {category.tests.map((test) => (
-                    <button
-                      key={test.id}
-                      onClick={() => cycleTestStatus(category.id, test.id)}
-                      className="w-full p-4 flex items-center gap-4 hover:bg-card/30 transition-colors border-b border-border/20 last:border-b-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
-                    >
-                      <StatusIcon status={test.status} />
-                      <span className={`text-sm ${test.status === 'passed' ? 'text-green-500' : test.status === 'failed' ? 'text-destructive' : ''}`}>
-                        {test.description}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
+      {/* Content */}
+      <main className="flex-1 overflow-auto py-4 sm:py-6">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 space-y-4 sm:space-y-6">
+          {/* Overall Progress */}
+          <div className="glass-card p-4 sm:p-5 lg:p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-base sm:text-lg lg:text-xl font-medium">Overall Progress</h3>
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary">
+                {getPassedTests()}/{getTotalTests()}
+              </span>
             </div>
-          ))}
-        </div>
+            <Progress value={(getPassedTests() / getTotalTests()) * 100} className="h-2 sm:h-3" />
+            <div className="flex flex-wrap gap-4 sm:gap-6 mt-4 text-xs sm:text-sm">
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                {getPassedTests()} Passed
+              </span>
+              <span className="flex items-center gap-2">
+                <XCircle className="w-4 h-4 text-destructive" />
+                {getFailedTests()} Failed
+              </span>
+              <span className="flex items-center gap-2">
+                <Circle className="w-4 h-4 text-muted-foreground" />
+                {getTotalTests() - getPassedTests() - getFailedTests()} Untested
+              </span>
+            </div>
+          </div>
 
-        {/* Reset Button */}
-        <button
-          onClick={() => setCategories(initialCategories)}
-          className="w-full p-4 rounded-2xl border border-border/50 text-muted-foreground hover:bg-card/30 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          Reset All Tests
-        </button>
-      </div>
+          {/* Quick Action */}
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/adhan')}
+            className="w-full glass-card p-4 sm:p-5 bg-primary/10 border-primary/30 flex items-center justify-center gap-3 hover:bg-primary/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <Play className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+            <span className="text-base sm:text-lg font-medium">Test Adhan Now</span>
+          </button>
+
+          {/* Test Categories */}
+          <div className="space-y-3">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="glass-card overflow-hidden"
+              >
+                {/* Category Header */}
+                <button
+                  data-focusable="true"
+                  onClick={() => toggleCategory(category.id)}
+                  className="w-full p-4 sm:p-5 flex items-center justify-between hover:bg-card/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset"
+                >
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <span className="text-base sm:text-lg font-medium">{category.name}</span>
+                    <span className="text-xs sm:text-sm text-muted-foreground">
+                      {category.tests.filter(t => t.status === 'passed').length}/{category.tests.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Progress
+                      value={getCategoryProgress(category)}
+                      className="w-16 sm:w-20 h-2"
+                    />
+                    {category.expanded ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Tests List */}
+                {category.expanded && (
+                  <div className="border-t border-border/30">
+                    {category.tests.map((test) => (
+                      <button
+                        key={test.id}
+                        data-focusable="true"
+                        onClick={() => cycleTestStatus(category.id, test.id)}
+                        className="w-full p-3 sm:p-4 flex items-center gap-3 sm:gap-4 hover:bg-card/30 transition-colors border-b border-border/20 last:border-b-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset text-left"
+                      >
+                        <StatusIcon status={test.status} />
+                        <span className={`text-sm sm:text-base ${test.status === 'passed' ? 'text-green-500' : test.status === 'failed' ? 'text-destructive' : ''}`}>
+                          {test.description}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Reset Button */}
+          <button
+            data-focusable="true"
+            onClick={() => setCategories(initialCategories)}
+            className="w-full glass-card p-4 sm:p-5 flex items-center justify-center gap-3 text-muted-foreground hover:text-foreground hover:bg-card/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <RotateCcw className="w-5 h-5" />
+            <span className="text-base sm:text-lg">Reset All Tests</span>
+          </button>
+        </div>
+      </main>
+
+      {/* Footer hint */}
+      <footer className="border-t border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-4 flex justify-center">
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Use ↑↓ to navigate • SELECT to toggle status • BACK to return
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
