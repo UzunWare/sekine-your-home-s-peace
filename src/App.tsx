@@ -43,9 +43,11 @@ const DashboardSettings = lazy(() => import("./pages/dashboard/DashboardSettings
 
 const queryClient = new QueryClient();
 
+import sekineLogo from "@/assets/sekine-logo.png";
+
 const LoadingFallback = () => (
   <div className="fixed inset-0 bg-background flex items-center justify-center">
-    <span className="text-4xl text-primary animate-pulse">☪</span>
+    <img src={sekineLogo} alt="Sekine" className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 animate-pulse" />
   </div>
 );
 
