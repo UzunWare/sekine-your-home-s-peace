@@ -194,6 +194,26 @@ const Settings = () => {
               </div>
               <Switch defaultChecked />
             </div>
+
+            {/* Screensaver Timeout */}
+            <div className="space-y-2">
+              <div>
+                <p className="text-foreground">Screensaver Timeout</p>
+                <p className="text-sm text-muted-foreground">Time before screensaver activates</p>
+              </div>
+              <Select defaultValue="5m">
+                <SelectTrigger className="w-full bg-muted/50 border-border/50">
+                  <SelectValue placeholder="Select timeout" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="disabled">Disabled</SelectItem>
+                  <SelectItem value="20s">20 seconds</SelectItem>
+                  <SelectItem value="1m">1 minute</SelectItem>
+                  <SelectItem value="5m">5 minutes</SelectItem>
+                  <SelectItem value="10m">10 minutes</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </section>
 
