@@ -185,7 +185,7 @@ const Idle = () => {
         </main>
 
         {/* Prayer times grid */}
-        <footer className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4">
+        <footer className={`flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 transition-all ${isMiniPlayerVisible ? 'mb-20 sm:mb-24' : ''}`}>
           {prayers.map((prayer) => (
             <div
               key={prayer.name}
