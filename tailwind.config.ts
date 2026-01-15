@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         arabic: ["Scheherazade New", "Amiri", "serif"],
+        uthmani: ["KFGQPC Uthmanic Script HAFS", "Amiri Quran", "Scheherazade New", "serif"],
         quote: ["Cormorant Garamond", "Lora", "Georgia", "serif"],
         serif: ["Lora", "Georgia", "serif"],
         sans: ["Inter", "system-ui", "sans-serif"],

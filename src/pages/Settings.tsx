@@ -1,17 +1,29 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight } from "lucide-react";
+import { ArrowLeft, MapPin, Calculator, Volume2, Monitor, Bell, Moon, ChevronRight, Globe, BookOpen } from "lucide-react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
 import { useApp } from "@/contexts/AppContext";
+import { useLanguage, SUPPORTED_LANGUAGES } from "@/lib/i18n";
 
 const Settings = () => {
   const navigate = useNavigate();
   const { settings } = useApp();
+  const { language } = useLanguage();
 
   useTVNavigation({
     onBack: () => navigate('/idle'),
   });
 
+  const currentLanguage = SUPPORTED_LANGUAGES.find(l => l.code === language);
+
   const settingsGroups = [
+    {
+      icon: Globe,
+      title: "Language",
+      description: currentLanguage?.nativeName || "English",
+      route: "/settings/language",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+    },
     {
       icon: MapPin,
       title: "Location",
@@ -25,8 +37,8 @@ const Settings = () => {
       title: "Calculation Method",
       description: settings.prayer.calculationMethod || "ISNA (North America)",
       route: "/settings/calculation",
-      color: "text-teal",
-      bgColor: "bg-teal/10",
+      color: "text-emerald-light",
+      bgColor: "bg-emerald/10",
     },
     {
       icon: Volume2,
@@ -41,8 +53,8 @@ const Settings = () => {
       title: "Iqamah Countdown",
       description: "Configure delays for each prayer",
       route: "/settings/iqamah",
-      color: "text-teal",
-      bgColor: "bg-teal/10",
+      color: "text-emerald-light",
+      bgColor: "bg-emerald/10",
     },
     {
       icon: Monitor,
@@ -57,8 +69,16 @@ const Settings = () => {
       title: "Night Mode",
       description: settings.display.nightMode ? "Enabled" : "Disabled",
       route: "/settings/night",
-      color: "text-teal",
-      bgColor: "bg-teal/10",
+      color: "text-emerald-light",
+      bgColor: "bg-emerald/10",
+    },
+    {
+      icon: BookOpen,
+      title: "Quran Settings",
+      description: "Reciter and translation preferences",
+      route: "/settings/quran",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
   ];
 
