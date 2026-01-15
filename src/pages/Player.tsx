@@ -332,16 +332,20 @@ const Player = () => {
                 </p>
               </div>
 
-              {/* Translation - Responsive sizing */}
+              {/* Translation - Elegant serif font */}
               {currentVerse.translations?.[0] && (
-                <div className="w-full max-w-4xl space-y-1 sm:space-y-2 lg:space-y-3">
+                <div className="w-full max-w-4xl space-y-2 sm:space-y-3 lg:space-y-4">
                   <p 
-                    className="text-foreground/80 leading-relaxed font-light"
-                    style={{ fontSize: 'clamp(0.875rem, 2vw + 0.25rem, 1.75rem)' }}
+                    className="font-translation text-foreground/90 leading-relaxed italic tracking-wide"
+                    style={{ fontSize: 'clamp(1rem, 2.5vw + 0.25rem, 2rem)' }}
                   >
-                    {currentVerse.translations[0].text.replace(/<[^>]*>/g, '')}
+                    {currentVerse.translations[0].text
+                      .replace(/<[^>]*>/g, '') // Remove HTML tags
+                      .replace(/\d+/g, '') // Remove verse numbers
+                      .replace(/\s+/g, ' ') // Normalize whitespace
+                      .trim()}
                   </p>
-                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground opacity-70">
+                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground/60 font-sans">
                     — {currentVerse.translations[0].resource_name || 'Saheeh International'}
                   </p>
                 </div>
