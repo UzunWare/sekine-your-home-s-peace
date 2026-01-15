@@ -106,6 +106,7 @@ export interface Reciter {
   id: string;
   name: string;
   nationality: string;
+  origin?: string;
 }
 
 export interface AdhanStyle {
