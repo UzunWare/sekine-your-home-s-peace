@@ -14,7 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        arabic: ["Amiri", "serif"],
+        arabic: ["Scheherazade New", "Amiri", "serif"],
+        quote: ["Cormorant Garamond", "Lora", "Georgia", "serif"],
+        serif: ["Lora", "Georgia", "serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
