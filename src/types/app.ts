@@ -143,6 +143,7 @@ export interface PlayerState {
   } | null;
   progress: number;
   duration: number;
+  currentVerseNumber?: number;
 }
 
 // Quote type
