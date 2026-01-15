@@ -75,6 +75,7 @@ const Player = () => {
     if (!timings.length || !audioRef.current) return;
     
     const currentTimeMs = currentTime * 1000;
+    
     const verseIndex = timings.findIndex(
       (timing, index) => {
         const nextTiming = timings[index + 1];
