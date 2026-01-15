@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Play, Pause, SkipForward, SkipBack, Volume2, BookOpen, Check, Minus, Plus, ChevronRight } from "lucide-react";
+import { ArrowLeft, Play, Pause, SkipForward, SkipBack, Volume2, BookOpen, Check, Minus, Plus, ChevronRight, Repeat, Repeat1 } from "lucide-react";
 import { useState } from "react";
 import { useTVNavigation } from "@/hooks/useTVNavigation";
+
+type RepeatMode = 'off' | 'one' | 'all';
 
 const reciters = [
   { id: "mishary", name: "Mishary Rashid Alafasy" },
@@ -30,6 +32,7 @@ const Quran = () => {
   const [selectedReciter, setSelectedReciter] = useState(reciters[0].id);
   const [showReciterList, setShowReciterList] = useState(false);
   const [volume, setVolume] = useState(80);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
 
   useTVNavigation({
     onBack: () => {
@@ -46,6 +49,14 @@ const Quran = () => {
     const currentIndex = volumeLevels.indexOf(volume);
     const newIndex = Math.max(0, Math.min(volumeLevels.length - 1, currentIndex + delta));
     setVolume(volumeLevels[newIndex]);
+  };
+
+  const cycleRepeatMode = () => {
+    setRepeatMode(prev => {
+      if (prev === 'off') return 'one';
+      if (prev === 'one') return 'all';
+      return 'off';
+    });
   };
 
   const currentReciter = reciters.find(r => r.id === selectedReciter);
@@ -166,6 +177,22 @@ const Quran = () => {
 
             {/* Controls */}
             <div className="flex items-center gap-3 sm:gap-4">
+              {/* Repeat Button */}
+              <button
+                data-focusable="true"
+                onClick={cycleRepeatMode}
+                className={`p-3 sm:p-4 rounded-full hover:bg-muted/50 focus:ring-2 focus:ring-primary focus:outline-none transition-colors ${
+                  repeatMode !== 'off' ? 'text-primary' : 'text-foreground'
+                }`}
+                title={repeatMode === 'off' ? 'Repeat off' : repeatMode === 'one' ? 'Repeat current' : 'Repeat all'}
+              >
+                {repeatMode === 'one' ? (
+                  <Repeat1 className="w-5 h-5 sm:w-6 sm:h-6" />
+                ) : (
+                  <Repeat className="w-5 h-5 sm:w-6 sm:h-6" />
+                )}
+              </button>
+              
               <button
                 data-focusable="true"
                 className="p-3 sm:p-4 rounded-full hover:bg-muted/50 focus:ring-2 focus:ring-primary focus:outline-none transition-colors"
