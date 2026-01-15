@@ -27,6 +27,11 @@ import SetupComplete from "./pages/setup/SetupComplete";
 import { lazy, Suspense } from "react";
 const Quran = lazy(() => import("./pages/Quran"));
 const Settings = lazy(() => import("./pages/Settings"));
+const QuranSettings = lazy(() => import("./pages/settings/QuranSettings"));
+const AdhanSettings = lazy(() => import("./pages/settings/AdhanSettings"));
+const DownloadsSettings = lazy(() => import("./pages/settings/DownloadsSettings"));
+const TestingSettings = lazy(() => import("./pages/settings/TestingSettings"));
+const IqamahSettings = lazy(() => import("./pages/settings/IqamahSettings"));
 
 const queryClient = new QueryClient();
 
@@ -55,6 +60,11 @@ const App = () => (
               <Route path="/screensaver" element={<Screensaver />} />
               <Route path="/pairing" element={<Pairing />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/settings/quran" element={<QuranSettings />} />
+              <Route path="/settings/adhan" element={<AdhanSettings />} />
+              <Route path="/settings/downloads" element={<DownloadsSettings />} />
+              <Route path="/settings/testing" element={<TestingSettings />} />
+              <Route path="/settings/iqamah" element={<IqamahSettings />} />
               
               {/* Setup wizard */}
               <Route path="/setup" element={<SetupWelcome />} />

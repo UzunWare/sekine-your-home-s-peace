@@ -11,6 +11,9 @@ export const quranReciters: Reciter[] = [
   { id: 'muaiqly', name: 'Maher Al-Muaiqly', nationality: 'Saudi Arabia' },
 ];
 
+// Alias for backward compatibility
+export const reciters = quranReciters;
+
 export const adhanStyles: AdhanStyle[] = [
   { id: 'makkah', name: 'Makkah', origin: 'Masjid al-Haram' },
   { id: 'madinah', name: 'Madinah', origin: 'Masjid an-Nabawi' },
