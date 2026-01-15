@@ -40,6 +40,7 @@ const NightModeSettings = lazy(() => import("./pages/settings/NightModeSettings"
 const LanguageSettings = lazy(() => import("./pages/settings/LanguageSettings"));
 const ModeSettings = lazy(() => import("./pages/settings/ModeSettings"));
 const AsrSettings = lazy(() => import("./pages/settings/AsrSettings"));
+const LayoutSettings = lazy(() => import("./pages/settings/LayoutSettings"));
 
 // Dashboard pages
 const DashboardLogin = lazy(() => import("./pages/dashboard/DashboardLogin"));
@@ -91,6 +92,7 @@ const App = () => (
                 <Route path="/settings/language" element={<LanguageSettings />} />
                 <Route path="/settings/mode" element={<ModeSettings />} />
                 <Route path="/settings/asr" element={<AsrSettings />} />
+                <Route path="/settings/layout" element={<LayoutSettings />} />
                 
                 {/* Setup wizard */}
                 <Route path="/setup" element={<SetupWelcome />} />

@@ -601,7 +601,7 @@ const DashboardDeviceSettings = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="text-sm text-muted-foreground mb-2 block">Clock Format</label>
                 <Select 
@@ -632,6 +632,24 @@ const DashboardDeviceSettings = () => {
                     <SelectItem value="1m">1 minute</SelectItem>
                     <SelectItem value="5m">5 minutes</SelectItem>
                     <SelectItem value="10m">10 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Screen Layout</label>
+                <Select 
+                  value="classic"
+                  onValueChange={(v) => updateSetting('settings.idleLayout', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="classic">Classic</SelectItem>
+                    <SelectItem value="split">Split View</SelectItem>
+                    <SelectItem value="minimal">Minimal</SelectItem>
+                    <SelectItem value="prayer-focus">Prayer Focus</SelectItem>
+                    <SelectItem value="dashboard">Dashboard</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

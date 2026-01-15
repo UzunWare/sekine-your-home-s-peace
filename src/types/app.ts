@@ -28,6 +28,8 @@ export type ClockFormat = '12h' | '24h';
 
 export type ScreensaverTimeout = 'disabled' | '20s' | '1m' | '5m' | '10m';
 
+export type IdleLayout = 'classic' | 'split' | 'minimal' | 'prayer-focus' | 'dashboard';
+
 export type PlaybackSpeed = 0.5 | 0.75 | 1 | 1.25 | 1.5 | 2;
 
 export type VolumeLevel = 20 | 40 | 60 | 80 | 100;
@@ -69,6 +71,7 @@ export interface DisplaySettings {
   oledProtection: boolean;
   nightMode: boolean;
   nightModeBrightness: number;
+  idleLayout: IdleLayout;
 }
 
 export interface AdhanSettings {

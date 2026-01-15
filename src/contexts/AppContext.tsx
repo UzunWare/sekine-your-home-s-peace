@@ -36,6 +36,7 @@ const defaultSettings: AppSettings = {
     oledProtection: true,
     nightMode: false,
     nightModeBrightness: 25,
+    idleLayout: 'classic',
   },
   adhan: {
     enabled: true,
