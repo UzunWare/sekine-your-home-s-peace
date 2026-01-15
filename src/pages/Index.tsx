@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NavigationBar from "@/components/NavigationBar";
 import BackgroundSlideshow from "@/components/BackgroundSlideshow";
 import CurrentTime from "@/components/CurrentTime";
@@ -8,12 +9,18 @@ import PrayerTimesGrid from "@/components/PrayerTimesGrid";
 import AdhanOverlay from "@/components/AdhanOverlay";
 import { getMockPrayerTimes, getHijriDate } from "@/lib/prayerUtils";
 import { PrayerTime } from "@/types/prayer";
+import { useTVNavigation } from "@/hooks/useTVNavigation";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [prayers, setPrayers] = useState<PrayerTime[]>([]);
   const [hijriDate] = useState(getHijriDate());
   const [showAdhan, setShowAdhan] = useState(false);
   const [activePrayer, setActivePrayer] = useState<PrayerTime | null>(null);
+
+  useTVNavigation({
+    onBack: () => navigate('/settings'),
+  });
 
   useEffect(() => {
     // Update prayer times
@@ -58,8 +65,9 @@ const Index = () => {
           {/* Next prayer indicator */}
           {nextPrayer && (
             <button
+              data-focusable="true"
               onClick={() => handleShowAdhan(nextPrayer)}
-              className="mt-4 flex items-center gap-3 px-6 py-3 rounded-full border border-gold/30 bg-gold/5 hover:bg-gold/10 transition-all duration-300 group"
+              className="mt-4 flex items-center gap-3 px-6 py-3 rounded-full border border-gold/30 bg-gold/5 hover:bg-gold/10 focus:ring-2 focus:ring-primary focus:outline-none transition-all duration-300 group"
             >
               <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
               <span className="text-gold-soft group-hover:text-gold transition-colors">

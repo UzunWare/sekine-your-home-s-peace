@@ -1,7 +1,9 @@
 import { Settings, Play, Book } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NavigationBar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-8 py-6">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -18,26 +20,31 @@ const NavigationBar = () => {
 
         {/* Navigation buttons */}
         <div className="flex items-center gap-2">
-          <Link
-            to="/quran"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 transition-all duration-300 group"
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/quran')}
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 focus:ring-2 focus:ring-primary focus:outline-none transition-all duration-300 group"
           >
             <Book className="w-4 h-4 text-gold-soft group-hover:text-gold transition-colors" />
             <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">Quran</span>
-          </Link>
+          </button>
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 transition-all duration-300 group">
+          <button
+            data-focusable="true"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 focus:ring-2 focus:ring-primary focus:outline-none transition-all duration-300 group"
+          >
             <Play className="w-4 h-4 text-gold-soft group-hover:text-gold transition-colors" />
             <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">Play Adhan</span>
           </button>
 
-          <Link
-            to="/settings"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 transition-all duration-300 group"
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/settings')}
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-card hover:bg-card/80 focus:ring-2 focus:ring-primary focus:outline-none transition-all duration-300 group"
           >
             <Settings className="w-4 h-4 text-gold-soft group-hover:text-gold transition-colors" />
             <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">Settings</span>
-          </Link>
+          </button>
         </div>
       </div>
     </nav>
