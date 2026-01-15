@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
-import { CheckCircle, MapPin, Calculator, Home, Building2, Smartphone } from 'lucide-react';
+import { MapPin, Calculator, Home, Building2, Smartphone } from 'lucide-react';
+import sekineLogo from '@/assets/sekine-logo.png';
 
 const SetupComplete = () => {
   const navigate = useNavigate();
@@ -33,10 +34,10 @@ const SetupComplete = () => {
 
       {/* Content */}
       <div className="flex flex-col items-center text-center max-w-2xl">
-        {/* Success icon */}
+        {/* Success logo */}
         <div className="relative mb-8">
-          <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center animate-pulse">
-            <CheckCircle className="w-16 h-16 text-primary" />
+          <div className="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center">
+            <img src={sekineLogo} alt="Sekine TV" className="w-24 h-24 object-contain" />
           </div>
         </div>
 

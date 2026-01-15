@@ -5,6 +5,7 @@ import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { quotes } from '@/data/quotes';
 import mosqueBg1 from '@/assets/mosque-background-1.jpg';
 import mosqueBg2 from '@/assets/mosque-background-2.jpg';
+import sekineLogo from '@/assets/sekine-logo.png';
 
 const backgrounds = [mosqueBg1, mosqueBg2];
 
@@ -95,6 +96,9 @@ const Screensaver = () => {
         className="relative z-10 h-full flex flex-col items-center justify-center transition-transform duration-[5000ms] ease-in-out"
         style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       >
+        {/* Logo */}
+        <img src={sekineLogo} alt="Sekine TV" className="w-20 h-20 object-contain mb-6 opacity-80" />
+        
         {/* Time */}
         <h1 className="text-[10rem] font-extralight leading-none tabular-nums text-foreground/90">
           {formatTime(currentTime)}

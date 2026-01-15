@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
+import sekineLogo from '@/assets/sekine-logo.png';
 
 const SetupWelcome = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const SetupWelcome = () => {
       {/* Content */}
       <div className="flex flex-col items-center text-center max-w-2xl">
         {/* Logo */}
-        <span className="text-8xl text-primary mb-8">☪</span>
+        <img src={sekineLogo} alt="Sekine TV" className="w-32 h-32 object-contain mb-8" />
 
         <h1 className="text-5xl font-light tracking-wide mb-4">
           Welcome to <span className="text-primary">Sekine TV</span>

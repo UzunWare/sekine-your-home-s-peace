@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import sekineLogo from '@/assets/sekine-logo.png';
 
 const Splash = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const Splash = () => {
       
       {/* Logo */}
       <div className={`transition-all duration-1000 ${showText ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
-        <span className="text-8xl text-primary">☪</span>
+        <img src={sekineLogo} alt="Sekine TV" className="w-40 h-40 object-contain" />
       </div>
 
       {/* App name */}
