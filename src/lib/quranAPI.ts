@@ -60,23 +60,54 @@ export async function fetchAllVerses(
   return allVerses;
 }
 
-// Get audio timing for a chapter (from chapter_recitations endpoint which includes timestamps)
+// Get audio timing for a chapter
+// First try chapter_recitations (has timestamps for some reciters)
+// Fall back to recitations endpoint to build timings from verse audio files
 export async function fetchAudioTimings(
   chapterNumber: number,
   reciterId: string = 'mishary'
 ): Promise<VerseTiming[]> {
   const reciterApiId = RECITER_IDS[reciterId] || RECITER_IDS.mishary;
   
+  // Try chapter_recitations first (has timestamps for some reciters)
+  try {
+    const response = await fetch(
+      `${API_BASE}/chapter_recitations/${reciterApiId}/${chapterNumber}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      if (data.audio_file?.timestamps && data.audio_file.timestamps.length > 0) {
+        return data.audio_file.timestamps;
+      }
+    }
+  } catch (e) {
+    console.warn('chapter_recitations failed, falling back to recitations endpoint');
+  }
+  
+  // Fallback: Use recitations endpoint to get individual verse audio files with duration
   const response = await fetch(
-    `${API_BASE}/chapter_recitations/${reciterApiId}/${chapterNumber}`
+    `${API_BASE}/recitations/${reciterApiId}/by_chapter/${chapterNumber}`
   );
   if (!response.ok) throw new Error('Failed to fetch audio timings');
   
   const data = await response.json();
   
-  // The timestamps are in audio_file.timestamps for chapter_recitations endpoint
-  if (data.audio_file?.timestamps) {
-    return data.audio_file.timestamps;
+  // Build synthetic timings from verse audio files
+  if (data.audio_files && data.audio_files.length > 0) {
+    let cumulativeTime = 0;
+    return data.audio_files.map((file: { verse_key: string; duration?: number }, index: number) => {
+      // Estimate ~5 seconds per verse if no duration available
+      const duration = (file.duration || 5) * 1000; // Convert to ms
+      const timing: VerseTiming = {
+        verse_key: file.verse_key,
+        timestamp_from: cumulativeTime,
+        timestamp_to: cumulativeTime + duration,
+        duration: duration,
+        segments: [],
+      };
+      cumulativeTime += duration;
+      return timing;
+    });
   }
   
   return [];

@@ -76,6 +76,12 @@ const Player = () => {
     
     const currentTimeMs = currentTime * 1000;
     
+    // Debug: Log timings info
+    console.log('Timings available:', timings.length, 'Current time (ms):', currentTimeMs);
+    if (timings.length > 0) {
+      console.log('First timing:', timings[0]);
+    }
+    
     const verseIndex = timings.findIndex(
       (timing, index) => {
         const nextTiming = timings[index + 1];
