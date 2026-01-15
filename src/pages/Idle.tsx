@@ -136,8 +136,13 @@ const Idle = () => {
         </div>
       )}
 
-      {/* Selected Layout */}
-      <LayoutComponent {...layoutProps} />
+      {/* Selected Layout with transition animation */}
+      <div 
+        key={settings.display.idleLayout} 
+        className="animate-fade-in"
+      >
+        <LayoutComponent {...layoutProps} />
+      </div>
 
       {/* Mini Player */}
       <MiniPlayer />
