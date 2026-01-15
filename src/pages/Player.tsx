@@ -275,7 +275,7 @@ const Player = () => {
           <div className="flex flex-col gap-0.5 sm:gap-1">
             {chapterInfo && (
               <>
-                <h1 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground leading-tight">
+                <h1 className="font-quote text-lg sm:text-xl lg:text-2xl text-foreground leading-tight">
                   {chapterInfo.name_simple}
                 </h1>
                 <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
