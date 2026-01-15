@@ -16,8 +16,8 @@
     --popover: 160 25% 6%;
     --popover-foreground: 45 30% 96%;
 
-    /* Gold accent - warm, spiritual (from logo gold accents) */
-    --primary: 43 74% 49%;
+    /* Gold accent - refined antique gold matching logo exactly */
+    --primary: 43 60% 45%;
     --primary-foreground: 160 30% 4%;
 
     /* Deep Emerald - the rich green from logo (KEY NEW COLOR) */
@@ -36,14 +36,14 @@
 
     --border: 160 20% 15%;
     --input: 160 20% 15%;
-    --ring: 43 74% 49%;
+    --ring: 43 60% 45%;
 
     --radius: 0.75rem;
 
-    /* Custom Sekine tokens - Logo-inspired palette */
-    --gold: 43 74% 49%;
-    --gold-soft: 43 50% 60%;
-    --gold-glow: 43 80% 55%;
+    /* Custom Sekine tokens - Exact logo gold palette */
+    --gold: 43 60% 45%;
+    --gold-soft: 43 45% 55%;
+    --gold-glow: 43 65% 52%;
     
     /* Deep Emerald from logo geometric pattern */
     --emerald: 160 55% 22%;
@@ -62,30 +62,30 @@
     --cream: 45 30% 96%;
     --cream-muted: 45 20% 75%;
 
-    /* Premium gradients using emerald + gold */
-    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(35 80% 45%));
+    /* Premium gradients using emerald + logo gold */
+    --gradient-gold: linear-gradient(135deg, hsl(43 60% 45%), hsl(38 55% 40%));
     --gradient-emerald: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 60% 15%));
-    --gradient-premium: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 30%), hsl(43 74% 49% / 0.3));
+    --gradient-premium: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 30%), hsl(43 60% 45% / 0.3));
     --gradient-night: linear-gradient(180deg, hsl(160 30% 6%), hsl(160 30% 3%));
     --gradient-card: linear-gradient(135deg, hsl(160 25% 10%), hsl(160 25% 6%));
-    --gradient-glow: radial-gradient(ellipse at center, hsl(43 74% 49% / 0.15), hsl(160 50% 25% / 0.05), transparent 70%);
-    --gradient-emerald-gold: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 28%), hsl(43 74% 49%));
+    --gradient-glow: radial-gradient(ellipse at center, hsl(43 60% 45% / 0.15), hsl(160 50% 25% / 0.05), transparent 70%);
+    --gradient-emerald-gold: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 28%), hsl(43 60% 45%));
 
-    /* Shadows with emerald tint */
-    --shadow-gold: 0 0 30px hsl(43 74% 49% / 0.3);
+    /* Shadows with emerald tint and logo gold */
+    --shadow-gold: 0 0 30px hsl(43 60% 45% / 0.3);
     --shadow-emerald: 0 0 30px hsl(160 55% 22% / 0.4);
     --shadow-soft: 0 4px 20px hsl(160 30% 0% / 0.5);
     --shadow-card: 0 8px 32px hsl(160 30% 0% / 0.4);
-    --shadow-premium: 0 0 40px hsl(160 55% 22% / 0.2), 0 0 60px hsl(43 74% 49% / 0.1);
+    --shadow-premium: 0 0 40px hsl(160 55% 22% / 0.2), 0 0 60px hsl(43 60% 45% / 0.1);
 
     --sidebar-background: 160 25% 6%;
     --sidebar-foreground: 45 30% 96%;
-    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary: 43 60% 45%;
     --sidebar-primary-foreground: 160 30% 4%;
     --sidebar-accent: 160 20% 12%;
     --sidebar-accent-foreground: 45 30% 96%;
     --sidebar-border: 160 20% 15%;
-    --sidebar-ring: 43 74% 49%;
+    --sidebar-ring: 43 60% 45%;
   }
 }
 
@@ -243,8 +243,8 @@
 
   /* Glow animation */
   @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px hsl(43 74% 49% / 0.3); }
-    50% { box-shadow: 0 0 40px hsl(43 74% 49% / 0.5); }
+    0%, 100% { box-shadow: 0 0 20px hsl(43 60% 45% / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(43 60% 45% / 0.5); }
   }
 
   .animate-glow {
@@ -266,7 +266,7 @@
 
 @layer utilities {
   .text-shadow-gold {
-    text-shadow: 0 0 20px hsl(43 74% 49% / 0.5);
+    text-shadow: 0 0 20px hsl(43 60% 45% / 0.5);
   }
 
   .text-shadow-soft {
