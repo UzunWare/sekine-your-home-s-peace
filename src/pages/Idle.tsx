@@ -5,6 +5,7 @@ import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { MapPin, Settings, BookOpen, Volume2, WifiOff } from 'lucide-react';
 import { getQuoteOfTheDay } from '@/data/dailyQuotes';
+import MiniPlayer from '@/components/MiniPlayer';
 import mosqueBg from '@/assets/mosque-background-1.jpg';
 
 const getTimeoutMs = (timeout: string): number | null => {
@@ -201,21 +202,8 @@ const Idle = () => {
         </footer>
       </div>
 
-      {/* Floating player bar */}
-      {playerState.isMinimized && playerState.currentTrack && (
-        <button
-          data-focusable="true"
-          onClick={() => navigate('/player')}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-card/95 backdrop-blur-xl border-t border-border cursor-pointer focus:ring-2 focus:ring-primary focus:outline-none"
-        >
-          <div className="flex items-center gap-4 max-w-4xl mx-auto">
-            <span className="text-primary">{playerState.currentTrack.title}</span>
-            <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
-              <div className="h-full bg-primary" style={{ width: `${(playerState.progress / playerState.duration) * 100}%` }} />
-            </div>
-          </div>
-        </button>
-      )}
+      {/* Mini Player */}
+      <MiniPlayer />
 
       {/* Footer brand */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
