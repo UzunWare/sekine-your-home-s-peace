@@ -6,69 +6,85 @@
 
 @layer base {
   :root {
-    /* Sekine TV - Deep, spiritual color palette */
-    --background: 222 47% 6%;
+    /* Sekine TV - Deep, spiritual color palette inspired by logo */
+    --background: 160 30% 4%;
     --foreground: 45 30% 96%;
 
-    --card: 222 40% 10%;
+    --card: 160 25% 8%;
     --card-foreground: 45 30% 96%;
 
-    --popover: 222 40% 8%;
+    --popover: 160 25% 6%;
     --popover-foreground: 45 30% 96%;
 
-    /* Gold accent - warm, spiritual */
+    /* Gold accent - warm, spiritual (from logo gold accents) */
     --primary: 43 74% 49%;
-    --primary-foreground: 222 47% 6%;
+    --primary-foreground: 160 30% 4%;
 
-    /* Muted teal - Islamic art inspired */
-    --secondary: 180 25% 25%;
+    /* Deep Emerald - the rich green from logo (KEY NEW COLOR) */
+    --secondary: 160 55% 22%;
     --secondary-foreground: 45 30% 96%;
 
-    --muted: 222 30% 15%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 160 20% 12%;
+    --muted-foreground: 160 15% 50%;
 
-    /* Soft teal accent */
-    --accent: 175 40% 35%;
+    /* Soft sage/mint accent (from logo outer edge) */
+    --accent: 150 35% 40%;
     --accent-foreground: 45 30% 96%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 45 30% 96%;
 
-    --border: 222 25% 18%;
-    --input: 222 25% 18%;
+    --border: 160 20% 15%;
+    --input: 160 20% 15%;
     --ring: 43 74% 49%;
 
     --radius: 0.75rem;
 
-    /* Custom Sekine tokens */
+    /* Custom Sekine tokens - Logo-inspired palette */
     --gold: 43 74% 49%;
     --gold-soft: 43 50% 60%;
     --gold-glow: 43 80% 55%;
-    --midnight: 222 47% 6%;
-    --midnight-light: 222 40% 12%;
-    --teal: 175 40% 35%;
-    --teal-soft: 175 30% 45%;
+    
+    /* Deep Emerald from logo geometric pattern */
+    --emerald: 160 55% 22%;
+    --emerald-light: 160 45% 30%;
+    --emerald-dark: 160 60% 15%;
+    --emerald-glow: 160 50% 35%;
+    
+    /* Sage/Mint from logo outer edge */
+    --sage: 150 30% 65%;
+    --sage-soft: 150 25% 75%;
+    
+    /* Background tones - emerald-tinted */
+    --midnight: 160 30% 4%;
+    --midnight-light: 160 25% 10%;
+    
     --cream: 45 30% 96%;
     --cream-muted: 45 20% 75%;
 
-    /* Gradients */
+    /* Premium gradients using emerald + gold */
     --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(35 80% 45%));
-    --gradient-night: linear-gradient(180deg, hsl(222 47% 8%), hsl(222 47% 4%));
-    --gradient-card: linear-gradient(135deg, hsl(222 40% 12%), hsl(222 40% 8%));
-    --gradient-glow: radial-gradient(ellipse at center, hsl(43 74% 49% / 0.15), transparent 70%);
+    --gradient-emerald: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 60% 15%));
+    --gradient-premium: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 30%), hsl(43 74% 49% / 0.3));
+    --gradient-night: linear-gradient(180deg, hsl(160 30% 6%), hsl(160 30% 3%));
+    --gradient-card: linear-gradient(135deg, hsl(160 25% 10%), hsl(160 25% 6%));
+    --gradient-glow: radial-gradient(ellipse at center, hsl(43 74% 49% / 0.15), hsl(160 50% 25% / 0.05), transparent 70%);
+    --gradient-emerald-gold: linear-gradient(135deg, hsl(160 55% 22%), hsl(160 45% 28%), hsl(43 74% 49%));
 
-    /* Shadows */
+    /* Shadows with emerald tint */
     --shadow-gold: 0 0 30px hsl(43 74% 49% / 0.3);
-    --shadow-soft: 0 4px 20px hsl(0 0% 0% / 0.4);
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.3);
+    --shadow-emerald: 0 0 30px hsl(160 55% 22% / 0.4);
+    --shadow-soft: 0 4px 20px hsl(160 30% 0% / 0.5);
+    --shadow-card: 0 8px 32px hsl(160 30% 0% / 0.4);
+    --shadow-premium: 0 0 40px hsl(160 55% 22% / 0.2), 0 0 60px hsl(43 74% 49% / 0.1);
 
-    --sidebar-background: 222 40% 8%;
+    --sidebar-background: 160 25% 6%;
     --sidebar-foreground: 45 30% 96%;
     --sidebar-primary: 43 74% 49%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 222 30% 15%;
+    --sidebar-primary-foreground: 160 30% 4%;
+    --sidebar-accent: 160 20% 12%;
     --sidebar-accent-foreground: 45 30% 96%;
-    --sidebar-border: 222 25% 18%;
+    --sidebar-border: 160 20% 15%;
     --sidebar-ring: 43 74% 49%;
   }
 }
@@ -98,6 +114,14 @@
     box-shadow: var(--shadow-gold);
   }
 
+  .emerald-glow {
+    box-shadow: var(--shadow-emerald);
+  }
+
+  .premium-glow {
+    box-shadow: var(--shadow-premium);
+  }
+
   .text-gold {
     color: hsl(var(--gold));
   }
@@ -106,8 +130,28 @@
     color: hsl(var(--gold-soft));
   }
 
+  .text-emerald {
+    color: hsl(var(--emerald));
+  }
+
+  .text-emerald-light {
+    color: hsl(var(--emerald-light));
+  }
+
+  .text-sage {
+    color: hsl(var(--sage));
+  }
+
   .bg-gold {
     background-color: hsl(var(--gold));
+  }
+
+  .bg-emerald {
+    background-color: hsl(var(--emerald));
+  }
+
+  .bg-emerald-dark {
+    background-color: hsl(var(--emerald-dark));
   }
 
   .bg-midnight {
@@ -122,6 +166,18 @@
     background: var(--gradient-gold);
   }
 
+  .gradient-emerald {
+    background: var(--gradient-emerald);
+  }
+
+  .gradient-premium {
+    background: var(--gradient-premium);
+  }
+
+  .gradient-emerald-gold {
+    background: var(--gradient-emerald-gold);
+  }
+
   .gradient-night {
     background: var(--gradient-night);
   }
@@ -130,12 +186,16 @@
     background: var(--gradient-card);
   }
 
-  /* Islamic geometric pattern overlay */
+  /* Islamic geometric pattern overlay with emerald tint */
   .pattern-overlay {
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23d4a853' stroke-opacity='0.05' stroke-width='1'/%3E%3C/svg%3E");
   }
 
-  /* Prayer time card styles */
+  .pattern-emerald {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%231a5c4a' stroke-opacity='0.1' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  /* Prayer time card styles with emerald accent option */
   .prayer-card {
     @apply glass-card p-4 transition-all duration-500;
   }
@@ -143,6 +203,22 @@
   .prayer-card-active {
     @apply border-primary/50;
     box-shadow: var(--shadow-gold), var(--shadow-card);
+  }
+
+  .prayer-card-emerald {
+    @apply border-secondary/50;
+    box-shadow: var(--shadow-emerald), var(--shadow-card);
+  }
+
+  /* Premium badge/accent styling */
+  .premium-badge {
+    background: var(--gradient-emerald-gold);
+    @apply text-cream px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .emerald-border {
+    @apply border-2;
+    border-color: hsl(var(--emerald));
   }
 
   /* Pulse animation for active prayer */
