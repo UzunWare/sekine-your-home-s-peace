@@ -17,6 +17,7 @@ export default {
         arabic: ["Scheherazade New", "Amiri", "serif"],
         uthmani: ["KFGQPC Uthmanic Script HAFS", "Amiri Quran", "Scheherazade New", "serif"],
         quote: ["Cormorant Garamond", "Lora", "Georgia", "serif"],
+        translation: ["Crimson Pro", "Cormorant Garamond", "Georgia", "serif"],
         serif: ["Lora", "Georgia", "serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
       },
