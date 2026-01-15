@@ -278,7 +278,7 @@ const Player = () => {
                 <h1 className="font-quote text-lg sm:text-xl lg:text-2xl text-foreground leading-tight">
                   {chapterInfo.name_simple}
                 </h1>
-                <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
+                <p className="font-quote text-[11px] sm:text-sm lg:text-base text-muted-foreground">
                   {chapterInfo.translated_name?.name} • {chapterInfo.verses_count} {t('quran.verses')}
                 </p>
               </>
