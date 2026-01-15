@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Tv, MapPin, Calculator, Volume2, Bell, Monitor, Moon, 
-  BookOpen, Save, RefreshCw, Trash2, Power
+  BookOpen, Save, RefreshCw, Trash2, Power, Home, Building2, Image, Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import DashboardLayout from '@/layouts/DashboardLayout';
 
-// Mock device data
+// Mock device data - Complete settings matching TV app
 const deviceData = {
   id: '1',
   name: 'Living Room TV',
@@ -19,17 +19,47 @@ const deviceData = {
   location: {
     city: 'London',
     country: 'United Kingdom',
+    timezone: 'Europe/London',
+    latitude: 51.5074,
+    longitude: -0.1278,
   },
   settings: {
+    // Prayer settings
     calculationMethod: 'MWL',
     asrJuristic: 'standard',
+    mode: 'home', // 'home' | 'mosque'
+    
+    // Mosque-specific settings
+    jumuahEnabled: false,
+    jumuahTime: '13:00',
+    
+    // Display settings
     clockFormat: '12h',
     showHijriDate: true,
     showCentralQuote: true,
     screensaverTimeout: '5m',
+    backgroundSlideshow: true,
+    screenBurnProtection: true,
+    showSeconds: true,
+    
+    // Night mode
+    nightModeEnabled: false,
+    nightModeDimLevel: 30,
+    
+    // Adhan settings
     adhanEnabled: true,
     adhanStyle: 'makkah',
     adhanVolume: 80,
+    adhanFadeIn: true,
+    duaAfterAdhan: true,
+    
+    // Quran settings
+    defaultReciter: 'mishary',
+    playbackSpeed: 1,
+    showTransliteration: false,
+    translationLanguage: 'en',
+    
+    // Iqamah delays
     iqamahDelays: {
       fajr: 20,
       dhuhr: 15,
@@ -41,12 +71,14 @@ const deviceData = {
 };
 
 const calculationMethods = [
-  { value: 'MWL', label: 'Muslim World League' },
   { value: 'ISNA', label: 'ISNA (North America)' },
-  { value: 'Egypt', label: 'Egyptian General Authority' },
-  { value: 'Makkah', label: 'Umm Al-Qura (Makkah)' },
+  { value: 'MWL', label: 'Muslim World League' },
+  { value: 'UmmAlQura', label: 'Umm Al-Qura (Makkah)' },
+  { value: 'Egyptian', label: 'Egyptian General Authority' },
   { value: 'Karachi', label: 'University of Karachi' },
   { value: 'Tehran', label: 'Institute of Geophysics, Tehran' },
+  { value: 'Gulf', label: 'Gulf Region' },
+  { value: 'Kuwait', label: 'Kuwait' },
 ];
 
 const adhanStyles = [
@@ -54,6 +86,38 @@ const adhanStyles = [
   { value: 'madinah', label: 'Madinah Adhan' },
   { value: 'alafasy', label: 'Mishary Rashid Alafasy' },
   { value: 'abdulbasit', label: 'Abdul Basit' },
+];
+
+const reciters = [
+  { value: 'mishary', label: 'Mishary Rashid Alafasy' },
+  { value: 'sudais', label: 'Abdul Rahman Al-Sudais' },
+  { value: 'shuraim', label: 'Saud Al-Shuraim' },
+  { value: 'minshawi', label: 'Mohamed Siddiq El-Minshawi' },
+  { value: 'husary', label: 'Mahmoud Khalil Al-Husary' },
+  { value: 'abdulbasit', label: 'Abdul Basit Abdul Samad' },
+];
+
+const translationLanguages = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'Arabic Only' },
+  { value: 'ur', label: 'Urdu' },
+  { value: 'fr', label: 'French' },
+  { value: 'es', label: 'Spanish' },
+  { value: 'tr', label: 'Turkish' },
+  { value: 'id', label: 'Indonesian' },
+  { value: 'bn', label: 'Bengali' },
+];
+
+const cities = [
+  { value: 'london', label: 'London, United Kingdom', lat: 51.5074, lng: -0.1278, tz: 'Europe/London' },
+  { value: 'dubai', label: 'Dubai, UAE', lat: 25.2048, lng: 55.2708, tz: 'Asia/Dubai' },
+  { value: 'istanbul', label: 'Istanbul, Turkey', lat: 41.0082, lng: 28.9784, tz: 'Europe/Istanbul' },
+  { value: 'cairo', label: 'Cairo, Egypt', lat: 30.0444, lng: 31.2357, tz: 'Africa/Cairo' },
+  { value: 'mecca', label: 'Mecca, Saudi Arabia', lat: 21.4225, lng: 39.8262, tz: 'Asia/Riyadh' },
+  { value: 'kualalumpur', label: 'Kuala Lumpur, Malaysia', lat: 3.1390, lng: 101.6869, tz: 'Asia/Kuala_Lumpur' },
+  { value: 'jakarta', label: 'Jakarta, Indonesia', lat: -6.2088, lng: 106.8456, tz: 'Asia/Jakarta' },
+  { value: 'newyork', label: 'New York, USA', lat: 40.7128, lng: -74.0060, tz: 'America/New_York' },
+  { value: 'toronto', label: 'Toronto, Canada', lat: 43.6532, lng: -79.3832, tz: 'America/Toronto' },
 ];
 
 const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
@@ -126,7 +190,7 @@ const DashboardDeviceSettings = () => {
           </div>
         </div>
 
-        {/* Device Name */}
+        {/* Device Info */}
         <section className="glass-card p-6">
           <h2 className="text-lg font-medium text-foreground mb-4">Device Info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,13 +203,99 @@ const DashboardDeviceSettings = () => {
             </div>
             <div>
               <label className="text-sm text-muted-foreground mb-2 block">Location</label>
-              <Input 
-                value={`${device.location.city}, ${device.location.country}`}
-                onChange={(e) => {}}
-                disabled
-              />
+              <Select 
+                value="london"
+                onValueChange={(v) => {
+                  const city = cities.find(c => c.value === v);
+                  if (city) {
+                    updateSetting('location.city', city.label.split(',')[0]);
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities.map((city) => (
+                    <SelectItem key={city.value} value={city.value}>
+                      {city.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
+        </section>
+
+        {/* App Mode */}
+        <section className="glass-card p-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              {device.settings.mode === 'home' ? (
+                <Home className="w-5 h-5 text-primary" />
+              ) : (
+                <Building2 className="w-5 h-5 text-primary" />
+              )}
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-foreground">App Mode</h2>
+              <p className="text-sm text-muted-foreground">Choose between home and mosque mode</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={() => updateSetting('settings.mode', 'home')}
+              className={`p-4 rounded-xl border-2 transition-all text-left ${
+                device.settings.mode === 'home'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
+              }`}
+            >
+              <Home className="w-6 h-6 mb-2 text-primary" />
+              <h3 className="font-medium">Home Mode</h3>
+              <p className="text-sm text-muted-foreground">For personal use at home</p>
+            </button>
+            <button
+              onClick={() => updateSetting('settings.mode', 'mosque')}
+              className={`p-4 rounded-xl border-2 transition-all text-left ${
+                device.settings.mode === 'mosque'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
+              }`}
+            >
+              <Building2 className="w-6 h-6 mb-2 text-primary" />
+              <h3 className="font-medium">Mosque Mode</h3>
+              <p className="text-sm text-muted-foreground">For mosque or community use</p>
+            </button>
+          </div>
+
+          {/* Jumuah Settings - Only show in mosque mode */}
+          {device.settings.mode === 'mosque' && (
+            <div className="pt-4 border-t border-border/50 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-foreground">Enable Jumuah Prayer</p>
+                  <p className="text-sm text-muted-foreground">Show Friday prayer time</p>
+                </div>
+                <Switch 
+                  checked={device.settings.jumuahEnabled}
+                  onCheckedChange={(v) => updateSetting('settings.jumuahEnabled', v)}
+                />
+              </div>
+              {device.settings.jumuahEnabled && (
+                <div>
+                  <label className="text-sm text-muted-foreground mb-2 block">Jumuah Time</label>
+                  <Input 
+                    type="time"
+                    value={device.settings.jumuahTime}
+                    onChange={(e) => updateSetting('settings.jumuahTime', e.target.value)}
+                    className="w-40"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Prayer Calculation */}
@@ -252,6 +402,28 @@ const DashboardDeviceSettings = () => {
                 step={5}
               />
             </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Fade In</p>
+                <p className="text-sm text-muted-foreground">Gradually increase volume at start</p>
+              </div>
+              <Switch 
+                checked={device.settings.adhanFadeIn}
+                onCheckedChange={(v) => updateSetting('settings.adhanFadeIn', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Dua After Adhan</p>
+                <p className="text-sm text-muted-foreground">Play supplication after the call to prayer</p>
+              </div>
+              <Switch 
+                checked={device.settings.duaAfterAdhan}
+                onCheckedChange={(v) => updateSetting('settings.duaAfterAdhan', v)}
+              />
+            </div>
           </div>
         </section>
 
@@ -289,6 +461,91 @@ const DashboardDeviceSettings = () => {
           </div>
         </section>
 
+        {/* Quran Settings */}
+        <section className="glass-card p-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-emerald/10">
+              <BookOpen className="w-5 h-5 text-emerald" />
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-foreground">Quran Settings</h2>
+              <p className="text-sm text-muted-foreground">Configure Quran recitation preferences</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Default Reciter</label>
+                <Select 
+                  value={device.settings.defaultReciter}
+                  onValueChange={(v) => updateSetting('settings.defaultReciter', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {reciters.map((reciter) => (
+                      <SelectItem key={reciter.value} value={reciter.value}>
+                        {reciter.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Playback Speed</label>
+                <Select 
+                  value={String(device.settings.playbackSpeed)}
+                  onValueChange={(v) => updateSetting('settings.playbackSpeed', parseFloat(v))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0.5">0.5x</SelectItem>
+                    <SelectItem value="0.75">0.75x</SelectItem>
+                    <SelectItem value="1">1.0x (Normal)</SelectItem>
+                    <SelectItem value="1.25">1.25x</SelectItem>
+                    <SelectItem value="1.5">1.5x</SelectItem>
+                    <SelectItem value="2">2.0x</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-muted-foreground mb-2 block">Translation Language</label>
+              <Select 
+                value={device.settings.translationLanguage}
+                onValueChange={(v) => updateSetting('settings.translationLanguage', v)}
+              >
+                <SelectTrigger className="w-full md:w-1/2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {translationLanguages.map((lang) => (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      {lang.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Show Transliteration</p>
+                <p className="text-sm text-muted-foreground">Display romanized Arabic text</p>
+              </div>
+              <Switch 
+                checked={device.settings.showTransliteration}
+                onCheckedChange={(v) => updateSetting('settings.showTransliteration', v)}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Display Settings */}
         <section className="glass-card p-6 space-y-6">
           <div className="flex items-center gap-3">
@@ -302,28 +559,6 @@ const DashboardDeviceSettings = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-foreground">Show Hijri Date</p>
-                <p className="text-sm text-muted-foreground">Display Islamic calendar date</p>
-              </div>
-              <Switch 
-                checked={device.settings.showHijriDate}
-                onCheckedChange={(v) => updateSetting('settings.showHijriDate', v)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-foreground">Show Quote of the Day</p>
-                <p className="text-sm text-muted-foreground">Display inspiring Islamic quotes</p>
-              </div>
-              <Switch 
-                checked={device.settings.showCentralQuote}
-                onCheckedChange={(v) => updateSetting('settings.showCentralQuote', v)}
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-muted-foreground mb-2 block">Clock Format</label>
@@ -351,6 +586,7 @@ const DashboardDeviceSettings = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="disabled">Disabled</SelectItem>
+                    <SelectItem value="20s">20 seconds</SelectItem>
                     <SelectItem value="1m">1 minute</SelectItem>
                     <SelectItem value="5m">5 minutes</SelectItem>
                     <SelectItem value="10m">10 minutes</SelectItem>
@@ -358,6 +594,116 @@ const DashboardDeviceSettings = () => {
                 </Select>
               </div>
             </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Show Hijri Date</p>
+                <p className="text-sm text-muted-foreground">Display Islamic calendar date</p>
+              </div>
+              <Switch 
+                checked={device.settings.showHijriDate}
+                onCheckedChange={(v) => updateSetting('settings.showHijriDate', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Show Quote of the Day</p>
+                <p className="text-sm text-muted-foreground">Display inspiring Islamic quotes</p>
+              </div>
+              <Switch 
+                checked={device.settings.showCentralQuote}
+                onCheckedChange={(v) => updateSetting('settings.showCentralQuote', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Show Seconds</p>
+                <p className="text-sm text-muted-foreground">Display seconds in the clock</p>
+              </div>
+              <Switch 
+                checked={device.settings.showSeconds}
+                onCheckedChange={(v) => updateSetting('settings.showSeconds', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Background Slideshow</p>
+                <p className="text-sm text-muted-foreground">Rotate background images automatically</p>
+              </div>
+              <Switch 
+                checked={device.settings.backgroundSlideshow}
+                onCheckedChange={(v) => updateSetting('settings.backgroundSlideshow', v)}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Screen Protection */}
+        <section className="glass-card p-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Shield className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-foreground">Screen Protection</h2>
+              <p className="text-sm text-muted-foreground">Protect your TV screen from burn-in</p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-foreground">Screen Burn Protection</p>
+              <p className="text-sm text-muted-foreground">Subtle element movement for OLED TVs</p>
+            </div>
+            <Switch 
+              checked={device.settings.screenBurnProtection}
+              onCheckedChange={(v) => updateSetting('settings.screenBurnProtection', v)}
+            />
+          </div>
+        </section>
+
+        {/* Night Mode */}
+        <section className="glass-card p-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gold/10">
+              <Moon className="w-5 h-5 text-gold" />
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-foreground">Night Mode</h2>
+              <p className="text-sm text-muted-foreground">Dim the display during night hours</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-foreground">Enable Night Mode</p>
+                <p className="text-sm text-muted-foreground">Automatically dim after Isha</p>
+              </div>
+              <Switch 
+                checked={device.settings.nightModeEnabled}
+                onCheckedChange={(v) => updateSetting('settings.nightModeEnabled', v)}
+              />
+            </div>
+
+            {device.settings.nightModeEnabled && (
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm text-muted-foreground">Dim Level</label>
+                  <span className="text-sm text-foreground font-medium">{device.settings.nightModeDimLevel}%</span>
+                </div>
+                <Slider 
+                  value={[device.settings.nightModeDimLevel]}
+                  onValueChange={(v) => updateSetting('settings.nightModeDimLevel', v[0])}
+                  min={10}
+                  max={50}
+                  step={5}
+                />
+              </div>
+            )}
           </div>
         </section>
 
