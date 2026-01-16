@@ -17,7 +17,7 @@ const ClassicLayout = ({
   onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   return (
-    <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
+    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all ${isMiniPlayerVisible ? 'pb-28 sm:pb-32 md:pb-36' : 'pb-16 sm:pb-20'}`}>
       {/* Header */}
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4">
         <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
@@ -46,15 +46,15 @@ const ClassicLayout = ({
       </header>
 
       {/* Center content */}
-      <main className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 lg:gap-8">
+      <main className="flex-1 flex flex-col items-center justify-center gap-2 sm:gap-4 lg:gap-6 overflow-hidden">
         {/* Time */}
         <div className="text-center">
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-extralight leading-none tabular-nums text-foreground">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-extralight leading-none tabular-nums text-foreground">
             {formatTime(currentTime)}
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mt-2 sm:mt-4">{formatDate(currentTime)}</p>
+          <p className="text-sm sm:text-lg lg:text-xl text-muted-foreground mt-1 sm:mt-2">{formatDate(currentTime)}</p>
           {settings.display.showHijriDate && hijriDate && (
-            <p className="text-base sm:text-lg lg:text-xl text-primary mt-1 sm:mt-2 font-arabic">
+            <p className="text-sm sm:text-base lg:text-lg text-primary mt-0.5 sm:mt-1 font-arabic">
               {hijriDate.day} {hijriDate.month} {hijriDate.year} هـ
             </p>
           )}
@@ -62,11 +62,11 @@ const ClassicLayout = ({
 
         {/* Next prayer */}
         {nextPrayer && timeUntilNextPrayer && (
-          <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-8 py-2 sm:py-4 glass-card border-primary/30">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-primary animate-pulse" />
-            <span className="text-base sm:text-lg lg:text-xl">
-              <span className="font-arabic text-lg sm:text-xl lg:text-2xl text-primary">{nextPrayer.arabicName}</span>
-              <span className="mx-2 sm:mx-3 text-muted-foreground">•</span>
+          <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-1.5 sm:py-3 glass-card border-primary/30">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm sm:text-base lg:text-lg">
+              <span className="font-arabic text-base sm:text-lg lg:text-xl text-primary">{nextPrayer.arabicName}</span>
+              <span className="mx-1.5 sm:mx-2 text-muted-foreground">•</span>
               <span>{nextPrayer.name} in {timeUntilNextPrayer.formatted}</span>
             </span>
           </div>
@@ -74,44 +74,44 @@ const ClassicLayout = ({
 
         {/* Quote of the Day */}
         {settings.display.showCentralQuote && (
-          <div className="max-w-2xl lg:max-w-4xl text-center mt-4 sm:mt-8 px-4">
-            <p className="text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary/60 mb-3 sm:mb-6">Quote of the Day</p>
+          <div className="max-w-xl lg:max-w-3xl text-center mt-2 sm:mt-4 px-2 sm:px-4">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-primary/60 mb-2 sm:mb-4">Quote of the Day</p>
             {quoteOfTheDay.arabic && (
-              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-arabic text-primary mb-3 sm:mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(212,175,55,0.2)]" dir="rtl">
+              <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-arabic text-primary mb-2 sm:mb-4 leading-relaxed drop-shadow-[0_2px_10px_rgba(212,175,55,0.2)]" dir="rtl">
                 {quoteOfTheDay.arabic}
               </p>
             )}
             <blockquote className="relative">
-              <p className="font-quote text-base sm:text-lg md:text-xl lg:text-2xl text-foreground/90 italic leading-relaxed px-4 sm:px-8">
+              <p className="font-quote text-sm sm:text-base md:text-lg lg:text-xl text-foreground/90 italic leading-relaxed px-2 sm:px-6">
                 "{quoteOfTheDay.text}"
               </p>
             </blockquote>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-4 font-serif tracking-wide">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1.5 sm:mt-3 font-serif tracking-wide">
               — {quoteOfTheDay.source}
             </p>
           </div>
         )}
 
         {/* Action buttons */}
-        <div className="mt-4 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <div className="mt-2 sm:mt-4 lg:mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <button
             data-focusable="true"
             onClick={() => onNavigate('/player?type=adhan')}
-            className="flex items-center gap-2 sm:gap-4 px-6 sm:px-8 py-3 sm:py-4 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
+            className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
           >
-            <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-            <span className="text-sm sm:text-base lg:text-lg">Play Adhan</span>
+            <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-xs sm:text-sm lg:text-base">Play Adhan</span>
           </button>
           <InvocationsButton onClick={onOpenInvocationsDialog} />
         </div>
       </main>
 
       {/* Prayer times grid */}
-      <footer className={`flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 transition-all ${isMiniPlayerVisible ? 'mb-20 sm:mb-24' : ''}`}>
+      <footer className="flex flex-wrap justify-center gap-1.5 sm:gap-2 lg:gap-3 mt-4 sm:mt-6">
         {prayers.map((prayer) => (
           <div
             key={prayer.name}
-            className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl transition-all ${
+            className={`px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 lg:py-3 rounded-lg sm:rounded-xl transition-all ${
               prayer.isNext 
                 ? 'glass-card border-primary/50 gold-glow' 
                 : prayer.isPassed 
@@ -119,9 +119,9 @@ const ClassicLayout = ({
                   : 'glass-card'
             }`}
           >
-            <p className="text-xs sm:text-sm text-muted-foreground">{prayer.name}</p>
-            <p className="font-arabic text-sm sm:text-base lg:text-lg text-primary">{prayer.arabicName}</p>
-            <p className="text-base sm:text-lg lg:text-xl tabular-nums mt-0.5 sm:mt-1">{prayer.time}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">{prayer.name}</p>
+            <p className="font-arabic text-xs sm:text-sm lg:text-base text-primary">{prayer.arabicName}</p>
+            <p className="text-sm sm:text-base lg:text-lg tabular-nums mt-0.5">{prayer.time}</p>
           </div>
         ))}
       </footer>

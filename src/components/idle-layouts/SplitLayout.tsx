@@ -17,7 +17,7 @@ const SplitLayout = ({
   onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   return (
-    <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
+    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all ${isMiniPlayerVisible ? 'pb-28 sm:pb-32 md:pb-36' : 'pb-8 sm:pb-10'}`}>
       {/* Header */}
       <header className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
