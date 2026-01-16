@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, RotateCcw, Scroll, Play, Pause, Volume2 } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, RotateCcw, Scroll, Play, Pause, Volume2, Minimize2 } from 'lucide-react';
 import { JawshanSection, getTotalSections } from '@/data/jawshan';
 import { useTranslation } from '@/lib/i18n';
 import { useApp } from '@/contexts/AppContext';
@@ -7,6 +7,7 @@ import { useApp } from '@/contexts/AppContext';
 interface JawshanContentProps {
   section: JawshanSection;
   onClose: () => void;
+  onMinimize: () => void;
   onNextSection: () => void;
   onPrevSection: () => void;
 }
@@ -14,6 +15,7 @@ interface JawshanContentProps {
 const JawshanContent = ({
   section,
   onClose,
+  onMinimize,
   onNextSection,
   onPrevSection,
 }: JawshanContentProps) => {
@@ -130,6 +132,13 @@ const JawshanContent = ({
               <span>{t('player.audio')}</span>
             </div>
           )}
+          <button
+            onClick={onMinimize}
+            className="p-2 rounded-full hover:bg-muted/50 transition-colors"
+            aria-label="Minimize"
+          >
+            <Minimize2 className="w-5 h-5" />
+          </button>
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-muted/50 transition-colors"

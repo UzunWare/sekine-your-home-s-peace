@@ -378,6 +378,7 @@ const Player = () => {
           <JawshanContent
             section={jawshanSection}
             onClose={handleStop}
+            onMinimize={handleMinimize}
             onNextSection={() => {
               if (sectionNumber < getTotalSections()) {
                 navigate(`/player?type=jawshan&section=${sectionNumber + 1}`);
@@ -457,34 +458,7 @@ const Player = () => {
           />
         )}
 
-        {/* Jawshan controls - with skip buttons for section navigation */}
-        {contentType === 'jawshan' && (
-          <PlayerControls
-            contentType={contentType}
-            audioRef={audioRef}
-            currentTime={playerState.progress}
-            duration={playerState.duration}
-            volume={volume}
-            isMuted={isMuted}
-            canSkipPrev={sectionNumber > 1}
-            canSkipNext={sectionNumber < getTotalSections()}
-            onSeek={handleSeek}
-            onVolumeChange={handleVolumeChange}
-            onToggleMute={toggleMute}
-            onSkipPrev={() => {
-              if (sectionNumber > 1) {
-                navigate(`/player?type=jawshan&section=${sectionNumber - 1}`);
-              }
-            }}
-            onSkipNext={() => {
-              if (sectionNumber < getTotalSections()) {
-                navigate(`/player?type=jawshan&section=${sectionNumber + 1}`);
-              }
-            }}
-            onMinimize={handleMinimize}
-            onStop={handleStop}
-          />
-        )}
+        {/* Jawshan has its own controls in JawshanContent - no PlayerControls needed */}
       </div>
     </div>
   );
