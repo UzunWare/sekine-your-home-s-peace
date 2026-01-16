@@ -6,6 +6,7 @@ import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { WifiOff } from 'lucide-react';
 import { getQuoteOfTheDay } from '@/data/dailyQuotes';
 import MiniPlayer from '@/components/MiniPlayer';
+import PrayerSelectionDialog from '@/components/PrayerSelectionDialog';
 import mosqueBg from '@/assets/mosque-background-1.jpg';
 import {
   ClassicLayout,
@@ -42,6 +43,7 @@ const Idle = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quoteOfTheDay] = useState(() => getQuoteOfTheDay());
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const [isInvocationsDialogOpen, setIsInvocationsDialogOpen] = useState(false);
 
   // Check if mini player is showing
   const isMiniPlayerVisible = playerState.isMinimized && playerState.currentTrack;
@@ -100,6 +102,15 @@ const Idle = () => {
     navigate(path);
   }, [navigate]);
 
+  const handleOpenInvocationsDialog = useCallback(() => {
+    setIsInvocationsDialogOpen(true);
+  }, []);
+
+  const handleSelectPrayer = useCallback((prayerId: string) => {
+    setIsInvocationsDialogOpen(false);
+    navigate(`/invocations?prayer=${prayerId}`);
+  }, [navigate]);
+
   // Get the selected layout component
   const LayoutComponent = layoutComponents[settings.display.idleLayout] || ClassicLayout;
 
@@ -117,6 +128,7 @@ const Idle = () => {
     isOnline: appState.isOnline,
     isMiniPlayerVisible: !!isMiniPlayerVisible,
     onNavigate: handleNavigate,
+    onOpenInvocationsDialog: handleOpenInvocationsDialog,
   };
 
   return (
@@ -153,6 +165,15 @@ const Idle = () => {
           <p className="text-xs text-muted-foreground/50">Sekine TV • Tranquility for your home</p>
         </div>
       )}
+
+      {/* Prayer Selection Dialog for Invocations */}
+      <PrayerSelectionDialog
+        open={isInvocationsDialogOpen}
+        onOpenChange={setIsInvocationsDialogOpen}
+        title="Invocations After Prayer"
+        description="Select which prayer's invocations you'd like to recite"
+        onSelectPrayer={handleSelectPrayer}
+      />
     </div>
   );
 };

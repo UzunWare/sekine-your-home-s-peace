@@ -1,5 +1,6 @@
 import { MapPin, Settings, BookOpen, Volume2 } from 'lucide-react';
 import { IdleLayoutProps } from './types';
+import InvocationsButton from '@/components/InvocationsButton';
 
 const SplitLayout = ({
   currentTime,
@@ -13,6 +14,7 @@ const SplitLayout = ({
   settings,
   isMiniPlayerVisible,
   onNavigate,
+  onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   return (
     <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
@@ -77,15 +79,18 @@ const SplitLayout = ({
             </div>
           )}
 
-          {/* Play Adhan button */}
-          <button
-            data-focusable="true"
-            onClick={() => onNavigate('/adhan')}
-            className="mt-4 flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
-          >
-            <Volume2 className="w-5 h-5 text-primary" />
-            <span className="text-sm sm:text-base">Play Adhan</span>
-          </button>
+          {/* Action buttons */}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              data-focusable="true"
+              onClick={() => onNavigate('/adhan')}
+              className="flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
+            >
+              <Volume2 className="w-5 h-5 text-primary" />
+              <span className="text-sm sm:text-base">Play Adhan</span>
+            </button>
+            <InvocationsButton onClick={onOpenInvocationsDialog} />
+          </div>
         </div>
 
         {/* Right column - Prayer list */}
