@@ -141,6 +141,8 @@ const englishTranslations: Translations = {
   'jawshan.navigateLines': 'Navigate lines',
   'jawshan.navigateSections': 'Navigate sections',
   'jawshan.reset': 'Reset',
+  'jawshan.playRange': 'Play',
+  'jawshan.sectionsInRange': 'sections in range',
   
   // Footer hints
   'hint.selectPress': 'Select/Press',

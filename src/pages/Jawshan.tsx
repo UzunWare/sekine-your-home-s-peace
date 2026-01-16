@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Scroll, Play, Search } from 'lucide-react';
+import { ChevronLeft, Scroll, Play, Search, PlayCircle } from 'lucide-react';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { useTranslation } from '@/lib/i18n';
 import { jawshanSections, getAvailableSections, getTotalSections } from '@/data/jawshan';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 
 // Define section ranges for tabs
 const SECTION_RANGES = Array.from({ length: 10 }, (_, i) => ({
@@ -29,6 +30,11 @@ const Jawshan = () => {
 
   const handleSectionSelect = useCallback((sectionNumber: number) => {
     navigate(`/player?type=jawshan&section=${sectionNumber}`);
+  }, [navigate]);
+
+  const handlePlayRange = useCallback((startSection: number, endSection: number) => {
+    // Navigate to player with range parameters for auto-play
+    navigate(`/player?type=jawshan&section=${startSection}&rangeEnd=${endSection}&autoplay=true`);
   }, [navigate]);
 
   const handleContinueReading = useCallback(() => {
@@ -114,26 +120,46 @@ const Jawshan = () => {
       <ScrollArea className="h-[calc(100vh-180px)]">
         <div className="p-4 sm:p-6">
           {/* Section Range Tabs */}
-          <Tabs value={activeRange} onValueChange={setActiveRange} className="mb-6">
-            <TabsList className="grid grid-cols-5 sm:grid-cols-10 gap-1 h-auto bg-muted/50 p-1 rounded-lg">
-              {SECTION_RANGES.map(range => {
-                const hasAvailable = availableSections.some(
-                  s => s >= range.start && s <= range.end
-                );
-                return (
-                  <TabsTrigger
-                    key={range.value}
-                    value={range.value}
-                    data-focusable="true"
-                    disabled={!hasAvailable}
-                    className="px-2 py-2 text-xs sm:text-sm data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-md disabled:opacity-40"
-                  >
-                    {range.value}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-          </Tabs>
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <Tabs value={activeRange} onValueChange={setActiveRange} className="flex-1">
+                <TabsList className="grid grid-cols-5 sm:grid-cols-10 gap-1 h-auto bg-muted/50 p-1 rounded-lg">
+                  {SECTION_RANGES.map(range => {
+                    const hasAvailable = availableSections.some(
+                      s => s >= range.start && s <= range.end
+                    );
+                    return (
+                      <TabsTrigger
+                        key={range.value}
+                        value={range.value}
+                        data-focusable="true"
+                        disabled={!hasAvailable}
+                        className="px-2 py-2 text-xs sm:text-sm data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-md disabled:opacity-40"
+                      >
+                        {range.value}
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+              </Tabs>
+            </div>
+            
+            {/* Play Range Button */}
+            <div className="flex items-center gap-3">
+              <Button
+                data-focusable="true"
+                onClick={() => handlePlayRange(currentRange.start, currentRange.end)}
+                variant="outline"
+                className="flex items-center gap-2 border-amber-500/50 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400"
+              >
+                <PlayCircle className="w-4 h-4" />
+                <span>{t('jawshan.playRange')} {activeRange}</span>
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {filteredSections.length} {t('jawshan.sectionsInRange')}
+              </span>
+            </div>
+          </div>
 
           {/* Detailed section cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
