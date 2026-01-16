@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, RotateCcw, Scroll } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, RotateCcw, Scroll, Play, Pause, Volume2 } from 'lucide-react';
 import { JawshanSection, getTotalSections } from '@/data/jawshan';
 import { useTranslation } from '@/lib/i18n';
+import { useApp } from '@/contexts/AppContext';
 
 interface JawshanContentProps {
   section: JawshanSection;
@@ -17,9 +18,17 @@ const JawshanContent = ({
   onPrevSection,
 }: JawshanContentProps) => {
   const { t } = useTranslation();
+  const { playerState, setPlayerState } = useApp();
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [showClosingPhrase, setShowClosingPhrase] = useState(false);
   const totalSections = getTotalSections();
+  
+  const hasAudio = !!section.audioUrl;
+  const isPlaying = playerState.isPlaying;
+  
+  const togglePlayPause = useCallback(() => {
+    setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
+  }, [setPlayerState]);
 
   // Reset line index when section changes
   useEffect(() => {
@@ -113,13 +122,22 @@ const JawshanContent = ({
             </p>
           </div>
         </div>
-        <button
-          onClick={onClose}
-          className="p-2 rounded-full hover:bg-muted/50 transition-colors"
-          aria-label="Close"
-        >
-          <X className="w-6 h-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Audio indicator */}
+          {hasAudio && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/20 text-primary text-xs">
+              <Volume2 className="w-3 h-3" />
+              <span>{t('player.audio')}</span>
+            </div>
+          )}
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-muted/50 transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
       </header>
 
       {/* Main content - current line */}
@@ -219,17 +237,32 @@ const JawshanContent = ({
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          <button
-            onClick={resetSection}
-            className="p-3 rounded-full bg-muted/50 hover:bg-muted transition-all"
-            aria-label="Reset section"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
+          {/* Play/Pause button - only show if audio available */}
+          {hasAudio ? (
+            <button
+              onClick={togglePlayPause}
+              className="p-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-lg"
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? (
+                <Pause className="w-6 h-6" />
+              ) : (
+                <Play className="w-6 h-6 ml-0.5" />
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={resetSection}
+              className="p-3 rounded-full bg-muted/50 hover:bg-muted transition-all"
+              aria-label="Reset section"
+            >
+              <RotateCcw className="w-5 h-5" />
+            </button>
+          )}
 
           <button
             onClick={goToNextLine}
-            className="p-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
+            className="p-4 rounded-full bg-primary/80 text-primary-foreground hover:bg-primary transition-all"
             aria-label="Next line"
           >
             <ChevronRight className="w-6 h-6" />

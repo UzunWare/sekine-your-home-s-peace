@@ -95,6 +95,7 @@ const englishTranslations: Translations = {
   'player.minimize': 'Minimize',
   'player.expand': 'Expand',
   'player.volume': 'Volume',
+  'player.audio': 'Audio',
   
   // Settings
   'settings.title': 'Settings',
