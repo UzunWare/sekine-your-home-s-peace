@@ -26,11 +26,28 @@ const JawshanContent = ({
   const totalSections = getTotalSections();
   
   const hasAudio = !!section.audioUrl;
-  const isPlaying = playerState.isPlaying;
+  const isPlaying = playerState.isPlaying && playerState.audioUrl === section.audioUrl;
   
   const togglePlayPause = useCallback(() => {
-    setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
-  }, [setPlayerState]);
+    if (!hasAudio) return;
+    
+    if (isPlaying) {
+      // Pause
+      setPlayerState(prev => ({ ...prev, isPlaying: false }));
+    } else {
+      // Play - set audio URL and start playing
+      setPlayerState(prev => ({
+        ...prev,
+        audioUrl: section.audioUrl,
+        isPlaying: true,
+        contentType: 'jawshan',
+        currentTrack: {
+          title: `${section.arabicTitle} - Section ${section.sectionNumber}`,
+          subtitle: 'Jawshan Kabir',
+        },
+      }));
+    }
+  }, [hasAudio, isPlaying, section.audioUrl, section.arabicTitle, section.sectionNumber, setPlayerState]);
 
   // Reset line index when section changes
   useEffect(() => {
@@ -246,28 +263,33 @@ const JawshanContent = ({
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          {/* Play/Pause button - only show if audio available */}
-          {hasAudio ? (
-            <button
-              onClick={togglePlayPause}
-              className="p-4 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-lg"
-              aria-label={isPlaying ? 'Pause' : 'Play'}
-            >
-              {isPlaying ? (
-                <Pause className="w-6 h-6" />
-              ) : (
-                <Play className="w-6 h-6 ml-0.5" />
-              )}
-            </button>
-          ) : (
-            <button
-              onClick={resetSection}
-              className="p-3 rounded-full bg-muted/50 hover:bg-muted transition-all"
-              aria-label="Reset section"
-            >
-              <RotateCcw className="w-5 h-5" />
-            </button>
-          )}
+          {/* Play/Pause button - always visible, disabled if no audio */}
+          <button
+            onClick={togglePlayPause}
+            disabled={!hasAudio}
+            className={`p-4 rounded-full transition-all shadow-lg ${
+              hasAudio 
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'bg-muted/50 text-muted-foreground cursor-not-allowed opacity-50'
+            }`}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            title={!hasAudio ? 'Audio coming soon' : undefined}
+          >
+            {isPlaying ? (
+              <Pause className="w-6 h-6" />
+            ) : (
+              <Play className="w-6 h-6 ml-0.5" />
+            )}
+          </button>
+
+          {/* Reset button */}
+          <button
+            onClick={resetSection}
+            className="p-2 rounded-full bg-muted/30 hover:bg-muted/50 transition-all"
+            aria-label="Reset section"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
 
           <button
             onClick={goToNextLine}
