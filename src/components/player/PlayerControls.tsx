@@ -62,7 +62,7 @@ const PlayerControls = ({
   };
 
   const showRepeat = contentType === 'quran';
-  const showSkipButtons = contentType === 'quran';
+  const showSkipButtons = contentType === 'quran' || contentType === 'jawshan';
   const isAdhan = contentType === 'adhan';
 
   return (

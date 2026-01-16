@@ -12,6 +12,7 @@ export interface JawshanSection {
   arabicTitle: string;
   lines: JawshanLine[];
   closingPhrase: JawshanLine;
+  audioUrl?: string; // Optional audio recitation URL for this section
 }
 
 // Common closing phrase for all sections

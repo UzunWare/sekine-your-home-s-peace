@@ -60,13 +60,14 @@ const Player = () => {
   const audioUrl = useMemo(() => {
     if (contentType === 'quran') return quranAudioUrl;
     if (contentType === 'invocations') return prayerData?.audioUrl ?? '';
+    if (contentType === 'jawshan') return jawshanSection?.audioUrl ?? '';
     if (contentType === 'adhan') {
       // For adhan, we'd use actual audio files - for now return empty as placeholder
       // Phase-based audio would be: adhanPhase === 'adhan' ? adhanAudioUrl : duaAudioUrl
       return '';
     }
     return '';
-  }, [contentType, quranAudioUrl, prayerData, adhanPhase]);
+  }, [contentType, quranAudioUrl, prayerData, jawshanSection, adhanPhase]);
   
   // Local state (volume/mute are local, time/duration come from playerState)
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
@@ -143,7 +144,9 @@ const Player = () => {
           arabicText: jawshanSection.lines[0]?.arabic || '',
           translation: jawshanSection.closingPhrase.translation,
         },
+        audioUrl: jawshanSection.audioUrl || undefined,
         isMinimized: false,
+        isPlaying: !!jawshanSection.audioUrl, // Auto-play if audio available
       }));
     } else if (contentType === 'adhan') {
       hasInitialized.current = true;
@@ -449,6 +452,35 @@ const Player = () => {
             onSeek={handleSeek}
             onVolumeChange={handleVolumeChange}
             onToggleMute={toggleMute}
+            onMinimize={handleMinimize}
+            onStop={handleStop}
+          />
+        )}
+
+        {/* Jawshan controls - with skip buttons for section navigation */}
+        {contentType === 'jawshan' && (
+          <PlayerControls
+            contentType={contentType}
+            audioRef={audioRef}
+            currentTime={playerState.progress}
+            duration={playerState.duration}
+            volume={volume}
+            isMuted={isMuted}
+            canSkipPrev={sectionNumber > 1}
+            canSkipNext={sectionNumber < getTotalSections()}
+            onSeek={handleSeek}
+            onVolumeChange={handleVolumeChange}
+            onToggleMute={toggleMute}
+            onSkipPrev={() => {
+              if (sectionNumber > 1) {
+                navigate(`/player?type=jawshan&section=${sectionNumber - 1}`);
+              }
+            }}
+            onSkipNext={() => {
+              if (sectionNumber < getTotalSections()) {
+                navigate(`/player?type=jawshan&section=${sectionNumber + 1}`);
+              }
+            }}
             onMinimize={handleMinimize}
             onStop={handleStop}
           />
