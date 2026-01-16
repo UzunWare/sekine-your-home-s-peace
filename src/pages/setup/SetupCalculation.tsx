@@ -25,12 +25,12 @@ const SetupCalculation = () => {
     <div className="fixed inset-0 bg-background flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 overflow-auto">
       {/* Progress indicator */}
       <div className="absolute top-6 right-6 sm:top-8 sm:right-8 md:top-10 md:right-10 lg:top-12 lg:right-12 flex items-center gap-2">
-        <span className="text-xs sm:text-sm text-muted-foreground">Step 4 of 6</span>
+        <span className="text-xs sm:text-sm text-muted-foreground">Step 5 of 7</span>
         <div className="flex gap-1">
-          {[1, 2, 3, 4, 5, 6].map((step) => (
+          {[1, 2, 3, 4, 5, 6, 7].map((step) => (
             <div
               key={step}
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${step <= 4 ? 'bg-primary' : 'bg-muted'}`}
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${step <= 5 ? 'bg-primary' : 'bg-muted'}`}
             />
           ))}
         </div>

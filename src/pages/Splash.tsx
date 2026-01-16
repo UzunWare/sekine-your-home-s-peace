@@ -16,7 +16,7 @@ const Splash = () => {
 
   useEffect(() => {
     if (countdown <= 0) {
-      navigate(appState.isSetupComplete ? '/idle' : '/setup');
+      navigate(appState.isSetupComplete ? '/idle' : '/setup/language');
       return;
     }
     const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
@@ -24,7 +24,7 @@ const Splash = () => {
   }, [countdown, navigate, appState.isSetupComplete]);
 
   const handleSkip = () => {
-    navigate(appState.isSetupComplete ? '/idle' : '/setup');
+    navigate(appState.isSetupComplete ? '/idle' : '/setup/language');
   };
 
   return (
