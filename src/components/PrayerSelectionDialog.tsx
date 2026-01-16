@@ -53,6 +53,7 @@ const PrayerSelectionDialog = ({
               data-focusable="true"
               variant="outline"
               onClick={() => onSelectPrayer(prayer.id)}
+              data-prayer-id={prayer.id}
               className="flex items-center justify-between px-6 py-6 h-auto border-primary/20 hover:bg-primary/10 hover:border-primary/40 focus:ring-2 focus:ring-primary transition-all"
             >
               <span className="text-base font-medium">{prayer.name}</span>
