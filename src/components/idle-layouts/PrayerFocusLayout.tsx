@@ -70,7 +70,7 @@ const PrayerFocusLayout = ({
                     ? 'bg-card/20 opacity-40' 
                     : 'glass-card hover:bg-card/80 focus:ring-2 focus:ring-primary'
               }`}
-              onClick={() => prayer.isNext && onNavigate('/adhan')}
+              onClick={() => prayer.isNext && onNavigate('/player?type=adhan')}
             >
               <p className="font-arabic text-2xl sm:text-3xl lg:text-4xl text-primary mb-2">
                 {prayer.arabicName}

@@ -83,7 +83,7 @@ const SplitLayout = ({
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               data-focusable="true"
-              onClick={() => onNavigate('/adhan')}
+              onClick={() => onNavigate('/player?type=adhan')}
               className="flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
             >
               <Volume2 className="w-5 h-5 text-primary" />

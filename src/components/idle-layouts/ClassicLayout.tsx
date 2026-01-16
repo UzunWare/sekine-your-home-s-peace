@@ -96,7 +96,7 @@ const ClassicLayout = ({
         <div className="mt-4 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <button
             data-focusable="true"
-            onClick={() => onNavigate('/adhan')}
+            onClick={() => onNavigate('/player?type=adhan')}
             className="flex items-center gap-2 sm:gap-4 px-6 sm:px-8 py-3 sm:py-4 bg-primary/10 border border-primary/30 rounded-full hover:bg-primary/20 focus:ring-2 focus:ring-primary transition-all"
           >
             <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
