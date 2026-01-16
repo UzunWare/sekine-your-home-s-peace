@@ -125,6 +125,22 @@ const englishTranslations: Translations = {
   'idle.offline': 'Offline',
   'idle.nextPrayer': 'Next Prayer',
   
+  // Jawshan
+  'jawshan.title': 'Jawshan Kabir',
+  'jawshan.section': 'Section',
+  'jawshan.of': 'of',
+  'jawshan.line': 'Line',
+  'jawshan.names': 'divine names',
+  'jawshan.closingPhrase': 'Closing Supplication',
+  'jawshan.continue': 'Continue Reading',
+  'jawshan.sectionsAvailable': 'sections available',
+  'jawshan.searchPlaceholder': 'Search sections...',
+  'jawshan.noResults': 'No sections found',
+  'jawshan.clearSearch': 'Clear search',
+  'jawshan.navigateLines': 'Navigate lines',
+  'jawshan.navigateSections': 'Navigate sections',
+  'jawshan.reset': 'Reset',
+  
   // Footer hints
   'hint.selectPress': 'Select/Press',
   'hint.navigate': 'Navigate',

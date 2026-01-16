@@ -138,7 +138,7 @@ export interface AdhanStyle {
 }
 
 // Player types - unified media player content types
-export type PlayerContentType = 'quran' | 'adhan' | 'invocations';
+export type PlayerContentType = 'quran' | 'adhan' | 'invocations' | 'jawshan';
 
 export interface PlayerState {
   isPlaying: boolean;
