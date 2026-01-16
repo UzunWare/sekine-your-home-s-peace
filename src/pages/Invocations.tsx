@@ -65,14 +65,24 @@ const Invocations = () => {
   }, [prayerData?.audioUrl]);
 
   const togglePlayPause = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current) {
+      console.log('No audio ref available');
+      return;
+    }
     
     if (isPlaying) {
       audioRef.current.pause();
+      setIsPlaying(false);
     } else {
-      audioRef.current.play();
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error('Audio play failed:', error);
+          setIsPlaying(false);
+        });
     }
-    setIsPlaying(!isPlaying);
   }, [isPlaying]);
 
   const toggleMute = useCallback(() => {
