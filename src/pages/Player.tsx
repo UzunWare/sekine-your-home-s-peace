@@ -38,6 +38,13 @@ const Player = () => {
   const prayerId = searchParams.get('prayer') || 'fajr';
   const prayerData = useMemo(() => getPrayerInvocations(prayerId), [prayerId]);
   
+  // Jawshan-specific params
+  const sectionNumber = parseInt(searchParams.get('section') || '1', 10);
+  const jawshanSection = useMemo(() => 
+    contentType === 'jawshan' ? getJawshanSection(sectionNumber) : null,
+    [contentType, sectionNumber]
+  );
+  
   // Adhan-specific state
   const [adhanPhase, setAdhanPhase] = useState<AdhanPhase>('adhan');
   const currentAdhanStyle = adhanStyles.find(s => s.id === settings.adhan.style) || adhanStyles[0];
@@ -125,6 +132,19 @@ const Player = () => {
         isMinimized: false,
         isPlaying: !!prayerData.audioUrl, // Auto-play if audio available
       }));
+    } else if (contentType === 'jawshan' && jawshanSection) {
+      hasInitialized.current = true;
+      setPlayerState(prev => ({
+        ...prev,
+        contentType: 'jawshan',
+        currentTrack: {
+          title: t('jawshan.title'),
+          subtitle: `${t('jawshan.section')} ${jawshanSection.sectionNumber} ${t('jawshan.of')} ${getTotalSections()}`,
+          arabicText: jawshanSection.lines[0]?.arabic || '',
+          translation: jawshanSection.closingPhrase.translation,
+        },
+        isMinimized: false,
+      }));
     } else if (contentType === 'adhan') {
       hasInitialized.current = true;
       const prayerName = nextPrayer?.name || 'Prayer';
@@ -142,7 +162,7 @@ const Player = () => {
         isMinimized: false,
       }));
     }
-  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer?.name, nextPrayer?.arabicName, currentAdhanStyle.name, adhanPhase, setPlayerState, playerState.contentType, audioUrl]);
+  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, jawshanSection, nextPrayer?.name, nextPrayer?.arabicName, currentAdhanStyle.name, adhanPhase, setPlayerState, playerState.contentType, audioUrl, t]);
   
   // Update current verse based on audio timing (Quran only)
   // Uses playerState.progress which is updated by GlobalAudioPlayer
@@ -273,6 +293,24 @@ const Player = () => {
     );
   }
 
+  // Jawshan section not found
+  if (contentType === 'jawshan' && !jawshanSection) {
+    return (
+      <div className="fixed inset-0 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-xl text-muted-foreground">{t('jawshan.noResults')}</p>
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/jawshan')}
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary transition-all"
+          >
+            {t('nav.back')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Invocations not found
   if (contentType === 'invocations' && !prayerData) {
     return (
@@ -330,6 +368,23 @@ const Player = () => {
             prayerData={prayerData}
             audioRef={audioRef}
             onClose={handleStop}
+          />
+        )}
+
+        {contentType === 'jawshan' && jawshanSection && (
+          <JawshanContent
+            section={jawshanSection}
+            onClose={handleStop}
+            onNextSection={() => {
+              if (sectionNumber < getTotalSections()) {
+                navigate(`/player?type=jawshan&section=${sectionNumber + 1}`);
+              }
+            }}
+            onPrevSection={() => {
+              if (sectionNumber > 1) {
+                navigate(`/player?type=jawshan&section=${sectionNumber - 1}`);
+              }
+            }}
           />
         )}
 

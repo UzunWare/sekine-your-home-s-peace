@@ -224,6 +224,22 @@ const arabicTranslations: Translations = {
   'idle.offline': 'غير متصل',
   'idle.nextPrayer': 'الصلاة القادمة',
   
+  // Jawshan
+  'jawshan.title': 'جوشن الكبير',
+  'jawshan.section': 'فصل',
+  'jawshan.of': 'من',
+  'jawshan.line': 'سطر',
+  'jawshan.names': 'أسماء إلهية',
+  'jawshan.closingPhrase': 'دعاء الختام',
+  'jawshan.continue': 'متابعة القراءة',
+  'jawshan.sectionsAvailable': 'فصول متاحة',
+  'jawshan.searchPlaceholder': 'بحث في الفصول...',
+  'jawshan.noResults': 'لم يتم العثور على فصول',
+  'jawshan.clearSearch': 'مسح البحث',
+  'jawshan.navigateLines': 'تنقل بين السطور',
+  'jawshan.navigateSections': 'تنقل بين الفصول',
+  'jawshan.reset': 'إعادة',
+  
   'hint.selectPress': 'اختيار/ضغط',
   'hint.navigate': 'تنقل',
   'hint.back': 'رجوع',
@@ -551,6 +567,22 @@ const turkishTranslations: Translations = {
   
   'idle.offline': 'Çevrimdışı',
   'idle.nextPrayer': 'Sonraki Namaz',
+  
+  // Jawshan
+  'jawshan.title': 'Cevşen-ül Kebir',
+  'jawshan.section': 'Bölüm',
+  'jawshan.of': '/',
+  'jawshan.line': 'Satır',
+  'jawshan.names': 'ilahi isim',
+  'jawshan.closingPhrase': 'Kapanış Duası',
+  'jawshan.continue': 'Okumaya Devam Et',
+  'jawshan.sectionsAvailable': 'bölüm mevcut',
+  'jawshan.searchPlaceholder': 'Bölüm ara...',
+  'jawshan.noResults': 'Bölüm bulunamadı',
+  'jawshan.clearSearch': 'Aramayı temizle',
+  'jawshan.navigateLines': 'Satırlar arası gezin',
+  'jawshan.navigateSections': 'Bölümler arası gezin',
+  'jawshan.reset': 'Sıfırla',
   
   'hint.selectPress': 'Seç',
   'hint.navigate': 'Gezin',

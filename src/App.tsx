@@ -31,6 +31,7 @@ import SetupComplete from "./pages/setup/SetupComplete";
 
 // Lazy load larger pages
 const Quran = lazy(() => import("./pages/Quran"));
+const Jawshan = lazy(() => import("./pages/Jawshan"));
 const Settings = lazy(() => import("./pages/Settings"));
 const QuranSettings = lazy(() => import("./pages/settings/QuranSettings"));
 const AdhanSettings = lazy(() => import("./pages/settings/AdhanSettings"));
@@ -81,6 +82,7 @@ const App = () => (
                 <Route path="/iqamah" element={<Iqamah />} />
                 <Route path="/player" element={<Player />} />
                 <Route path="/quran" element={<Quran />} />
+                <Route path="/jawshan" element={<Jawshan />} />
                 <Route path="/screensaver" element={<Screensaver />} />
                 {/* Invocations now handled by /player?type=invocations */}
                 <Route path="/pairing" element={<Pairing />} />

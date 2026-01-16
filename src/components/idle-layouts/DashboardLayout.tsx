@@ -1,4 +1,4 @@
-import { Settings, BookOpen, HandHeart } from 'lucide-react';
+import { Settings, BookOpen, HandHeart, Scroll } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 
 const DashboardLayout = ({
@@ -14,6 +14,7 @@ const DashboardLayout = ({
   isMiniPlayerVisible,
   onNavigate,
   onOpenInvocationsDialog,
+  onOpenJawshan,
 }: IdleLayoutProps) => {
   return (
     <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28 md:pb-32' : ''}`}>
@@ -94,6 +95,14 @@ const DashboardLayout = ({
 
       {/* Navigation buttons */}
       <div className="flex justify-end gap-2 sm:gap-3 mt-4">
+        <button
+          data-focusable="true"
+          onClick={onOpenJawshan}
+          className="flex items-center gap-2 px-4 py-2 glass-card hover:bg-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all"
+        >
+          <Scroll className="w-4 h-4 text-amber-400" />
+          <span className="text-sm text-amber-400">Jawshan</span>
+        </button>
         <button
           data-focusable="true"
           onClick={onOpenInvocationsDialog}

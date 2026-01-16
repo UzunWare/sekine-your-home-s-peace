@@ -105,6 +105,10 @@ const Idle = () => {
     setIsInvocationsDialogOpen(true);
   }, []);
 
+  const handleOpenJawshan = useCallback(() => {
+    navigate('/jawshan');
+  }, [navigate]);
+
   const handleSelectPrayer = useCallback((prayerId: string) => {
     setIsInvocationsDialogOpen(false);
     navigate(`/player?type=invocations&prayer=${prayerId}`);
@@ -128,6 +132,7 @@ const Idle = () => {
     isMiniPlayerVisible: !!isMiniPlayerVisible,
     onNavigate: handleNavigate,
     onOpenInvocationsDialog: handleOpenInvocationsDialog,
+    onOpenJawshan: handleOpenJawshan,
   };
 
   return (

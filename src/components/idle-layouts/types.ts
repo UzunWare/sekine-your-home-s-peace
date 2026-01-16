@@ -15,4 +15,5 @@ export interface IdleLayoutProps {
   isMiniPlayerVisible: boolean;
   onNavigate: (path: string) => void;
   onOpenInvocationsDialog: () => void;
+  onOpenJawshan: () => void;
 }

@@ -1,6 +1,7 @@
 import { MapPin, Settings, BookOpen, Volume2 } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 import InvocationsButton from '@/components/InvocationsButton';
+import JawshanButton from '@/components/JawshanButton';
 
 const ClassicLayout = ({
   currentTime,
@@ -15,6 +16,7 @@ const ClassicLayout = ({
   isMiniPlayerVisible,
   onNavigate,
   onOpenInvocationsDialog,
+  onOpenJawshan,
 }: IdleLayoutProps) => {
   return (
     <div className="relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all">
@@ -103,6 +105,7 @@ const ClassicLayout = ({
             <span className="text-xs sm:text-sm lg:text-base">Play Adhan</span>
           </button>
           <InvocationsButton onClick={onOpenInvocationsDialog} />
+          <JawshanButton onClick={onOpenJawshan} />
         </div>
       </main>
 
