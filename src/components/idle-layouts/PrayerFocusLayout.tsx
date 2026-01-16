@@ -1,4 +1,4 @@
-import { Settings, BookOpen, HandHeart } from 'lucide-react';
+import { Settings, BookOpen, HandHeart, Scroll } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 
 const PrayerFocusLayout = ({
@@ -12,6 +12,7 @@ const PrayerFocusLayout = ({
   isMiniPlayerVisible,
   onNavigate,
   onOpenInvocationsDialog,
+  onOpenJawshan,
 }: IdleLayoutProps) => {
   return (
     <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28 md:pb-32' : ''}`}>
@@ -32,6 +33,13 @@ const PrayerFocusLayout = ({
         </div>
         
         <div className="flex gap-2 sm:gap-3">
+          <button
+            data-focusable="true"
+            onClick={onOpenJawshan}
+            className="p-2 sm:p-3 glass-card hover:bg-card/80 focus:ring-2 focus:ring-amber-400 transition-all"
+          >
+            <Scroll className="w-5 h-5 text-amber-400" />
+          </button>
           <button
             data-focusable="true"
             onClick={onOpenInvocationsDialog}

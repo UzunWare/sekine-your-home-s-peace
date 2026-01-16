@@ -1,6 +1,7 @@
 import { Settings } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 import InvocationsButton from '@/components/InvocationsButton';
+import JawshanButton from '@/components/JawshanButton';
 
 const MinimalLayout = ({
   currentTime,
@@ -10,6 +11,7 @@ const MinimalLayout = ({
   isMiniPlayerVisible,
   onNavigate,
   onOpenInvocationsDialog,
+  onOpenJawshan,
 }: IdleLayoutProps) => {
   // Format time without seconds for minimal look
   const formatMinimalTime = (date: Date) => {
@@ -20,6 +22,7 @@ const MinimalLayout = ({
     <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28 md:pb-32' : ''}`}>
       {/* Subtle header buttons */}
       <header className="flex justify-end gap-2">
+        <JawshanButton onClick={onOpenJawshan} compact />
         <InvocationsButton onClick={onOpenInvocationsDialog} compact />
         <button
           data-focusable="true"

@@ -40,6 +40,13 @@ const MiniPlayer = ({ className = '' }: MiniPlayerProps) => {
     const searchParams = new URLSearchParams();
     if (playerState.contentType) {
       searchParams.set('type', playerState.contentType);
+      // Include section number for jawshan
+      if (playerState.contentType === 'jawshan' && playerState.currentTrack?.subtitle) {
+        const sectionMatch = playerState.currentTrack.subtitle.match(/(\d+)/);
+        if (sectionMatch) {
+          searchParams.set('section', sectionMatch[1]);
+        }
+      }
     }
     navigate(`/player?${searchParams.toString()}`);
   };
@@ -93,6 +100,7 @@ const MiniPlayer = ({ className = '' }: MiniPlayerProps) => {
                   <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary capitalize">
                     {playerState.contentType === 'invocations' ? 'Dua' : 
                      playerState.contentType === 'adhan' ? 'Adhan' :
+                     playerState.contentType === 'jawshan' ? 'Jawshan' :
                      playerState.contentType || 'Quran'}
                   </span>
                   {playerState.currentVerseNumber && (

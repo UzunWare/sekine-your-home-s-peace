@@ -1,6 +1,7 @@
 import { MapPin, Settings, BookOpen, Volume2 } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 import InvocationsButton from '@/components/InvocationsButton';
+import JawshanButton from '@/components/JawshanButton';
 
 const SplitLayout = ({
   currentTime,
@@ -15,6 +16,7 @@ const SplitLayout = ({
   isMiniPlayerVisible,
   onNavigate,
   onOpenInvocationsDialog,
+  onOpenJawshan,
 }: IdleLayoutProps) => {
   return (
     <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28 md:pb-32' : ''}`}>
@@ -90,6 +92,7 @@ const SplitLayout = ({
               <span className="text-sm sm:text-base">Play Adhan</span>
             </button>
             <InvocationsButton onClick={onOpenInvocationsDialog} />
+            <JawshanButton onClick={onOpenJawshan} />
           </div>
         </div>
 
