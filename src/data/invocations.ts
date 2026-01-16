@@ -1,5 +1,11 @@
 // Invocations (Adhkar) after daily prayers
 
+// Audio imports
+import asrAudio from '@/assets/audio/asr-invocation.mp3';
+import dhuhrAudio from '@/assets/audio/dhuhr-invocation.mp3';
+import ishaAudio from '@/assets/audio/isha-invocation.mp3';
+import maghribAudio from '@/assets/audio/maghrib-invocation.mp3';
+
 export interface Invocation {
   id: string;
   arabic: string;
@@ -14,6 +20,7 @@ export interface PrayerInvocations {
   prayerName: string;
   arabicName: string;
   invocations: Invocation[];
+  audioUrl?: string;
 }
 
 // Common invocations after all prayers
@@ -129,31 +136,36 @@ export const prayerInvocations: PrayerInvocations[] = [
     prayerId: 'fajr',
     prayerName: 'Fajr',
     arabicName: 'الفجر',
-    invocations: [...commonInvocations, ...fajrSpecificInvocations]
+    invocations: [...commonInvocations, ...fajrSpecificInvocations],
+    // No audio file for Fajr yet
   },
   {
     prayerId: 'dhuhr',
     prayerName: 'Dhuhr',
     arabicName: 'الظهر',
-    invocations: [...commonInvocations]
+    invocations: [...commonInvocations],
+    audioUrl: dhuhrAudio,
   },
   {
     prayerId: 'asr',
     prayerName: 'Asr',
     arabicName: 'العصر',
-    invocations: [...commonInvocations]
+    invocations: [...commonInvocations],
+    audioUrl: asrAudio,
   },
   {
     prayerId: 'maghrib',
     prayerName: 'Maghrib',
     arabicName: 'المغرب',
-    invocations: [...commonInvocations, ...maghribSpecificInvocations]
+    invocations: [...commonInvocations, ...maghribSpecificInvocations],
+    audioUrl: maghribAudio,
   },
   {
     prayerId: 'isha',
     prayerName: 'Isha',
     arabicName: 'العشاء',
-    invocations: [...commonInvocations]
+    invocations: [...commonInvocations],
+    audioUrl: ishaAudio,
   }
 ];
 

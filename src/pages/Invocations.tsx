@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { useApp } from '@/contexts/AppContext';
 import { getPrayerInvocations, Invocation } from '@/data/invocations';
-import { ChevronLeft, ChevronRight, X, RotateCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, RotateCcw, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import mosqueBg from '@/assets/mosque-background-1.jpg';
@@ -20,13 +20,66 @@ const Invocations = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentRepetition, setCurrentRepetition] = useState(1);
   
+  // Audio state
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  
   const currentInvocation: Invocation | undefined = invocations[currentIndex];
   const totalInvocations = invocations.length;
   const progressPercent = totalInvocations > 0 ? ((currentIndex + 1) / totalInvocations) * 100 : 0;
+  const hasAudio = !!prayerData?.audioUrl;
 
   useTVNavigation({
-    onBack: () => navigate('/idle'),
+    onBack: () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      navigate('/idle');
+    },
   });
+
+  // Initialize audio
+  useEffect(() => {
+    if (prayerData?.audioUrl) {
+      audioRef.current = new Audio(prayerData.audioUrl);
+      audioRef.current.addEventListener('timeupdate', () => {
+        if (audioRef.current) {
+          const progress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+          setAudioProgress(progress || 0);
+        }
+      });
+      audioRef.current.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setAudioProgress(0);
+      });
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [prayerData?.audioUrl]);
+
+  const togglePlayPause = useCallback(() => {
+    if (!audioRef.current) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  }, [isPlaying]);
+
+  const toggleMute = useCallback(() => {
+    if (!audioRef.current) return;
+    audioRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  }, [isMuted]);
 
   const goToNext = useCallback(() => {
     if (!currentInvocation) return;
@@ -75,12 +128,22 @@ const Invocations = () => {
           e.preventDefault();
           resetCurrent();
           break;
+        case 'p':
+        case 'P':
+          e.preventDefault();
+          togglePlayPause();
+          break;
+        case 'm':
+        case 'M':
+          e.preventDefault();
+          toggleMute();
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToNext, goToPrevious, resetCurrent]);
+  }, [goToNext, goToPrevious, resetCurrent, togglePlayPause, toggleMute]);
 
   if (!prayerData || !currentInvocation) {
     return (
@@ -188,13 +251,51 @@ const Invocations = () => {
           )}
         </main>
 
-        {/* Progress bar */}
+        {/* Audio progress bar (if audio available) */}
+        {hasAudio && (
+          <div className="mb-2">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Audio</span>
+              <span>{Math.round(audioProgress)}%</span>
+            </div>
+            <Progress value={audioProgress} className="h-1" />
+          </div>
+        )}
+
+        {/* Invocation progress bar */}
         <div className="mb-6">
           <Progress value={progressPercent} className="h-1.5" />
         </div>
 
         {/* Controls */}
         <footer className="flex justify-center items-center gap-4">
+          {/* Audio controls */}
+          {hasAudio && (
+            <>
+              <Button
+                data-focusable="true"
+                variant="outline"
+                size="icon"
+                onClick={togglePlayPause}
+                className="hover:bg-card/50"
+                title={isPlaying ? 'Pause audio (P)' : 'Play audio (P)'}
+              >
+                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              </Button>
+              <Button
+                data-focusable="true"
+                variant="ghost"
+                size="icon"
+                onClick={toggleMute}
+                className="hover:bg-card/50"
+                title={isMuted ? 'Unmute (M)' : 'Mute (M)'}
+              >
+                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+              </Button>
+              <div className="w-px h-8 bg-border mx-2" />
+            </>
+          )}
+
           <Button
             data-focusable="true"
             variant="outline"
