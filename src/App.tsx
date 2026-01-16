@@ -22,6 +22,7 @@ import Pairing from "./pages/Pairing";
 import NotFound from "./pages/NotFound";
 
 // Setup Wizard
+import SetupLanguage from "./pages/setup/SetupLanguage";
 import SetupWelcome from "./pages/setup/SetupWelcome";
 import SetupMode from "./pages/setup/SetupMode";
 import SetupLocation from "./pages/setup/SetupLocation";
@@ -102,7 +103,9 @@ const App = () => (
                 <Route path="/settings/layout" element={<LayoutSettings />} />
                 
                 {/* Setup wizard */}
-                <Route path="/setup" element={<SetupWelcome />} />
+                <Route path="/setup" element={<SetupLanguage />} />
+                <Route path="/setup/language" element={<SetupLanguage />} />
+                <Route path="/setup/welcome" element={<SetupWelcome />} />
                 <Route path="/setup/mode" element={<SetupMode />} />
                 <Route path="/setup/location" element={<SetupLocation />} />
                 <Route path="/setup/calculation" element={<SetupCalculation />} />
