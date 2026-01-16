@@ -267,9 +267,31 @@ export const jawshanSections: JawshanSection[] = [
   },
 ];
 
+// Audio configuration
+// To add audio for Jawshan sections, either:
+// 1. Place MP3 files in src/assets/audio/jawshan/ named section-1.mp3, section-2.mp3, etc.
+// 2. Or update this base URL to point to a CDN hosting the audio files
+const JAWSHAN_AUDIO_BASE_URL = '/audio/jawshan'; // Update this to your audio CDN URL
+
+// Helper to generate audio URL for a section (returns undefined if audio not configured)
+export const getJawshanAudioUrl = (sectionNumber: number): string | undefined => {
+  // For now, return undefined as audio files need to be added
+  // When audio files are available, uncomment the line below:
+  // return `${JAWSHAN_AUDIO_BASE_URL}/section-${sectionNumber}.mp3`;
+  return undefined;
+};
+
 // Helper functions
 export const getJawshanSection = (sectionNumber: number): JawshanSection | undefined => {
-  return jawshanSections.find(s => s.sectionNumber === sectionNumber);
+  const section = jawshanSections.find(s => s.sectionNumber === sectionNumber);
+  if (section) {
+    // Attach audio URL if available
+    return {
+      ...section,
+      audioUrl: getJawshanAudioUrl(sectionNumber),
+    };
+  }
+  return undefined;
 };
 
 export const getTotalSections = (): number => {
@@ -279,4 +301,12 @@ export const getTotalSections = (): number => {
 
 export const getAvailableSections = (): number[] => {
   return jawshanSections.map(s => s.sectionNumber);
+};
+
+// Get all sections with audio URLs attached
+export const getAllJawshanSections = (): JawshanSection[] => {
+  return jawshanSections.map(section => ({
+    ...section,
+    audioUrl: getJawshanAudioUrl(section.sectionNumber),
+  }));
 };
