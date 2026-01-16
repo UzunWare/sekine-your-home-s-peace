@@ -14,4 +14,5 @@ export interface IdleLayoutProps {
   isOnline: boolean;
   isMiniPlayerVisible: boolean;
   onNavigate: (path: string) => void;
+  onOpenInvocationsDialog: () => void;
 }

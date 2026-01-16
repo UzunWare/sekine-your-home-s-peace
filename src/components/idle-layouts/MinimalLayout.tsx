@@ -1,5 +1,6 @@
 import { Settings } from 'lucide-react';
 import { IdleLayoutProps } from './types';
+import InvocationsButton from '@/components/InvocationsButton';
 
 const MinimalLayout = ({
   currentTime,
@@ -8,6 +9,7 @@ const MinimalLayout = ({
   timeUntilNextPrayer,
   isMiniPlayerVisible,
   onNavigate,
+  onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   // Format time without seconds for minimal look
   const formatMinimalTime = (date: Date) => {
@@ -16,8 +18,9 @@ const MinimalLayout = ({
 
   return (
     <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
-      {/* Subtle settings button */}
-      <header className="flex justify-end">
+      {/* Subtle header buttons */}
+      <header className="flex justify-end gap-2">
+        <InvocationsButton onClick={onOpenInvocationsDialog} compact />
         <button
           data-focusable="true"
           onClick={() => onNavigate('/settings')}

@@ -14,6 +14,7 @@ import Iqamah from "./pages/Iqamah";
 import Player from "./pages/Player";
 import Screensaver from "./pages/Screensaver";
 import Pairing from "./pages/Pairing";
+import Invocations from "./pages/Invocations";
 import NotFound from "./pages/NotFound";
 
 // Setup Wizard
@@ -78,6 +79,7 @@ const App = () => (
                 <Route path="/player" element={<Player />} />
                 <Route path="/quran" element={<Quran />} />
                 <Route path="/screensaver" element={<Screensaver />} />
+                <Route path="/invocations" element={<Invocations />} />
                 <Route path="/pairing" element={<Pairing />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/settings/quran" element={<QuranSettings />} />
