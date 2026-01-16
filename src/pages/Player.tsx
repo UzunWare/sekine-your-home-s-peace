@@ -112,14 +112,17 @@ const Player = () => {
         },
         isMinimized: false,
       }));
-    } else if (contentType === 'adhan' && nextPrayer) {
+    } else if (contentType === 'adhan') {
+      // Always set adhan state, use fallback if nextPrayer not available
+      const prayerName = nextPrayer?.name || 'Prayer';
+      const prayerArabicName = nextPrayer?.arabicName || 'الصلاة';
       setPlayerState(prev => ({
         ...prev,
         contentType: 'adhan',
         currentTrack: {
-          title: `${nextPrayer.name} Adhan`,
+          title: `${prayerName} Adhan`,
           subtitle: currentAdhanStyle.name,
-          arabicText: nextPrayer.arabicName,
+          arabicText: prayerArabicName,
           translation: adhanPhase === 'adhan' ? "It's time to pray" : 'Dua After Adhan',
         },
         isMinimized: false,
