@@ -86,9 +86,18 @@ const Player = () => {
     onPlayPause: () => togglePlayPause(),
   });
 
-  // Initialize player state when data loads
+  // Track if we've initialized to prevent infinite loops
+  const hasInitialized = useRef(false);
+  
+  // Initialize player state when component mounts or content type changes
   useEffect(() => {
+    // Only initialize once per content type to prevent infinite loops
+    if (hasInitialized.current && playerState.contentType === contentType) {
+      return;
+    }
+    
     if (contentType === 'quran' && chapterInfo && verses.length > 0) {
+      hasInitialized.current = true;
       setPlayerState(prev => ({
         ...prev,
         contentType: 'quran',
@@ -101,6 +110,7 @@ const Player = () => {
         isMinimized: false,
       }));
     } else if (contentType === 'invocations' && prayerData) {
+      hasInitialized.current = true;
       setPlayerState(prev => ({
         ...prev,
         contentType: 'invocations',
@@ -113,7 +123,7 @@ const Player = () => {
         isMinimized: false,
       }));
     } else if (contentType === 'adhan') {
-      // Always set adhan state, use fallback if nextPrayer not available
+      hasInitialized.current = true;
       const prayerName = nextPrayer?.name || 'Prayer';
       const prayerArabicName = nextPrayer?.arabicName || 'الصلاة';
       setPlayerState(prev => ({
@@ -128,7 +138,12 @@ const Player = () => {
         isMinimized: false,
       }));
     }
-  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer, currentAdhanStyle.name, adhanPhase, setPlayerState]);
+  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer?.name, nextPrayer?.arabicName, currentAdhanStyle.name, adhanPhase, setPlayerState, playerState.contentType]);
+  
+  // Reset initialization flag when content type changes
+  useEffect(() => {
+    hasInitialized.current = false;
+  }, [contentType]);
 
   // Update current verse based on audio timing (Quran only)
   useEffect(() => {
