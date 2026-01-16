@@ -108,7 +108,7 @@ const Idle = () => {
 
   const handleSelectPrayer = useCallback((prayerId: string) => {
     setIsInvocationsDialogOpen(false);
-    navigate(`/invocations?prayer=${prayerId}`);
+    navigate(`/player?type=invocations&prayer=${prayerId}`);
   }, [navigate]);
 
   // Get the selected layout component

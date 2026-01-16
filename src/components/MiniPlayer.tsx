@@ -35,7 +35,12 @@ const MiniPlayer = ({ className = '' }: MiniPlayerProps) => {
 
   const handleExpand = () => {
     setPlayerState(prev => ({ ...prev, isMinimized: false }));
-    navigate('/player');
+    // Navigate back to player with the correct content type
+    const searchParams = new URLSearchParams();
+    if (playerState.contentType) {
+      searchParams.set('type', playerState.contentType);
+    }
+    navigate(`/player?${searchParams.toString()}`);
   };
 
   const formatTime = (seconds: number) => {
@@ -85,7 +90,7 @@ const MiniPlayer = ({ className = '' }: MiniPlayerProps) => {
               <div className="flex-1 min-w-0 text-left">
                 <div className="flex items-center gap-2">
                   <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary capitalize">
-                    {playerState.contentType || 'Quran'}
+                    {playerState.contentType === 'invocations' ? 'Dua' : playerState.contentType || 'Quran'}
                   </span>
                   {playerState.currentVerseNumber && (
                     <span className="text-xs text-muted-foreground">

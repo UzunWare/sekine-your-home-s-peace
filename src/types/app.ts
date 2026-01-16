@@ -138,7 +138,7 @@ export interface AdhanStyle {
 }
 
 // Player types
-export type PlayerContentType = 'quran' | 'adhan' | 'dua';
+export type PlayerContentType = 'quran' | 'adhan' | 'invocations';
 
 export interface PlayerState {
   isPlaying: boolean;

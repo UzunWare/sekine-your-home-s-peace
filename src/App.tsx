@@ -16,7 +16,7 @@ import Iqamah from "./pages/Iqamah";
 import Player from "./pages/Player";
 import Screensaver from "./pages/Screensaver";
 import Pairing from "./pages/Pairing";
-import Invocations from "./pages/Invocations";
+// Invocations is now part of the unified Player component
 import NotFound from "./pages/NotFound";
 
 // Setup Wizard
@@ -78,7 +78,7 @@ const App = () => (
                 <Route path="/player" element={<Player />} />
                 <Route path="/quran" element={<Quran />} />
                 <Route path="/screensaver" element={<Screensaver />} />
-                <Route path="/invocations" element={<Invocations />} />
+                {/* Invocations now handled by /player?type=invocations */}
                 <Route path="/pairing" element={<Pairing />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/settings/quran" element={<QuranSettings />} />

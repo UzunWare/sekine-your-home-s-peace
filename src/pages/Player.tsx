@@ -6,10 +6,11 @@ import { useTranslation, useLanguage } from '@/lib/i18n';
 import { useQuranPlayer } from '@/hooks/useQuranAPI';
 import { RECITERS_INFO } from '@/lib/quranAPI';
 import { getSurahBackground } from '@/lib/surahBackgrounds';
-import { 
-  Play, Pause, SkipBack, SkipForward, Repeat, Repeat1, 
-  Minimize2, Square, Volume2, Loader2, AlertCircle, ChevronLeft, ChevronRight
-} from 'lucide-react';
+import { getPrayerInvocations } from '@/data/invocations';
+import { QuranContent, InvocationsContent, PlayerControls } from '@/components/player';
+import { Loader2, AlertCircle } from 'lucide-react';
+import mosqueBg from '@/assets/mosque-background-1.jpg';
+import type { PlayerContentType } from '@/types/app';
 
 type RepeatMode = 'off' | 'one' | 'all';
 
@@ -20,16 +21,30 @@ const Player = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   
-  // Get surah and reciter from URL params
+  // Determine content type from URL
+  const contentType = (searchParams.get('type') || 'quran') as PlayerContentType;
+  
+  // Quran-specific params
   const surahNumber = parseInt(searchParams.get('surah') || '1', 10);
   const reciterId = searchParams.get('reciter') || 'mishary';
   
-  // Fetch Quran data
-  const { verses, timings, audioUrl, chapterInfo, isLoading, error } = useQuranPlayer(
-    surahNumber,
+  // Invocations-specific params
+  const prayerId = searchParams.get('prayer') || 'fajr';
+  const prayerData = useMemo(() => getPrayerInvocations(prayerId), [prayerId]);
+  
+  // Fetch Quran data (only when contentType is 'quran')
+  const { verses, timings, audioUrl: quranAudioUrl, chapterInfo, isLoading, error } = useQuranPlayer(
+    contentType === 'quran' ? surahNumber : 0, // Skip fetching if not quran
     reciterId,
-    language === 'ar' ? 'en' : language // Use English translation if Arabic is the UI language
+    language === 'ar' ? 'en' : language
   );
+  
+  // Audio URL based on content type
+  const audioUrl = useMemo(() => {
+    if (contentType === 'quran') return quranAudioUrl;
+    if (contentType === 'invocations') return prayerData?.audioUrl || '';
+    return '';
+  }, [contentType, quranAudioUrl, prayerData?.audioUrl]);
   
   // Local state
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
@@ -37,16 +52,20 @@ const Player = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
   
   // Audio ref
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  // Get current verse
+  // Get current verse and reciter info for Quran
   const currentVerse = verses[currentVerseIndex];
   const reciterInfo = RECITERS_INFO[reciterId] || { name: reciterId, arabicName: '' };
   
-  // Get contextual background image based on surah theme
-  const backgroundImage = useMemo(() => getSurahBackground(surahNumber), [surahNumber]);
+  // Get contextual background image
+  const backgroundImage = useMemo(() => {
+    if (contentType === 'quran') return getSurahBackground(surahNumber);
+    return mosqueBg;
+  }, [contentType, surahNumber]);
 
   useTVNavigation({
     onBack: () => handleMinimize(),
@@ -55,7 +74,7 @@ const Player = () => {
 
   // Initialize player state when data loads
   useEffect(() => {
-    if (chapterInfo && verses.length > 0) {
+    if (contentType === 'quran' && chapterInfo && verses.length > 0) {
       setPlayerState(prev => ({
         ...prev,
         contentType: 'quran',
@@ -67,20 +86,26 @@ const Player = () => {
         },
         isMinimized: false,
       }));
+    } else if (contentType === 'invocations' && prayerData) {
+      setPlayerState(prev => ({
+        ...prev,
+        contentType: 'invocations',
+        currentTrack: {
+          title: `${prayerData.prayerName} Invocations`,
+          subtitle: prayerData.arabicName,
+          arabicText: prayerData.invocations[0]?.arabic || '',
+          translation: prayerData.invocations[0]?.translation || '',
+        },
+        isMinimized: false,
+      }));
     }
-  }, [chapterInfo, verses, reciterInfo.name, setPlayerState]);
+  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, setPlayerState]);
 
-  // Update current verse based on audio timing
+  // Update current verse based on audio timing (Quran only)
   useEffect(() => {
-    if (!timings.length || !audioRef.current) return;
+    if (contentType !== 'quran' || !timings.length || !audioRef.current) return;
     
     const currentTimeMs = currentTime * 1000;
-    
-    // Debug: Log timings info
-    console.log('Timings available:', timings.length, 'Current time (ms):', currentTimeMs);
-    if (timings.length > 0) {
-      console.log('First timing:', timings[0]);
-    }
     
     const verseIndex = timings.findIndex(
       (timing, index) => {
@@ -95,7 +120,6 @@ const Player = () => {
     if (verseIndex !== -1 && verseIndex !== currentVerseIndex) {
       setCurrentVerseIndex(verseIndex);
       
-      // Update player state with current verse info
       const verse = verses[verseIndex];
       if (verse) {
         setPlayerState(prev => ({
@@ -109,7 +133,7 @@ const Player = () => {
         }));
       }
     }
-  }, [currentTime, timings, verses, currentVerseIndex, setPlayerState]);
+  }, [contentType, currentTime, timings, verses, currentVerseIndex, setPlayerState]);
 
   // Audio event handlers
   const handleTimeUpdate = useCallback(() => {
@@ -133,21 +157,24 @@ const Player = () => {
   }, [setPlayerState]);
 
   const handleEnded = useCallback(() => {
-    if (repeatMode === 'all') {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play();
-      }
-    } else if (repeatMode === 'one') {
-      // Go to previous verse start
-      if (timings[currentVerseIndex] && audioRef.current) {
-        audioRef.current.currentTime = timings[currentVerseIndex].timestamp_from / 1000;
-        audioRef.current.play();
+    if (contentType === 'quran') {
+      if (repeatMode === 'all') {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play();
+        }
+      } else if (repeatMode === 'one') {
+        if (timings[currentVerseIndex] && audioRef.current) {
+          audioRef.current.currentTime = timings[currentVerseIndex].timestamp_from / 1000;
+          audioRef.current.play();
+        }
+      } else {
+        setPlayerState(prev => ({ ...prev, isPlaying: false }));
       }
     } else {
       setPlayerState(prev => ({ ...prev, isPlaying: false }));
     }
-  }, [repeatMode, currentVerseIndex, timings, setPlayerState]);
+  }, [contentType, repeatMode, currentVerseIndex, timings, setPlayerState]);
 
   // Play/pause control
   useEffect(() => {
@@ -163,9 +190,9 @@ const Player = () => {
   // Volume control
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume / 100;
+      audioRef.current.volume = isMuted ? 0 : volume / 100;
     }
-  }, [volume]);
+  }, [volume, isMuted]);
 
   const togglePlayPause = () => {
     setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
@@ -211,14 +238,25 @@ const Player = () => {
     });
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  const handleSeek = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
   };
 
-  // Loading state
-  if (isLoading) {
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    if (newVolume > 0 && isMuted) {
+      setIsMuted(false);
+    }
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+  };
+
+  // Loading state (Quran only)
+  if (contentType === 'quran' && isLoading) {
     return (
       <div className="fixed inset-0 bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
@@ -229,8 +267,8 @@ const Player = () => {
     );
   }
 
-  // Error state
-  if (error) {
+  // Error state (Quran only)
+  if (contentType === 'quran' && error) {
     return (
       <div className="fixed inset-0 bg-background flex items-center justify-center">
         <div className="text-center space-y-4 max-w-md px-6">
@@ -249,18 +287,38 @@ const Player = () => {
     );
   }
 
+  // Invocations not found
+  if (contentType === 'invocations' && !prayerData) {
+    return (
+      <div className="fixed inset-0 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-xl text-muted-foreground">No invocations found</p>
+          <button
+            data-focusable="true"
+            onClick={() => navigate('/idle')}
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary transition-all"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-background overflow-hidden">
       {/* Hidden audio element */}
-      <audio
-        ref={audioRef}
-        src={audioUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
-      />
+      {audioUrl && (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleEnded}
+        />
+      )}
 
-      {/* Contextual background image */}
+      {/* Background image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
         style={{ 
@@ -269,214 +327,74 @@ const Player = () => {
         }}
       />
       
-      {/* Dark overlay for better text readability */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/60 to-background/90" />
       
-      {/* Subtle pattern overlay */}
+      {/* Pattern overlay */}
       <div className="absolute inset-0 pattern-overlay opacity-5" />
 
-      {/* Content - Full height flex container */}
+      {/* Content */}
       <div className="relative z-10 w-full h-full flex flex-col">
-        {/* Header - Surah Info - Fixed height */}
-        <header className="shrink-0 flex items-center justify-between px-3 py-2 sm:px-6 sm:py-4 lg:px-8 lg:py-5">
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            {chapterInfo && (
-              <>
-                <h1 className="font-quote text-lg sm:text-xl lg:text-2xl text-foreground leading-tight">
-                  {chapterInfo.name_simple}
-                </h1>
-                <p className="font-quote text-[11px] sm:text-sm lg:text-base text-muted-foreground">
-                  {chapterInfo.translated_name?.name} • {chapterInfo.verses_count} {t('quran.verses')}
-                </p>
-              </>
-            )}
-          </div>
-          <div className="flex flex-col items-end gap-0.5 sm:gap-1">
-            <span className="px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs bg-primary/20 text-primary rounded-full">
-              {t('quran.nowPlaying')}
-            </span>
-            <span className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
-              {reciterInfo.arabicName || reciterInfo.name}
-            </span>
-          </div>
-        </header>
+        {/* Render content based on type */}
+        {contentType === 'quran' && (
+          <QuranContent
+            verses={verses}
+            timings={timings}
+            currentVerseIndex={currentVerseIndex}
+            chapterInfo={chapterInfo}
+            reciterInfo={reciterInfo}
+            audioRef={audioRef}
+            onVerseChange={setCurrentVerseIndex}
+          />
+        )}
 
-        {/* Main verse display - Flexible, takes remaining space */}
-        <main className="flex-1 flex flex-col items-center justify-center px-3 sm:px-6 lg:px-12 xl:px-16 overflow-hidden min-h-0">
-          {currentVerse ? (
-            <div className="w-full max-w-6xl text-center flex flex-col items-center justify-center gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
-              {/* Verse indicator with navigation */}
-              <div className="flex items-center justify-center gap-3 sm:gap-4 lg:gap-6">
-                <button
-                  data-focusable="true"
-                  onClick={() => skipToVerse('prev')}
-                  disabled={currentVerseIndex === 0}
-                  className="p-1.5 sm:p-2 lg:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
-                >
-                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
-                </button>
-                <span className="text-xs sm:text-sm lg:text-base text-primary font-medium">
-                  {t('quran.verseOf', { current: currentVerse.verse_number, total: verses.length })}
-                </span>
-                <button
-                  data-focusable="true"
-                  onClick={() => skipToVerse('next')}
-                  disabled={currentVerseIndex === verses.length - 1}
-                  className="p-1.5 sm:p-2 lg:p-3 rounded-full hover:bg-muted/50 disabled:opacity-30 focus:ring-2 focus:ring-primary transition-all"
-                >
-                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
-                </button>
-              </div>
+        {contentType === 'invocations' && prayerData && (
+          <InvocationsContent
+            prayerData={prayerData}
+            audioRef={audioRef}
+            onClose={handleStop}
+          />
+        )}
 
-              {/* Arabic text - Responsive sizing with clamp */}
-              <div className="w-full py-2 sm:py-4 lg:py-6">
-                <p 
-                  className="font-uthmani text-primary leading-[1.8] sm:leading-[2] lg:leading-[2.2] text-shadow-gold transition-all duration-500"
-                  style={{ fontSize: 'clamp(1.5rem, 5vw + 0.5rem, 5rem)' }}
-                  dir="rtl"
-                >
-                  {currentVerse.text_uthmani}
-                </p>
-              </div>
+        {/* Shared controls for audio-based content */}
+        {audioUrl && contentType === 'quran' && (
+          <PlayerControls
+            contentType={contentType}
+            audioRef={audioRef}
+            currentTime={currentTime}
+            duration={duration}
+            volume={volume}
+            isMuted={isMuted}
+            repeatMode={repeatMode}
+            canSkipPrev={currentVerseIndex > 0}
+            canSkipNext={currentVerseIndex < verses.length - 1}
+            onSeek={handleSeek}
+            onVolumeChange={handleVolumeChange}
+            onToggleMute={toggleMute}
+            onSkipPrev={() => skipToVerse('prev')}
+            onSkipNext={() => skipToVerse('next')}
+            onCycleRepeat={cycleRepeatMode}
+            onMinimize={handleMinimize}
+            onStop={handleStop}
+          />
+        )}
 
-              {/* Translation - Elegant serif font */}
-              {currentVerse.translations?.[0] && (
-                <div className="w-full max-w-4xl space-y-2 sm:space-y-3 lg:space-y-4">
-                  <p 
-                    className="font-translation text-foreground/90 leading-relaxed italic tracking-wide"
-                    style={{ fontSize: 'clamp(1rem, 2.5vw + 0.25rem, 2rem)' }}
-                  >
-                    "{currentVerse.translations[0].text
-                      .replace(/<[^>]*>/g, '') // Remove HTML tags
-                      .replace(/\d+/g, '') // Remove verse numbers
-                      .replace(/\s+/g, ' ') // Normalize whitespace
-                      .trim()}"
-                  </p>
-                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground/60 font-sans">
-                    — {currentVerse.translations[0].resource_name || 'Saheeh International'}
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center text-muted-foreground">
-              <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-2 sm:mb-4" />
-              <p className="text-sm sm:text-base">{t('common.loading')}</p>
-            </div>
-          )}
-        </main>
-
-        {/* Bottom controls container - Fixed height */}
-        <footer className="shrink-0 px-3 py-2 sm:px-6 sm:py-4 lg:px-8 lg:py-5 space-y-2 sm:space-y-3 lg:space-y-4 bg-gradient-to-t from-background via-background/90 to-transparent">
-          {/* Progress bar */}
-          <div className="w-full max-w-2xl lg:max-w-3xl mx-auto">
-            <div 
-              className="h-1 sm:h-1.5 lg:h-2 bg-muted/50 rounded-full overflow-hidden cursor-pointer group"
-              onClick={(e) => {
-                if (audioRef.current) {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const percent = (e.clientX - rect.left) / rect.width;
-                  audioRef.current.currentTime = percent * duration;
-                }
-              }}
-            >
-              <div 
-                className="h-full bg-primary rounded-full transition-all duration-100 group-hover:bg-primary/80"
-                style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground mt-1 sm:mt-2">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
-
-          {/* Main controls - Responsive sizing */}
-          <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-6">
-            {/* Repeat */}
-            <button
-              data-focusable="true"
-              onClick={cycleRepeatMode}
-              className={`p-2 sm:p-3 rounded-full transition-all focus:ring-2 focus:ring-primary ${
-                repeatMode !== 'off' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
-              }`}
-              title={repeatMode === 'off' ? t('player.repeatOff') : repeatMode === 'one' ? t('player.repeatOne') : t('player.repeatAll')}
-            >
-              {repeatMode === 'one' ? (
-                <Repeat1 className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <Repeat className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-            </button>
-
-            {/* Previous verse */}
-            <button
-              data-focusable="true"
-              onClick={() => skipToVerse('prev')}
-              disabled={currentVerseIndex === 0}
-              className="p-2 sm:p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
-            >
-              <SkipBack className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
-            </button>
-
-            {/* Play/Pause - Prominent */}
-            <button
-              data-focusable="true"
-              autoFocus
-              onClick={togglePlayPause}
-              className="p-4 sm:p-5 lg:p-6 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all focus:ring-4 focus:ring-primary/30 gold-glow shadow-lg"
-            >
-              {playerState.isPlaying ? (
-                <Pause className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10" />
-              ) : (
-                <Play className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 ml-0.5 sm:ml-1" />
-              )}
-            </button>
-
-            {/* Next verse */}
-            <button
-              data-focusable="true"
-              onClick={() => skipToVerse('next')}
-              disabled={currentVerseIndex === verses.length - 1}
-              className="p-2 sm:p-3 rounded-full text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary disabled:opacity-30"
-            >
-              <SkipForward className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
-            </button>
-
-            {/* Volume control - Hidden on mobile */}
-            <div className="hidden md:flex items-center gap-2 text-muted-foreground">
-              <Volume2 className="w-4 h-4 lg:w-5 lg:h-5" />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={(e) => setVolume(Number(e.target.value))}
-                className="w-16 lg:w-20 xl:w-24 accent-primary h-1 cursor-pointer"
-              />
-            </div>
-
-            {/* Minimize */}
-            <button
-              data-focusable="true"
-              onClick={handleMinimize}
-              className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all focus:ring-2 focus:ring-primary"
-              title={t('player.minimize')}
-            >
-              <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
-            {/* Stop */}
-            <button
-              data-focusable="true"
-              onClick={handleStop}
-              className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all focus:ring-2 focus:ring-destructive"
-              title={t('player.stop')}
-            >
-              <Square className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          </div>
-        </footer>
+        {/* Audio controls for invocations (simpler) */}
+        {audioUrl && contentType === 'invocations' && (
+          <PlayerControls
+            contentType={contentType}
+            audioRef={audioRef}
+            currentTime={currentTime}
+            duration={duration}
+            volume={volume}
+            isMuted={isMuted}
+            onSeek={handleSeek}
+            onVolumeChange={handleVolumeChange}
+            onToggleMute={toggleMute}
+            onMinimize={handleMinimize}
+            onStop={handleStop}
+          />
+        )}
       </div>
     </div>
   );
