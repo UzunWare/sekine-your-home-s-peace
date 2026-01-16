@@ -28,6 +28,7 @@ const MiniPlayer = ({ className = '' }: MiniPlayerProps) => {
       isMinimized: false,
       contentType: null,
       currentTrack: null,
+      audioUrl: undefined,
       progress: 0,
       duration: 0,
     });

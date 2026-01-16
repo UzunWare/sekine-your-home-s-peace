@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { I18nProvider } from "@/lib/i18n";
+import GlobalAudioPlayer from "@/components/GlobalAudioPlayer";
+import MiniPlayer from "@/components/MiniPlayer";
 import sekineLogo from "@/assets/sekine-logo.png";
 
 // Pages
@@ -67,7 +69,9 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <GlobalAudioPlayer />
           <BrowserRouter>
+            <MiniPlayer />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 {/* Main screens */}

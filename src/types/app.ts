@@ -150,6 +150,7 @@ export interface PlayerState {
     arabicText?: string;
     translation?: string;
   } | null;
+  audioUrl?: string;
   progress: number;
   duration: number;
   currentVerseNumber?: number;
