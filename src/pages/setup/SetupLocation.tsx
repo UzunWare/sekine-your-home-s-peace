@@ -92,8 +92,8 @@ const SetupLocation = () => {
         </div>
 
         {/* City grid */}
-        <div className="flex-1 w-full overflow-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+        <div className="flex-1 w-full overflow-auto px-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 p-1">
             {filteredCities.map((city) => (
               <button
                 key={city.city}
@@ -103,10 +103,10 @@ const SetupLocation = () => {
                   selectedCity?.city === city.city
                     ? 'border-primary bg-primary/10'
                     : 'border-border bg-card hover:border-primary/50'
-                } focus:ring-2 focus:ring-primary`}
+                } focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background`}
               >
-                <h3 className="text-base sm:text-lg lg:text-xl font-medium">{city.city}</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">{city.country}</p>
+                <h3 className="text-base sm:text-lg lg:text-xl font-medium leading-tight">{city.city}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{city.country}</p>
               </button>
             ))}
           </div>

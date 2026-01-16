@@ -43,40 +43,42 @@ const SetupLanguage = () => {
         </p>
 
         {/* Language grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 w-full mb-6 sm:mb-8">
-          {SUPPORTED_LANGUAGES.map((lang, index) => (
-            <button
-              key={lang.code}
-              data-focusable="true"
-              autoFocus={index === 0}
-              onClick={() => handleLanguageSelect(lang.code)}
-              className={`relative p-4 sm:p-5 lg:p-6 rounded-xl border-2 transition-all text-left ${
-                language === lang.code
-                  ? 'border-primary bg-primary/10'
-                  : 'border-border bg-card hover:border-primary/50'
-              } focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background`}
-            >
-              {language === lang.code && (
-                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
-                </div>
-              )}
-              
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-lg sm:text-xl lg:text-2xl px-2 py-1 bg-muted rounded font-mono">
-                  {lang.code.toUpperCase()}
-                </span>
-                {lang.rtl && (
-                  <span className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-primary/20 text-primary rounded">
-                    RTL
-                  </span>
+        <div className="w-full mb-6 sm:mb-8 px-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 p-1">
+            {SUPPORTED_LANGUAGES.map((lang, index) => (
+              <button
+                key={lang.code}
+                data-focusable="true"
+                autoFocus={index === 0}
+                onClick={() => handleLanguageSelect(lang.code)}
+                className={`relative p-4 sm:p-5 lg:p-6 rounded-xl border-2 transition-all text-left ${
+                  language === lang.code
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border bg-card hover:border-primary/50'
+                } focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background`}
+              >
+                {language === lang.code && (
+                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center">
+                    <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
+                  </div>
                 )}
-              </div>
-              
-              <h3 className="text-base sm:text-lg lg:text-xl font-medium">{lang.name}</h3>
-              <p className="text-sm sm:text-base text-muted-foreground">{lang.nativeName}</p>
-            </button>
-          ))}
+                
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-lg sm:text-xl lg:text-2xl px-2 py-1 bg-muted rounded font-mono">
+                    {lang.code.toUpperCase()}
+                  </span>
+                  {lang.rtl && (
+                    <span className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-primary/20 text-primary rounded">
+                      RTL
+                    </span>
+                  )}
+                </div>
+                
+                <h3 className="text-base sm:text-lg lg:text-xl font-medium leading-tight">{lang.name}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">{lang.nativeName}</p>
+              </button>
+            ))}
+          </div>
         </div>
 
         <p className="text-xs sm:text-sm text-muted-foreground">
