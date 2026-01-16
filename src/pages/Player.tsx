@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
@@ -60,15 +60,13 @@ const Player = () => {
     return '';
   }, [contentType, quranAudioUrl, prayerData, adhanPhase]);
   
-  // Local state
+  // Local state (volume/mute are local, time/duration come from playerState)
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   
-  // Audio ref
+  // Dummy audioRef for components that still expect it (will be removed in future refactor)
   const audioRef = useRef<HTMLAudioElement>(null);
   
   // Get current verse and reciter info for Quran
@@ -107,7 +105,9 @@ const Player = () => {
           arabicText: verses[0]?.text_uthmani || '',
           translation: verses[0]?.translations?.[0]?.text || '',
         },
+        audioUrl: audioUrl || undefined,
         isMinimized: false,
+        isPlaying: true, // Auto-play when opening
       }));
     } else if (contentType === 'invocations' && prayerData) {
       hasInitialized.current = true;
@@ -120,7 +120,9 @@ const Player = () => {
           arabicText: prayerData.invocations[0]?.arabic || '',
           translation: prayerData.invocations[0]?.translation || '',
         },
+        audioUrl: prayerData.audioUrl || undefined,
         isMinimized: false,
+        isPlaying: !!prayerData.audioUrl, // Auto-play if audio available
       }));
     } else if (contentType === 'adhan') {
       hasInitialized.current = true;
@@ -135,21 +137,18 @@ const Player = () => {
           arabicText: prayerArabicName,
           translation: adhanPhase === 'adhan' ? "It's time to pray" : 'Dua After Adhan',
         },
+        audioUrl: audioUrl || undefined, // Will be empty until adhan audio files are added
         isMinimized: false,
       }));
     }
-  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer?.name, nextPrayer?.arabicName, currentAdhanStyle.name, adhanPhase, setPlayerState, playerState.contentType]);
+  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer?.name, nextPrayer?.arabicName, currentAdhanStyle.name, adhanPhase, setPlayerState, playerState.contentType, audioUrl]);
   
-  // Reset initialization flag when content type changes
-  useEffect(() => {
-    hasInitialized.current = false;
-  }, [contentType]);
-
   // Update current verse based on audio timing (Quran only)
+  // Uses playerState.progress which is updated by GlobalAudioPlayer
   useEffect(() => {
-    if (contentType !== 'quran' || !timings.length || !audioRef.current) return;
+    if (contentType !== 'quran' || !timings.length) return;
     
-    const currentTimeMs = currentTime * 1000;
+    const currentTimeMs = playerState.progress * 1000;
     
     const verseIndex = timings.findIndex(
       (timing, index) => {
@@ -177,79 +176,10 @@ const Player = () => {
         }));
       }
     }
-  }, [contentType, currentTime, timings, verses, currentVerseIndex, setPlayerState]);
+  }, [contentType, playerState.progress, timings, verses, currentVerseIndex, setPlayerState]);
 
-  // Audio event handlers
-  const handleTimeUpdate = useCallback(() => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-      setPlayerState(prev => ({
-        ...prev,
-        progress: audioRef.current!.currentTime,
-      }));
-    }
-  }, [setPlayerState]);
-
-  const handleLoadedMetadata = useCallback(() => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-      setPlayerState(prev => ({
-        ...prev,
-        duration: audioRef.current!.duration,
-      }));
-    }
-  }, [setPlayerState]);
-
-  const handleEnded = useCallback(() => {
-    if (contentType === 'quran') {
-      if (repeatMode === 'all') {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play();
-        }
-      } else if (repeatMode === 'one') {
-        if (timings[currentVerseIndex] && audioRef.current) {
-          audioRef.current.currentTime = timings[currentVerseIndex].timestamp_from / 1000;
-          audioRef.current.play();
-        }
-      } else {
-        setPlayerState(prev => ({ ...prev, isPlaying: false }));
-      }
-    } else if (contentType === 'adhan') {
-      // Handle adhan phase transitions
-      if (adhanPhase === 'adhan' && settings.adhan.duaAfterAdhan) {
-        setAdhanPhase('dua');
-        // Would load dua audio here
-      } else {
-        // Adhan complete, navigate based on mode
-        if (settings.prayer.mode === 'mosque') {
-          navigate('/iqamah');
-        } else {
-          handleStop();
-        }
-      }
-    } else {
-      setPlayerState(prev => ({ ...prev, isPlaying: false }));
-    }
-  }, [contentType, repeatMode, currentVerseIndex, timings, adhanPhase, settings.adhan.duaAfterAdhan, settings.prayer.mode, navigate, setPlayerState]);
-
-  // Play/pause control
-  useEffect(() => {
-    if (audioRef.current) {
-      if (playerState.isPlaying) {
-        audioRef.current.play().catch(console.error);
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [playerState.isPlaying]);
-
-  // Volume control
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume / 100;
-    }
-  }, [volume, isMuted]);
+  // Note: Audio is now managed by GlobalAudioPlayer
+  // The following functions are kept for local UI interactions
 
   const togglePlayPause = () => {
     setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
@@ -261,15 +191,12 @@ const Player = () => {
   };
 
   const handleStop = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
     setPlayerState({
       isPlaying: false,
       isMinimized: false,
       contentType: null,
       currentTrack: null,
+      audioUrl: undefined,
       progress: 0,
       duration: 0,
     });
@@ -281,9 +208,10 @@ const Player = () => {
       ? Math.min(currentVerseIndex + 1, verses.length - 1)
       : Math.max(currentVerseIndex - 1, 0);
     
-    if (timings[newIndex] && audioRef.current) {
-      audioRef.current.currentTime = timings[newIndex].timestamp_from / 1000;
+    // Update verse index - seeking will need GlobalAudioPlayer enhancement later
+    if (timings[newIndex]) {
       setCurrentVerseIndex(newIndex);
+      // TODO: Add seek support to GlobalAudioPlayer
     }
   };
 
@@ -364,16 +292,7 @@ const Player = () => {
 
   return (
     <div className="fixed inset-0 bg-background overflow-hidden">
-      {/* Hidden audio element */}
-      {audioUrl && (
-        <audio
-          ref={audioRef}
-          src={audioUrl}
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-          onEnded={handleEnded}
-        />
-      )}
+      {/* Audio is now handled by GlobalAudioPlayer */}
 
       {/* Background image */}
       <div 
@@ -427,8 +346,8 @@ const Player = () => {
           <PlayerControls
             contentType={contentType}
             audioRef={audioRef}
-            currentTime={currentTime}
-            duration={duration}
+            currentTime={playerState.progress}
+            duration={playerState.duration}
             volume={volume}
             isMuted={isMuted}
             repeatMode={repeatMode}
@@ -450,8 +369,8 @@ const Player = () => {
           <PlayerControls
             contentType={contentType}
             audioRef={audioRef}
-            currentTime={currentTime}
-            duration={duration}
+            currentTime={playerState.progress}
+            duration={playerState.duration}
             volume={volume}
             isMuted={isMuted}
             onSeek={handleSeek}
@@ -467,8 +386,8 @@ const Player = () => {
           <PlayerControls
             contentType={contentType}
             audioRef={audioRef}
-            currentTime={currentTime}
-            duration={duration}
+            currentTime={playerState.progress}
+            duration={playerState.duration}
             volume={volume}
             isMuted={isMuted}
             onSeek={handleSeek}
