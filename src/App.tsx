@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { I18nProvider } from "@/lib/i18n";
+import sekineLogo from "@/assets/sekine-logo.png";
 
 // Pages
 import Splash from "./pages/Splash";
@@ -26,7 +28,6 @@ import SetupPairing from "./pages/setup/SetupPairing";
 import SetupComplete from "./pages/setup/SetupComplete";
 
 // Lazy load larger pages
-import { lazy, Suspense } from "react";
 const Quran = lazy(() => import("./pages/Quran"));
 const Settings = lazy(() => import("./pages/Settings"));
 const QuranSettings = lazy(() => import("./pages/settings/QuranSettings"));
@@ -52,8 +53,6 @@ const DashboardPair = lazy(() => import("./pages/dashboard/DashboardPair"));
 const DashboardSettings = lazy(() => import("./pages/dashboard/DashboardSettings"));
 
 const queryClient = new QueryClient();
-
-import sekineLogo from "@/assets/sekine-logo.png";
 
 const LoadingFallback = () => (
   <div className="fixed inset-0 bg-background flex items-center justify-center">
