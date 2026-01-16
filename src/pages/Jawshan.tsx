@@ -6,11 +6,20 @@ import { useTranslation } from '@/lib/i18n';
 import { jawshanSections, getAvailableSections, getTotalSections } from '@/data/jawshan';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+// Define section ranges for tabs
+const SECTION_RANGES = Array.from({ length: 10 }, (_, i) => ({
+  start: i * 10 + 1,
+  end: Math.min((i + 1) * 10, 100),
+  value: `${i * 10 + 1}-${Math.min((i + 1) * 10, 100)}`,
+}));
 
 const Jawshan = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeRange, setActiveRange] = useState('1-10');
   const availableSections = getAvailableSections();
   const totalSections = getTotalSections();
 
@@ -28,11 +37,18 @@ const Jawshan = () => {
     navigate(`/player?type=jawshan&section=${lastSection}`);
   }, [navigate]);
 
-  // Filter sections based on search
+  // Get current range bounds
+  const currentRange = SECTION_RANGES.find(r => r.value === activeRange) || SECTION_RANGES[0];
+
+  // Filter sections based on active range and search
   const filteredSections = jawshanSections.filter(section => {
+    // First filter by range
+    if (section.sectionNumber < currentRange.start || section.sectionNumber > currentRange.end) {
+      return false;
+    }
+    // Then filter by search query
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
-    // Search by section number or content
     return (
       section.sectionNumber.toString().includes(query) ||
       section.lines.some(line => 
@@ -97,24 +113,27 @@ const Jawshan = () => {
       {/* Section Grid */}
       <ScrollArea className="h-[calc(100vh-180px)]">
         <div className="p-4 sm:p-6">
-          {/* Quick section jump - 10 columns for sections 1-100 */}
-          <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 mb-6">
-            {Array.from({ length: 10 }, (_, i) => i * 10 + 1).map(startSection => (
-              <button
-                key={startSection}
-                data-focusable="true"
-                onClick={() => handleSectionSelect(startSection)}
-                className={`p-2 text-xs sm:text-sm rounded-lg border transition-all ${
-                  availableSections.includes(startSection)
-                    ? 'bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20 text-amber-400'
-                    : 'bg-muted/50 border-border text-muted-foreground opacity-50'
-                }`}
-                disabled={!availableSections.includes(startSection)}
-              >
-                {startSection}-{Math.min(startSection + 9, 100)}
-              </button>
-            ))}
-          </div>
+          {/* Section Range Tabs */}
+          <Tabs value={activeRange} onValueChange={setActiveRange} className="mb-6">
+            <TabsList className="grid grid-cols-5 sm:grid-cols-10 gap-1 h-auto bg-muted/50 p-1 rounded-lg">
+              {SECTION_RANGES.map(range => {
+                const hasAvailable = availableSections.some(
+                  s => s >= range.start && s <= range.end
+                );
+                return (
+                  <TabsTrigger
+                    key={range.value}
+                    value={range.value}
+                    data-focusable="true"
+                    disabled={!hasAvailable}
+                    className="px-2 py-2 text-xs sm:text-sm data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-md disabled:opacity-40"
+                  >
+                    {range.value}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </Tabs>
 
           {/* Detailed section cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
