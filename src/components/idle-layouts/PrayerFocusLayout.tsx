@@ -1,5 +1,6 @@
 import { Settings, BookOpen, HandHeart, Scroll } from 'lucide-react';
 import { IdleLayoutProps } from './types';
+import QiblahBadge from '@/components/QiblahBadge';
 
 const PrayerFocusLayout = ({
   currentTime,
@@ -30,6 +31,10 @@ const PrayerFocusLayout = ({
               <span className="text-sm text-primary font-arabic">{hijriDate.day} {hijriDate.month}</span>
             </>
           )}
+          <span className="text-muted-foreground/50 hidden sm:inline">•</span>
+          <div className="hidden sm:block">
+            <QiblahBadge compact />
+          </div>
         </div>
         
         <div className="flex gap-2 sm:gap-3">

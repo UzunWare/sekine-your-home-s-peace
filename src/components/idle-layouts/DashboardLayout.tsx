@@ -1,5 +1,6 @@
 import { Settings, BookOpen, HandHeart, Scroll } from 'lucide-react';
 import { IdleLayoutProps } from './types';
+import QiblahBadge from '@/components/QiblahBadge';
 
 const DashboardLayout = ({
   currentTime,
@@ -22,7 +23,10 @@ const DashboardLayout = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-4 lg:mb-6">
         {/* Time tile */}
         <div className="glass-card p-6 lg:p-8">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Current Time</p>
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Current Time</p>
+            <QiblahBadge compact />
+          </div>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light tabular-nums text-foreground">
             {formatTime(currentTime)}
           </h1>
