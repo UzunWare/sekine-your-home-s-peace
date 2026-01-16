@@ -2,6 +2,7 @@ import { Settings } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 import InvocationsButton from '@/components/InvocationsButton';
 import JawshanButton from '@/components/JawshanButton';
+import { useQiblah } from '@/hooks/useQiblah';
 
 const MinimalLayout = ({
   currentTime,
@@ -13,6 +14,8 @@ const MinimalLayout = ({
   onOpenInvocationsDialog,
   onOpenJawshan,
 }: IdleLayoutProps) => {
+  const { formatted: qiblahFormatted, isValid: qiblahValid } = useQiblah();
+  
   // Format time without seconds for minimal look
   const formatMinimalTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false });
@@ -40,14 +43,20 @@ const MinimalLayout = ({
         </h1>
       </main>
 
-      {/* Bottom - Subtle next prayer indicator */}
-      <footer className="flex justify-center pb-8">
+      {/* Bottom - Subtle next prayer and qiblah indicator */}
+      <footer className="flex justify-center items-center gap-6 pb-8">
         {nextPrayer && timeUntilNextPrayer && (
           <div className="flex items-center gap-3 text-muted-foreground">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-sm sm:text-base font-light tracking-wide">
               {nextPrayer.name} in {timeUntilNextPrayer.formatted}
             </span>
+          </div>
+        )}
+        {qiblahValid && (
+          <div className="flex items-center gap-2 text-muted-foreground/60">
+            <span className="text-xs uppercase tracking-widest text-primary/50">Qiblah</span>
+            <span className="text-sm font-light tabular-nums">{qiblahFormatted}</span>
           </div>
         )}
       </footer>

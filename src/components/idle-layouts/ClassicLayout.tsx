@@ -2,6 +2,7 @@ import { MapPin, Settings, BookOpen, Volume2 } from 'lucide-react';
 import { IdleLayoutProps } from './types';
 import InvocationsButton from '@/components/InvocationsButton';
 import JawshanButton from '@/components/JawshanButton';
+import QiblahBadge from '@/components/QiblahBadge';
 
 const ClassicLayout = ({
   currentTime,
@@ -22,9 +23,12 @@ const ClassicLayout = ({
     <div className="relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all">
       {/* Header */}
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4">
-        <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
-          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-          <span className="text-sm sm:text-base lg:text-lg">{settings.location.city || 'Set Location'}, {settings.location.country}</span>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
+            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-sm sm:text-base lg:text-lg">{settings.location.city || 'Set Location'}, {settings.location.country}</span>
+          </div>
+          <QiblahBadge />
         </div>
         
         <div className="flex gap-2 sm:gap-4">
