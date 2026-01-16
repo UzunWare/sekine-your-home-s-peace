@@ -7,10 +7,14 @@ import { useQuranPlayer } from '@/hooks/useQuranAPI';
 import { RECITERS_INFO } from '@/lib/quranAPI';
 import { getSurahBackground } from '@/lib/surahBackgrounds';
 import { getPrayerInvocations } from '@/data/invocations';
-import { QuranContent, InvocationsContent, PlayerControls } from '@/components/player';
+import { QuranContent, InvocationsContent, AdhanContent, PlayerControls } from '@/components/player';
+import { adhanStyles } from '@/data/reciters';
+import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { Loader2, AlertCircle } from 'lucide-react';
 import mosqueBg from '@/assets/mosque-background-1.jpg';
 import type { PlayerContentType } from '@/types/app';
+
+type AdhanPhase = 'adhan' | 'dua';
 
 type RepeatMode = 'off' | 'one' | 'all';
 
@@ -20,6 +24,7 @@ const Player = () => {
   const { playerState, setPlayerState, settings } = useApp();
   const { t } = useTranslation();
   const { language } = useLanguage();
+  const { nextPrayer } = usePrayerTimes();
   
   // Determine content type from URL
   const contentType = (searchParams.get('type') || 'quran') as PlayerContentType;
@@ -32,6 +37,10 @@ const Player = () => {
   const prayerId = searchParams.get('prayer') || 'fajr';
   const prayerData = useMemo(() => getPrayerInvocations(prayerId), [prayerId]);
   
+  // Adhan-specific state
+  const [adhanPhase, setAdhanPhase] = useState<AdhanPhase>('adhan');
+  const currentAdhanStyle = adhanStyles.find(s => s.id === settings.adhan.style) || adhanStyles[0];
+  
   // Fetch Quran data (only when contentType is 'quran')
   const { verses, timings, audioUrl: quranAudioUrl, chapterInfo, isLoading, error } = useQuranPlayer(
     contentType === 'quran' ? surahNumber : 0, // Skip fetching if not quran
@@ -42,9 +51,14 @@ const Player = () => {
   // Audio URL based on content type
   const audioUrl = useMemo(() => {
     if (contentType === 'quran') return quranAudioUrl;
-    if (contentType === 'invocations') return prayerData?.audioUrl || '';
+    if (contentType === 'invocations') return prayerData?.audioUrl ?? '';
+    if (contentType === 'adhan') {
+      // For adhan, we'd use actual audio files - for now return empty as placeholder
+      // Phase-based audio would be: adhanPhase === 'adhan' ? adhanAudioUrl : duaAudioUrl
+      return '';
+    }
     return '';
-  }, [contentType, quranAudioUrl, prayerData?.audioUrl]);
+  }, [contentType, quranAudioUrl, prayerData, adhanPhase]);
   
   // Local state
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
@@ -98,8 +112,20 @@ const Player = () => {
         },
         isMinimized: false,
       }));
+    } else if (contentType === 'adhan' && nextPrayer) {
+      setPlayerState(prev => ({
+        ...prev,
+        contentType: 'adhan',
+        currentTrack: {
+          title: `${nextPrayer.name} Adhan`,
+          subtitle: currentAdhanStyle.name,
+          arabicText: nextPrayer.arabicName,
+          translation: adhanPhase === 'adhan' ? "It's time to pray" : 'Dua After Adhan',
+        },
+        isMinimized: false,
+      }));
     }
-  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, setPlayerState]);
+  }, [contentType, chapterInfo, verses, reciterInfo.name, prayerData, nextPrayer, currentAdhanStyle.name, adhanPhase, setPlayerState]);
 
   // Update current verse based on audio timing (Quran only)
   useEffect(() => {
@@ -171,10 +197,23 @@ const Player = () => {
       } else {
         setPlayerState(prev => ({ ...prev, isPlaying: false }));
       }
+    } else if (contentType === 'adhan') {
+      // Handle adhan phase transitions
+      if (adhanPhase === 'adhan' && settings.adhan.duaAfterAdhan) {
+        setAdhanPhase('dua');
+        // Would load dua audio here
+      } else {
+        // Adhan complete, navigate based on mode
+        if (settings.prayer.mode === 'mosque') {
+          navigate('/iqamah');
+        } else {
+          handleStop();
+        }
+      }
     } else {
       setPlayerState(prev => ({ ...prev, isPlaying: false }));
     }
-  }, [contentType, repeatMode, currentVerseIndex, timings, setPlayerState]);
+  }, [contentType, repeatMode, currentVerseIndex, timings, adhanPhase, settings.adhan.duaAfterAdhan, settings.prayer.mode, navigate, setPlayerState]);
 
   // Play/pause control
   useEffect(() => {
@@ -356,6 +395,15 @@ const Player = () => {
           />
         )}
 
+        {contentType === 'adhan' && (
+          <AdhanContent
+            audioRef={audioRef}
+            phase={adhanPhase}
+            onPhaseChange={setAdhanPhase}
+            onComplete={handleStop}
+          />
+        )}
+
         {/* Shared controls for audio-based content */}
         {audioUrl && contentType === 'quran' && (
           <PlayerControls
@@ -381,6 +429,23 @@ const Player = () => {
 
         {/* Audio controls for invocations (simpler) */}
         {audioUrl && contentType === 'invocations' && (
+          <PlayerControls
+            contentType={contentType}
+            audioRef={audioRef}
+            currentTime={currentTime}
+            duration={duration}
+            volume={volume}
+            isMuted={isMuted}
+            onSeek={handleSeek}
+            onVolumeChange={handleVolumeChange}
+            onToggleMute={toggleMute}
+            onMinimize={handleMinimize}
+            onStop={handleStop}
+          />
+        )}
+
+        {/* Adhan controls - minimal, show even without audio for simulated playback */}
+        {contentType === 'adhan' && (
           <PlayerControls
             contentType={contentType}
             audioRef={audioRef}

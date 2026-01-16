@@ -63,6 +63,7 @@ const PlayerControls = ({
 
   const showRepeat = contentType === 'quran';
   const showSkipButtons = contentType === 'quran';
+  const isAdhan = contentType === 'adhan';
 
   return (
     <footer className="shrink-0 px-3 py-2 sm:px-6 sm:py-4 lg:px-8 lg:py-5 space-y-2 sm:space-y-3 lg:space-y-4 bg-gradient-to-t from-background via-background/90 to-transparent">
