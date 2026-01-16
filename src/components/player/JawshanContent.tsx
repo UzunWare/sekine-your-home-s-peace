@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, RotateCcw, Scroll, Play, Pause, Volume2, Minimize2 } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RotateCcw, Scroll, Play, Pause, Volume2, Minimize2 } from 'lucide-react';
 import { JawshanSection, getTotalSections } from '@/data/jawshan';
 import { useTranslation } from '@/lib/i18n';
 import { useApp } from '@/contexts/AppContext';
@@ -251,8 +251,7 @@ const JawshanContent = ({
             className="p-3 rounded-full bg-muted/50 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             aria-label="Previous section"
           >
-            <ChevronLeft className="w-5 h-5" />
-            <ChevronLeft className="w-5 h-5 -ml-3" />
+            <ChevronsLeft className="w-5 h-5" />
           </button>
 
           <button
@@ -305,8 +304,7 @@ const JawshanContent = ({
             className="p-3 rounded-full bg-muted/50 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             aria-label="Next section"
           >
-            <ChevronRight className="w-5 h-5" />
-            <ChevronRight className="w-5 h-5 -ml-3" />
+            <ChevronsRight className="w-5 h-5" />
           </button>
         </div>
 
