@@ -430,8 +430,8 @@ const Player = () => {
           />
         )}
 
-        {/* Audio controls for invocations (simpler) */}
-        {audioUrl && contentType === 'invocations' && (
+        {/* Audio controls for invocations (simpler) - show even without audio for minimize/stop */}
+        {contentType === 'invocations' && (
           <PlayerControls
             contentType={contentType}
             audioRef={audioRef}
