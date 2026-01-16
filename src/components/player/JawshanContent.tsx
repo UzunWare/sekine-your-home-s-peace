@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RotateCcw, Scroll, Play, Pause, Volume2, Minimize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RotateCcw, Scroll, Play, Pause, Volume2, Minimize2, Square } from 'lucide-react';
 import { JawshanSection, getTotalSections } from '@/data/jawshan';
 import { useTranslation } from '@/lib/i18n';
 import { useApp } from '@/contexts/AppContext';
@@ -141,29 +141,13 @@ const JawshanContent = ({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Audio indicator */}
-          {hasAudio && (
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/20 text-primary text-xs">
-              <Volume2 className="w-3 h-3" />
-              <span>{t('player.audio')}</span>
-            </div>
-          )}
-          <button
-            onClick={onMinimize}
-            className="p-2 rounded-full hover:bg-muted/50 transition-colors"
-            aria-label="Minimize"
-          >
-            <Minimize2 className="w-5 h-5" />
-          </button>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-muted/50 transition-colors"
-            aria-label="Close"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
+        {/* Audio indicator */}
+        {hasAudio && (
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/20 text-primary text-xs">
+            <Volume2 className="w-3 h-3" />
+            <span>{t('player.audio')}</span>
+          </div>
+        )}
       </header>
 
       {/* Main content - current line */}
@@ -305,6 +289,27 @@ const JawshanContent = ({
             aria-label="Next section"
           >
             <ChevronsRight className="w-5 h-5" />
+          </button>
+
+          {/* Divider */}
+          <div className="h-8 w-px bg-muted-foreground/20" />
+
+          {/* Minimize button */}
+          <button
+            onClick={onMinimize}
+            className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
+            aria-label="Minimize"
+          >
+            <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+
+          {/* Stop button */}
+          <button
+            onClick={onClose}
+            className="p-2 sm:p-3 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+            aria-label="Stop"
+          >
+            <Square className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
