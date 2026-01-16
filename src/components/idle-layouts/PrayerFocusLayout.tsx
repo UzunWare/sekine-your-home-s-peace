@@ -14,7 +14,7 @@ const PrayerFocusLayout = ({
   onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   return (
-    <div className={`relative z-10 h-full flex flex-col p-6 sm:p-8 md:p-10 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28' : ''}`}>
+    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 transition-all ${isMiniPlayerVisible ? 'pb-28 sm:pb-32 md:pb-36' : 'pb-8 sm:pb-10'}`}>
       {/* Compact header */}
       <header className="flex justify-between items-center mb-6 lg:mb-10">
         <div className="flex items-center gap-3 sm:gap-4">

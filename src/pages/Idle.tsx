@@ -5,7 +5,6 @@ import { usePrayerTimes } from '@/hooks/usePrayerTimes';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { WifiOff } from 'lucide-react';
 import { getQuoteOfTheDay } from '@/data/dailyQuotes';
-import MiniPlayer from '@/components/MiniPlayer';
 import PrayerSelectionDialog from '@/components/PrayerSelectionDialog';
 import mosqueBg from '@/assets/mosque-background-1.jpg';
 import {
@@ -156,8 +155,7 @@ const Idle = () => {
         <LayoutComponent {...layoutProps} />
       </div>
 
-      {/* Mini Player */}
-      <MiniPlayer />
+      {/* MiniPlayer is rendered globally in App.tsx */}
 
       {/* Footer brand - hide when mini player is visible */}
       {!isMiniPlayerVisible && (
