@@ -54,7 +54,7 @@ const SetupLanguage = () => {
                 language === lang.code
                   ? 'border-primary bg-primary/10'
                   : 'border-border bg-card hover:border-primary/50'
-              } focus:ring-2 focus:ring-primary`}
+              } focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background`}
             >
               {language === lang.code && (
                 <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-full flex items-center justify-center">
