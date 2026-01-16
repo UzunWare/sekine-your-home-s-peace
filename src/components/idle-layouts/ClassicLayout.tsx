@@ -17,7 +17,7 @@ const ClassicLayout = ({
   onOpenInvocationsDialog,
 }: IdleLayoutProps) => {
   return (
-    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all ${isMiniPlayerVisible ? 'pb-28 sm:pb-32 md:pb-36' : 'pb-16 sm:pb-20'}`}>
+    <div className="relative z-10 h-screen flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 transition-all">
       {/* Header */}
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4">
         <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 glass-card">
@@ -107,7 +107,7 @@ const ClassicLayout = ({
       </main>
 
       {/* Prayer times grid */}
-      <footer className="flex flex-wrap justify-center gap-1.5 sm:gap-2 lg:gap-3 mt-4 sm:mt-6">
+      <footer className={`flex flex-wrap justify-center gap-1.5 sm:gap-2 lg:gap-3 mt-4 sm:mt-6 transition-all ${isMiniPlayerVisible ? 'mb-20 sm:mb-24 md:mb-28' : ''}`}>
         {prayers.map((prayer) => (
           <div
             key={prayer.name}

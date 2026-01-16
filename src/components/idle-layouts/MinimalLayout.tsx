@@ -17,7 +17,7 @@ const MinimalLayout = ({
   };
 
   return (
-    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 transition-all ${isMiniPlayerVisible ? 'pb-28 sm:pb-32 md:pb-36' : 'pb-8 sm:pb-10'}`}>
+    <div className={`relative z-10 h-screen flex flex-col p-4 sm:p-6 transition-all ${isMiniPlayerVisible ? 'pb-24 sm:pb-28 md:pb-32' : ''}`}>
       {/* Subtle header buttons */}
       <header className="flex justify-end gap-2">
         <InvocationsButton onClick={onOpenInvocationsDialog} compact />
