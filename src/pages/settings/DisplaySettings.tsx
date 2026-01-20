@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Monitor, Check } from 'lucide-react';
+import { ArrowLeft, Monitor, Check, Image } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
+import { BackgroundSelector } from '@/components/BackgroundSelector';
+import type { BackgroundId } from '@/types/app';
 
 export default function DisplaySettings() {
   const navigate = useNavigate();
@@ -21,6 +23,10 @@ export default function DisplaySettings() {
 
   const setScreensaverTimeout = (timeout: '20s' | '1m' | '5m' | '10m' | 'disabled') => {
     updateSettings('display', { screensaverTimeout: timeout });
+  };
+
+  const setBackgroundId = (id: BackgroundId) => {
+    updateSettings('display', { backgroundId: id });
   };
 
   const screensaverOptions = [
@@ -179,6 +185,21 @@ export default function DisplaySettings() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Background Image Selection */}
+          <div className="glass-card p-4 sm:p-5 lg:p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Image className="w-5 h-5 text-primary" />
+              <div>
+                <h3 className="text-base sm:text-lg font-medium">Background Image</h3>
+                <p className="text-sm text-muted-foreground">Choose a background for the idle screen</p>
+              </div>
+            </div>
+            <BackgroundSelector
+              selectedId={settings.display.backgroundId}
+              onSelect={setBackgroundId}
+            />
           </div>
         </div>
       </main>
