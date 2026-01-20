@@ -32,7 +32,7 @@ const defaultSettings: AppSettings = {
     showSeconds: true,
     backgroundSlideshow: true,
     screensaverTimeout: '5m',
-    backgroundImageUrl: null,
+    backgroundId: 'mosque-1',
     oledProtection: true,
     nightMode: false,
     nightModeBrightness: 25,

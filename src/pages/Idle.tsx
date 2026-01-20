@@ -6,7 +6,7 @@ import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { WifiOff } from 'lucide-react';
 import { getQuoteOfTheDay } from '@/data/dailyQuotes';
 import PrayerSelectionDialog from '@/components/PrayerSelectionDialog';
-import mosqueBg from '@/assets/mosque-background-1.jpg';
+import { getBackgroundById, getDefaultBackground } from '@/data/backgrounds';
 import {
   ClassicLayout,
   SplitLayout,
@@ -43,6 +43,9 @@ const Idle = () => {
   const [quoteOfTheDay] = useState(() => getQuoteOfTheDay());
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isInvocationsDialogOpen, setIsInvocationsDialogOpen] = useState(false);
+
+  // Get the selected background image
+  const backgroundImage = getBackgroundById(settings.display.backgroundId)?.image || getDefaultBackground().image;
 
   // Check if mini player is showing
   const isMiniPlayerVisible = playerState.isMinimized && playerState.currentTrack;
@@ -137,10 +140,10 @@ const Idle = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      {/* Static Background Image */}
+      {/* Dynamic Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${mosqueBg})` }}
+        className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
       

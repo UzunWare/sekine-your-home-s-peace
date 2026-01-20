@@ -62,6 +62,16 @@ export interface MosqueSettings {
   };
 }
 
+export type BackgroundId = 
+  | 'mosque-1' 
+  | 'mosque-2' 
+  | 'celestial' 
+  | 'desert' 
+  | 'mountains' 
+  | 'ocean' 
+  | 'paradise' 
+  | 'light';
+
 export interface DisplaySettings {
   clockFormat: ClockFormat;
   showHijriDate: boolean;
@@ -69,7 +79,7 @@ export interface DisplaySettings {
   showSeconds: boolean;
   backgroundSlideshow: boolean;
   screensaverTimeout: ScreensaverTimeout;
-  backgroundImageUrl: string | null;
+  backgroundId: BackgroundId;
   oledProtection: boolean;
   nightMode: boolean;
   nightModeBrightness: number;
