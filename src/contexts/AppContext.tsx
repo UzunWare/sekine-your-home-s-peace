@@ -38,6 +38,7 @@ const defaultSettings: AppSettings = {
     nightModeBrightness: 25,
     idleLayout: 'classic',
     screensaverLayout: 'classic',
+    colorTheme: 'emerald-gold',
   },
   adhan: {
     enabled: true,

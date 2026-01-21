@@ -32,6 +32,8 @@ export type IdleLayout = 'classic' | 'split' | 'minimal' | 'prayer-focus' | 'das
 
 export type ScreensaverLayout = 'classic' | 'minimal' | 'quote-focus' | 'prayer-focus' | 'ambient';
 
+export type ColorThemeId = 'emerald-gold' | 'midnight-azure' | 'desert-sand';
+
 export type PlaybackSpeed = 0.5 | 0.75 | 1 | 1.25 | 1.5 | 2;
 
 export type VolumeLevel = 20 | 40 | 60 | 80 | 100;
@@ -85,6 +87,7 @@ export interface DisplaySettings {
   nightModeBrightness: number;
   idleLayout: IdleLayout;
   screensaverLayout: ScreensaverLayout;
+  colorTheme: ColorThemeId;
 }
 
 export interface AdhanSettings {
