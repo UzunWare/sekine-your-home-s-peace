@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Monitor, Check, Image } from 'lucide-react';
+import { ArrowLeft, Monitor, Check, Image, Palette } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { useTVNavigation } from '@/hooks/useTVNavigation';
 import { BackgroundSelector } from '@/components/BackgroundSelector';
-import type { BackgroundId } from '@/types/app';
+import { ColorThemeSelector } from '@/components/ColorThemeSelector';
+import type { BackgroundId, ColorThemeId } from '@/types/app';
 
 export default function DisplaySettings() {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ export default function DisplaySettings() {
     updateSettings('display', { backgroundId: id });
   };
 
+  const setColorTheme = (id: ColorThemeId) => {
+    updateSettings('display', { colorTheme: id });
+  };
   const screensaverOptions = [
     { value: 'disabled' as const, label: 'Disabled' },
     { value: '20s' as const, label: '20 seconds' },
@@ -61,6 +65,21 @@ export default function DisplaySettings() {
       {/* Settings List */}
       <main className="flex-1 overflow-auto py-4 sm:py-6">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 space-y-3">
+          {/* Color Theme */}
+          <div className="glass-card p-4 sm:p-5 lg:p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Palette className="w-5 h-5 text-primary" />
+              <div>
+                <h3 className="text-base sm:text-lg font-medium">Color Theme</h3>
+                <p className="text-sm text-muted-foreground">Choose your app's color palette</p>
+              </div>
+            </div>
+            <ColorThemeSelector
+              selectedId={settings.display.colorTheme}
+              onSelect={setColorTheme}
+            />
+          </div>
+
           {/* Clock Format */}
           <div className="glass-card p-4 sm:p-5 lg:p-6">
             <h3 className="text-base sm:text-lg font-medium mb-4">Clock Format</h3>

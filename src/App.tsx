@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { I18nProvider } from "@/lib/i18n";
+import { ColorThemeProvider } from "@/components/ColorThemeProvider";
 import GlobalAudioPlayer from "@/components/GlobalAudioPlayer";
 import MiniPlayer from "@/components/MiniPlayer";
 import sekineLogo from "@/assets/sekine-logo.png";
@@ -68,12 +69,13 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <I18nProvider>
       <AppProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <GlobalAudioPlayer />
-          <BrowserRouter>
-            <MiniPlayer />
+        <ColorThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <GlobalAudioPlayer />
+            <BrowserRouter>
+              <MiniPlayer />
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 {/* Main screens */}
@@ -125,9 +127,10 @@ const App = () => (
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>
-      </AppProvider>
-    </I18nProvider>
-  </QueryClientProvider>
+      </ColorThemeProvider>
+    </AppProvider>
+  </I18nProvider>
+</QueryClientProvider>
 );
 
 export default App;
